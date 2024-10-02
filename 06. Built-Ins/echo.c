@@ -6,10 +6,10 @@
 /*   By: apoh <apoh@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:13:18 by apoh              #+#    #+#             */
-/*   Updated: 2024/09/18 16:13:21 by apoh             ###   ########.fr       */
+/*   Updated: 2024/10/02 15:07:30 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+#include "minishell"
 
 static void	print_without_n(int ac, char **av)
 
