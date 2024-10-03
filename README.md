@@ -10,7 +10,7 @@ Not interpretation of unclosed quotes or special characters such as \ (backslash
 
 (2) Expansion - ENV Variables, **envp
  
-(3) Tokenization - Synatax, data structure design
+(3) Tokenization - Syntax, data structure design
 
 (4) Redirection - heredocs and normal
 
