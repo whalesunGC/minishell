@@ -10,8 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/lexer.h"
+#include "../includes/minishell.h"
 
+/**
+ * @function: lexer
+ * @brief: this is the entry point to the lexer module.
+ * 
+ * @param input: the string that is read from readline
+ * 
+ * @return: returns an int, 0 for failure to tokenize, 1 for success.
+ */
 int	lexer(char *input)
 {
 	

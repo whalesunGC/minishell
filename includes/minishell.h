@@ -10,10 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../Libft/libft.h"
+#include "lexer.h"
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <unistd,h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include <dirent.h>
 #include <string.h>
