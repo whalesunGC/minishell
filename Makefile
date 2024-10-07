@@ -6,7 +6,7 @@ LDFLAGS = -lreadline
 
 # Source files names for each directory
 LEXER_FILES = lexer.c	tokenize.c
-EXPANSION_FILES = expansion.c 
+EXPANSION_FILES = expansion.c	expansion_utils_a.c
 
 # Directories
 EXPANSION_DIR = 01_Expansion

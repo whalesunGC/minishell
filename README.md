@@ -6,11 +6,11 @@
 Only one global variable to indicate received signal.
 Not interpretation of unclosed quotes or special characters such as \ (backslash) or ; (semicolon)
 
-(1) Lexing - Input validation, tokenization 
+(1) Expansion - ENV Variables, **envp
 
-(2) Expansion - ENV Variables, **envp
- 
-(3) Tokenization - Syntax, data structure design
+(2) Lexing - Input validation, tokenization 
+
+(3) Parsing - Syntax, data structure design
 
 (4) Redirection - heredocs and normal
 
