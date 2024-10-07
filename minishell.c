@@ -12,6 +12,13 @@
 
 #include "includes/minishell.h"
 
+/**
+ * @function: main
+ * @brief: this is the entry point to the minishell program
+ * 
+ * @param: None
+ * @return: returns int at exit. 0 for failure, 1 for success,
+ */
 int	main(void)
 {
 	char	*input;

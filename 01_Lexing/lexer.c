@@ -18,7 +18,7 @@
  * 
  * @param input: the string that is read from readline
  * 
- * @return: returns an int, 0 for failure to tokenize, 1 for success.
+ * @returns: returns an int, 0 for failure to tokenize, 1 for success.
  */
 int	lexer(char *input)
 {
