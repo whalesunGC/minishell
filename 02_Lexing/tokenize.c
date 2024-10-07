@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/05 11:58:49 by wichee            #+#    #+#             */
-/*   Updated: 2024/10/05 12:00:58 by wichee           ###   ########.fr       */
+/*   Created: 2024/10/07 12:25:30 by wichee            #+#    #+#             */
+/*   Updated: 2024/10/07 12:26:02 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 /**
- * @function: lexer
- * @brief: this is the entry point to the lexer module.
+ * @function: tokenize
+ * @brief: takes input string and splits the words into tokens without any classification.
  * 
- * @param input: the string that is read from readline
+ * @param input: string after first expansion
  * 
- * @returns: returns an int, 0 for failure to tokenize, 1 for success.
+ * @return: returns a list of strings, char **tokens
  */
-int	lexer(char *input)
+char	**tokenize(char *input)
 {
-	ft_printf("%s\n", input);
-	return (0);
+	char **tokens;
+
+	tokens = ft_split(input, ' ');
+	return (tokens);
 }

@@ -10,5 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	lexer(char *input);
-
+int		lexer(char *input);
+char 	**tokenize(char *input);
+char	*ft_var_exp(char **input);
