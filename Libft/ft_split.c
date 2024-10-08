@@ -84,11 +84,9 @@ char	**ft_split(const char *s, char c)
 	char		**split_str;
 	const char	*temp_s;
 	size_t		num_strings;
-	size_t		i;
 
 	temp_s = s;
 	num_strings = ft_num_strings(s, c);
-	i = 0;
 	if (!s)
 		return (NULL);
 	split_str = (char **)malloc((num_strings + 1) * sizeof(char *));

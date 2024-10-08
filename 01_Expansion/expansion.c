@@ -92,9 +92,9 @@ char	*expansion(char *input)
 		{
 			env_var = ft_var_exp(&input, i);
 			if (env_var)
-				exp_input = ft_str_replace();
+				exp_input = ft_str_replace(exp_input, i, env_var);
 			else
-				exp_input = ft_str_replace();
+				exp_input = ft_str_replace(exp_input, i, "$");
 		}
 		i++;
 	}

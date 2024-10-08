@@ -16,13 +16,30 @@
  * @function: ft_str_replace
  * @brief: takes a input string
  * 
- * @param input:input string.
- * @param index:start position where replacement substring begins.
+ * @param input: input string.
+ * @param index: start position where replacement substring begins.
  * @param rep_substr: replacement substring.
  * 
  * @return: returns a new string that has the substring replaced
  */
 char	*ft_str_replace(char *input, int index, char *rep_substring)
 {
-	return (input);
+	char	*result;
+	int		input_len;
+	int		rep_len;
+	int		result_len;
+
+	if (!input || !rep_substring || index < 0)
+		return (NULL);
+	input_len = ft_strlen(input);
+	rep_len = ft_strlen(rep_substring);
+	result_len = input_len - ft_strlen(input + index) + rep_len;
+	result = (char *)malloc(sizeof(char) * (result_len + 1));
+	if (!result)
+		return (NULL);
+	ft_strlcpy(result, input, index + 1);
+	ft_strlcat(result, rep_substring, result_len + 1);
+	ft_strlcat(result, input + index + ft_strlen(input + index), result_len + 1);
+	free(input);
+	return (result);
 }
