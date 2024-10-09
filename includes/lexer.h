@@ -12,3 +12,6 @@
 
 int		lexer(char *input);
 char 	**tokenize(char *input);
+
+//Lexer Utils
+void	ft_free_split(char **split);

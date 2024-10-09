@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/06 13:20:45 by wichee            #+#    #+#             */
-/*   Updated: 2024/10/06 13:21:40 by wichee           ###   ########.fr       */
+/*   Created: 2024/10/09 19:43:07 by wichee            #+#    #+#             */
+/*   Updated: 2024/10/09 19:43:35 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 /**
- * @function: main
- * @brief: this is the entry point to the minishell program
+ * @function: ft_free_split()
+ * @brief: function that takes a **char and frees each string in the array followed by the array itself
  * 
- * @param: None
- * @return: returns int at exit. 0 for failure, 1 for success,
+ * @param input: a char* array or an array of strings each malloced.
+ * 
+ * @return: no return value, void function.
  */
-int	main(void)
+void	ft_free_split(char **split)
 {
-	char	*input;
-
-	input = readline("minishell>> ");
-	input = expansion(input);
-	lexer(input);
-	return (free(input), 1);
+	while (*split)
+		free(*split++);
 }

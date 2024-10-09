@@ -32,7 +32,6 @@ char	*ft_env_search(char *var)
 	if (env_var != NULL)
 	{
 		ft_printf("env_var found: %s\n", env_var);
-		env_var = ft_strdup(env_var);
 	}
 	else
 	{
@@ -52,6 +51,8 @@ int	ft_env_len(const char *input)
 	int	len;
 
 	len = 0;
+	if (input[len] == '$')
+		len++;
 	while (input[len] && (ft_isalnum(input[len]) || input[len] == '_'))
 		len++;
 	return (len);
@@ -107,15 +108,15 @@ char	*expansion(char *input)
 	{
 		if (exp_input[i] == '$')
 		{
-			env_var = ft_var_exp(&input, i);
+			env_var = ft_var_exp(&exp_input, i);
 			if (env_var)
 				exp_input = ft_str_replace(exp_input, i, env_var);
 			else
 				exp_input = ft_str_replace(exp_input, i, "");
-			exp_input += i + ft_strlen(env_var);
+			i += ft_strlen(env_var);
 		}
 		else
 			i++;
 	}
-	return (exp_input);
+	return (free(input), exp_input);
 }

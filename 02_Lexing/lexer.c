@@ -23,15 +23,20 @@
 int	lexer(char *input)
 {
 	char	**tokens;
+	int		i;
 
 	ft_printf("%s\n", input);
 	tokens = tokenize(input);
+	i = 0;
 	if (!tokens)
 		return (free(input), 0);
 	else
 	{
-		while (*tokens)
-			ft_printf("printing tokens: %s\n",*tokens++);
+		while (tokens[i])
+		{
+			ft_printf("printing tokens: %s\n",tokens[i]);
+			i++;
+		}
 	}
-	return (1);
+	return (ft_free_split(tokens), free(tokens), 1);
 }

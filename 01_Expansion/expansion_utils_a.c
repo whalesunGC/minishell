@@ -41,7 +41,6 @@ char	*ft_str_replace(char *input, int index, char *rep_substring)
 		return (NULL);
 	ft_strlcpy(result, input, index + 1);
 	ft_strlcat(result, rep_substring, result_len + 1);
-	ft_strlcat(result, input + index + ft_strlen(input + index), result_len + 1);
-	free(input);
-	return (result);
+	ft_strlcat(result, input + index + env_len, result_len + 1);
+	return (free(input), result);
 }

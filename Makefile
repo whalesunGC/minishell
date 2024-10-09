@@ -1,11 +1,11 @@
 # Compiler and flags
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Iincludes
+CFLAGS = -g -Wall -Wextra -Werror -Iincludes
 RM        := rm -f
 LDFLAGS = -lreadline
 
 # Source files names for each directory
-LEXER_FILES = lexer.c	tokenize.c
+LEXER_FILES = lexer.c	tokenize.c	lexer_utils.c
 EXPANSION_FILES = expansion.c	expansion_utils_a.c
 
 # Directories
