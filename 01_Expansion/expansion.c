@@ -13,7 +13,7 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: ft_env_replace
+ * @function: ft_env_search
  * @brief: takes a string "$VAR" and returns 
  	the corresponding string from the env list
  * 
@@ -24,7 +24,7 @@
  	corresponding string from the env list if it exists.
 	Else it returns a whitespace (' ')
  */
-char	*ft_env_replace(char *var)
+char	*ft_env_search(char *var)
 {
 	char	*env_var;
 
@@ -40,6 +40,23 @@ char	*ft_env_replace(char *var)
 	}
 	return (env_var);
 }
+/**
+ * @function: ft_env_len
+ * @brief: Calculates the length of an environment variable name
+ * 
+ * @param input: The input string starting with the variable name
+ * @return: The length of the environment variable name
+ */
+int	ft_env_len(const char *input)
+{
+	int	len;
+
+	len = 0;
+	while (input[len] && (ft_isalnum(input[len]) || input[len] == '_'))
+		len++;
+	return (len);
+}
+
 /**
  * @function: ft_var_exp
  * @brief: takes an input that starts with a '$',
@@ -60,10 +77,10 @@ char	*ft_var_exp(char **input, int start_index)
 	char	*var;
 	char	*env_var;
 
-	env_len = ft_strchr(*input + start_index, ' ') - *input;
+	env_len = ft_env_len(*input + start_index);
 	var = ft_substr(*input + start_index, 0, env_len);
 	ft_printf("variable found: %s\n", var);
-	env_var = ft_env_replace(var);
+	env_var = ft_env_search(var);
 	return (free(var), env_var);
 }
 /**
@@ -86,17 +103,19 @@ char	*expansion(char *input)
 	ft_printf("input from readline: %s\n", input);
 	exp_input = ft_strdup(input);
 	i = 0;
-	while (input[i])
+	while (exp_input[i])
 	{
-		if (input[i] == '$')
+		if (exp_input[i] == '$')
 		{
 			env_var = ft_var_exp(&input, i);
 			if (env_var)
 				exp_input = ft_str_replace(exp_input, i, env_var);
 			else
-				exp_input = ft_str_replace(exp_input, i, "$");
+				exp_input = ft_str_replace(exp_input, i, "");
+			exp_input += i + ft_strlen(env_var);
 		}
-		i++;
+		else
+			i++;
 	}
 	return (exp_input);
 }

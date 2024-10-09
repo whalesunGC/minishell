@@ -14,7 +14,7 @@
 
 /**
  * @function: ft_str_replace
- * @brief: takes a input string
+ * @brief: takes a input string and replaces the env variable with the substring
  * 
  * @param input: input string.
  * @param index: start position where replacement substring begins.
@@ -28,12 +28,14 @@ char	*ft_str_replace(char *input, int index, char *rep_substring)
 	int		input_len;
 	int		rep_len;
 	int		result_len;
+	int		env_len;
 
 	if (!input || !rep_substring || index < 0)
 		return (NULL);
 	input_len = ft_strlen(input);
+	env_len = ft_env_len(input + index);
 	rep_len = ft_strlen(rep_substring);
-	result_len = input_len - ft_strlen(input + index) + rep_len;
+	result_len = input_len - env_len + rep_len;
 	result = (char *)malloc(sizeof(char) * (result_len + 1));
 	if (!result)
 		return (NULL);
