@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   ft_split_ignore_quotes.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -9,15 +9,31 @@
 /*   Updated: 2024/06/10 15:52:21 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include "../includes/minishell.h"
 
 static const char	*ft_trimlead_del(const char *s, int c)
 {
+	int		in_single_quote;
+	int		in_double_quote;
+
 	if (!c || *s == '\0' || *s != c)
 		return (s);
-	s = ft_strchr(s, c);
-	while (*s == c)
+	in_single_quote = 0;
+	in_double_quote = 0;
+	while (*s)
+	{
+		if (*s == '\'' && !in_double_quote)
+			in_single_quote = !in_single_quote;
+		else if (*s == '"' && !in_single_quote)
+			in_double_quote = !in_double_quote;
+		else if (*s == c && !in_single_quote && !in_double_quote)
+		{
+			while (*s == c)
+				s++;
+			break ;
+		}
 		s++;
+	}
 	return (s);
 }
 
@@ -33,7 +49,7 @@ static size_t	ft_num_strings(const char *s, int c)
 			break ;
 		if (*s)
 			num_strings++;
-		s = ft_strchr(s, c);
+		s = ft_strchr_ignore_quotes(s, c);
 	}
 	return (num_strings);
 }
@@ -62,7 +78,7 @@ static char	**ft_process_s(char **s_s, const char *t_s, const char *s, char c)
 	{
 		t_s = ft_trimlead_del(s, c);
 		s = t_s;
-		t_s = ft_strchr(t_s, c);
+		t_s = ft_strchr_ignore_quotes(t_s, c);
 		if (!t_s)
 			s_s[i] = ft_substr(s, 0, ft_strlen(s));
 		else
@@ -79,7 +95,7 @@ static char	**ft_process_s(char **s_s, const char *t_s, const char *s, char c)
 	return (s_s);
 }
 
-char	**ft_split(const char *s, char c)
+char	**ft_split_ignore_quotes(const char *s, char c)
 {
 	char		**split_str;
 	const char	*temp_s;

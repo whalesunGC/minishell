@@ -1,21 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/05 12:01:18 by wichee            #+#    #+#             */
-/*   Updated: 2024/10/05 12:02:06 by wichee           ###   ########.fr       */
+/*   Created: 2024/10/07 12:25:30 by wichee            #+#    #+#             */
+/*   Updated: 2024/10/07 12:26:02 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		lexer(char *input);
-char 	**tokenize(char *input);
+#include "../includes/minishell.h"
 
-//Lexer Utils
-void	ft_free_split(char **split);
+/**
+ * @function: tokenize
+ * @brief: takes input string and splits the words into tokens
+	 without any classification.
+ *
+ * @param input: string after first expansion
+ *
+ * @return: returns a list of strings, char **tokens
+ */
+char	**tokenize(char *input)
+{
+	char	**tokens;
 
-//ft_split_ignore_quotes.c
-char	**ft_split_ignore_quotes(const char *s, char c);
-char	*ft_strchr_ignore_quotes(const char *s, int c);
+	tokens = ft_split_ignore_quotes(input, ' ');
+	return (tokens);
+}
