@@ -14,16 +14,17 @@
 
 /**
  * @function: tokenize
- * @brief: takes input string and splits the words into tokens without any classification.
- * 
+ * @brief: takes input string and splits the words into tokens
+	 without any classification.
+ *
  * @param input: string after first expansion
- * 
+ *
  * @return: returns a list of strings, char **tokens
  */
 char	**tokenize(char *input)
 {
-	char **tokens;
+	char	**tokens;
 
-	tokens = ft_split(input, ' ');
+	tokens = ft_split_ignore_quotes(input, ' ');
 	return (tokens);
 }

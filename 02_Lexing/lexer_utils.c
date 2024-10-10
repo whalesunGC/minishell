@@ -14,10 +14,11 @@
 
 /**
  * @function: ft_free_split()
- * @brief: function that takes a **char and frees each string in the array followed by the array itself
- * 
+ * @brief: function that takes a **char and frees each
+	 string in the array followed by the array itself
+ *
  * @param input: a char* array or an array of strings each malloced.
- * 
+ *
  * @return: no return value, void function.
  */
 void	ft_free_split(char **split)

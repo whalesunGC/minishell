@@ -39,6 +39,7 @@ char	*ft_env_search(char *var)
 	}
 	return (env_var);
 }
+
 /**
  * @function: ft_env_len
  * @brief: Calculates the length of an environment variable name

@@ -5,7 +5,7 @@ RM        := rm -f
 LDFLAGS = -lreadline
 
 # Source files names for each directory
-LEXER_FILES = lexer.c	tokenize.c	lexer_utils.c
+LEXER_FILES = lexer.c	tokenize.c	lexer_utils.c	ft_split_ignore_quotes.c	ft_strchr_ignore_quotes.c
 EXPANSION_FILES = expansion.c	expansion_utils_a.c
 
 # Directories

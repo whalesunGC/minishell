@@ -16,9 +16,11 @@
  * @function: lexer
  * @brief: this is the entry point to the lexer module.
  * 
- * @param input: string after expansion (variable expansion, command substition and globbing).
- * 
- * @return: returns an int, 0 for failure to create "stream of tokens", 1 for success.
+ * @param input: string after expansion (variable expansion, 
+ 	command substition and globbing).
+ *
+ * @return: returns an int, 0 for failure to create "stream of tokens",
+	 1 for success.
  */
 int	lexer(char *input)
 {
@@ -34,7 +36,7 @@ int	lexer(char *input)
 	{
 		while (tokens[i])
 		{
-			ft_printf("printing tokens: %s\n",tokens[i]);
+			ft_printf("printing tokens: %s\n", tokens[i]);
 			i++;
 		}
 	}

@@ -15,3 +15,7 @@ char 	**tokenize(char *input);
 
 //Lexer Utils
 void	ft_free_split(char **split);
+
+//ft_split_ignore_quotes.c
+char	**ft_split_ignore_quotes(const char *s, char c);
+char	*ft_strchr_ignore_quotes(const char *s, int c);
