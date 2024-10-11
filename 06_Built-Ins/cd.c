@@ -11,13 +11,33 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+/**
+ * @function: handle_cd_error
+ * @brief: prints error message using perror
+ * 
+ * @param dir: prints the invalid directory if change is unsuccessful.
+ * 
+ * @return: void function
+ */
+
 static void	handle_cd_error(const char *dir)
 
 {
 	perror(dir);
 }
 
-static void	handle_ac_is_1(void)
+/**
+ * @function: change_to_home_directory
+ * @brief: process of getting your "HOME" directory from getenv
+ 		and then changes it. If not successful, print
+ 		error message using handle_cd_error function.
+ * 
+ * @param NIL
+ * 
+ * @return: void function
+ */
+
+static void	change_to_home_directory(void)
 
 {
 	char	*home;
@@ -32,7 +52,21 @@ static void	handle_ac_is_1(void)
 		handle_cd_error(home);
 }
 
-static void	handle_ac_is_2(char **av)
+/**
+ * @function: changing_directories
+ * @brief: looking at the arguments after the cd argument is read.
+ 		example : . - do nothing
+ 			: .. - change one step up from current directory.
+ 			: ~ - change to home directory.
+ 	if change is unsuccessful, handle_cd_error
+ 	function to print out error message
+ * 
+ * @param **av: the arguments inside your command.
+ * 
+ * @return: void function
+ */
+
+static void	changing_directories(char **av)
 
 {
 	if (ft_strncmp(av[1], ".", 1) == 0 && ft_strlen(av[1]) == 1)
@@ -42,28 +76,52 @@ static void	handle_ac_is_2(char **av)
 		if (chdir("..") != 0)
 			handle_cd_error(av[1]);
 	}
+	else if (ft_strncmp(av[1], "~", 1) == 0 && ft_strlen(av[1]) == 1)
+		change_to_home_directory();
 	else if (chdir(av[1]) != 0)
-	{
 		handle_cd_error(av[1]);
-	}
 }
 
-/*ft_printf("Cd: %s: %s\n", strerror(errno), av[1]);*/
+/**
+ * @function: cd_command
+ * @brief: illustrates what happens when i type
+ 	the cd command in my program.
+ * 
+ * @param ac: the total number of arguments in my program.
+ 	  **av: to access the string for each argument. 
+ 	  ***env : triple *** because i want to update the env variable
+ 	  	to be used in other functions.
+ * 
+ * @return: (*env) because i wanted to use the updated environment
+ 		contents in other functions.
+ */
 
-void	cd_command(int ac, char **av)
+char	**cd_command(int ac, char **av, char ***env)
 
 {
+	char	old_pwd[PATH_MAX];
+
 	if (ac > 0 && ft_strncmp(av[0], "cd", 2) == 0)
 	{
+		if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
+		{
+			perror("getcwd failed");
+			return (*env);
+		}
 		if (ac == 1 && ft_strlen(av[0]) == 2)
-			handle_ac_is_1();
+		{
+			change_to_home_directory();
+			updating_env(env, old_pwd);
+		}
 		else if (ac >= 1 && ft_strlen(av[0]) > 2)
 			ft_printf("%s: command not found\n", av[0]);
 		else if (ac == 2)
-			handle_ac_is_2(av);
+		{
+			changing_directories(av);
+			updating_env(env, old_pwd);
+		}
 		else
 			ft_printf("Too many arguments!\n");
 	}
-	else
-		return ;
+	return (*env);
 }
