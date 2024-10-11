@@ -100,14 +100,21 @@ char	*expansion(char *input)
 {
 	char	*env_var;
 	char	*exp_input;
+	int		in_single_quote;
 	int		i;
 
 	ft_printf("input from readline: %s\n", input);
 	exp_input = ft_strdup(input);
+	in_single_quote = 0;
 	i = 0;
 	while (exp_input[i])
 	{
-		if (exp_input[i] == '$')
+		if (exp_input[i] == '\'')
+		{
+			in_single_quote = !in_single_quote;
+			i++;
+		}
+		else if (exp_input[i] == '$' && !in_single_quote)
 		{
 			env_var = ft_var_exp(&exp_input, i);
 			if (env_var)
