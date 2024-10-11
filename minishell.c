@@ -1,21 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/05 12:01:18 by wichee            #+#    #+#             */
-/*   Updated: 2024/10/05 12:02:06 by wichee           ###   ########.fr       */
+/*   Created: 2024/10/06 13:20:45 by wichee            #+#    #+#             */
+/*   Updated: 2024/10/06 13:21:40 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		lexer(char *input);
-char 	**tokenize(char *input);
+#include "includes/minishell.h"
 
-//Lexer Utils
-void	ft_free_split(char **split);
+/**
+ * @function: main
+ * @brief: this is the entry point to the minishell program
+ * 
+ * @param: None
+ * @return: returns int at exit. 0 for failure, 1 for success,
+ */
+int	main(void)
+{
+	char	*input;
 
-//ft_split_ignore_quotes.c
-char	**ft_split_ignore_quotes(const char *s, char c);
-char	*ft_strchr_ignore_quotes(const char *s, int c);
+	input = readline("minishell>> ");
+	input = expansion(input);
+	lexer(input);
+	return (free(input), 1);
+}

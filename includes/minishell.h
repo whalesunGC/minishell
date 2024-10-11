@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "../Libft/libft.h"
+#include "../Libft/ft_printf.h"
 #include "lexer.h"
+#include "expansion.h"
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
