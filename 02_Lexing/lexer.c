@@ -25,18 +25,19 @@ token_type	lexer_token_type(const char *input)
 	{
 		return TOKEN_COMMAND;
 	}
-	else if (ft_strncmp(*input, "|", 1) == 0)
+	else if (ft_strncmp(input, "|", 1) == 0)
 	{
 		return TOKEN_PIPE;
 	}
-	else if (ft_strncmp(*input, "<", 1) == 0 || ft_strncmp(*input, ">", 1) == 0)
+	else if (ft_strncmp(input, "<", 1) == 0 || ft_strncmp(input, ">", 1) == 0)
 	{
 		return TOKEN_REDIRECTION;
 	}
-	else if (ft_strncmp(*input, "<<", 2 == 0 || ft_strncmp(*input, ">>", 2) == 0))
+	else if (ft_strncmp(input, "<<", 2 == 0 || ft_strncmp(input, ">>", 2) == 0))
 	{
 		return TOKEN_HEREDOC;
 	}
+	return (0);
 }
 
 /**
@@ -53,8 +54,8 @@ t_lex_data	*lexer_token_data(char *input)
 	data = malloc(sizeof(t_lex_data));
 	if (!data)
 		return (NULL);
-	data->raw_string = ft_strdup(*input);
-	data->type = lexer_token_type(*input);
+	data->raw_string = ft_strdup(input);
+	data->type = lexer_token_type(input);
 	return (data);
 }
 
@@ -88,7 +89,7 @@ t_list	*lexer_init_data(char **tokens)
 		}
 		i++;
 	}
-	
+	return (first_node);
 }
 
 /**
@@ -119,7 +120,7 @@ int	lexer(char *input)
 			ft_printf("printing tokens: %s\n", tokens[i]);
 			i++;
 		}
-		data = lexer_init_data(&tokens);
+		data = lexer_init_data(tokens);
 		while (data)
 		{
 			ft_printf("Token is %s, Token Type is %d\n", ((t_lex_data *)(data->content))->raw_string, ((t_lex_data *)(data->content))->type);
