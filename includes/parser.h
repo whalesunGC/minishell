@@ -21,5 +21,5 @@ typedef struct s_ast_node
 	struct s_ast_node		*right_leaf;
 }	t_ast_node;
 
-t_ast_node *parser(t_list *token_data);
+t_ast_node	*parser(t_list *token_data);
 #endif
