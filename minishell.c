@@ -33,11 +33,15 @@ void	ft_free(t_list **token_data)
  */
 int	main(void)
 {
-	char	*input;
-	t_list	*token_data;
+	char		*input;
+	t_list		*token_data;
+	t_ast_node	*ast;
 
+	token_data = NULL;
+	ast = NULL;
 	input = readline("minishell>> ");
 	input = expansion(input);
 	token_data = lexer(input);
+
 	return (free(input), ft_free(&token_data), 1);
 }

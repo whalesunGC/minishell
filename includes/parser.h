@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/13 17:12:07 by wichee            #+#    #+#             */
-/*   Updated: 2024/10/13 17:12:48 by wichee           ###   ########.fr       */
+/*   Created: 2024/10/13 17:13:13 by wichee            #+#    #+#             */
+/*   Updated: 2024/10/13 17:13:22 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#ifndef PARSER_H
+# define PARSER_H
 
-#include "../includes/minishell.h"
-
-/**
- * @function: parser
- * @brief: creates a syntax tree using a AST after taking in a stream of tokens
- * 
- * @param token_data: the head of a linked_list which contains the stream of tokens
- * @return: a parsed AST following the bash syntax
- */
-t_ast_node *parser(t_list *token_data)
+typedef struct s_ast_node
 {
-	t_ast_node	*ast_node;
+	t_token_type			type;
+	char					*raw_string;
+	struct s_ast_node		*root;
+	struct s_ast_node		*left_leaf;
+	struct s_ast_node		*right_leaf;
+}	t_ast_node;
 
-	ast_node = NULL;
-	return (ast_node);
-}
+t_ast_node *parser(t_list *token_data);
+#endif
