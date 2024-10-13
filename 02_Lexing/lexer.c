@@ -77,6 +77,8 @@ t_list	*lexer_init_data(char **tokens)
 	t_list		*first_node;
 
 	i = 0;
+	new_node = NULL;
+	first_node = NULL;
 	while (tokens[i])
 	{
 		data = lexer_token_data(tokens[i]);

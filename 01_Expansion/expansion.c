@@ -117,28 +117,27 @@ char	*ft_var_exp(char **input, int start_index)
 char	*expansion(char *input)
 {
 	char	*env_var;
-	char	*exp_input;
 	int		in_single_quote;
 	int		i;
 
-	exp_input = ft_strdup(input);
 	in_single_quote = 0;
 	i = 0;
-	while (exp_input[i])
+	while (input[i])
 	{
-		if (exp_input[i] == '\'')
+		if (input[i] == '\'')
 		{
 			in_single_quote = !in_single_quote;
 			i++;
 		}
-		else if (exp_input[i] == '$' && !in_single_quote)
+		else if (input[i] == '$' && !in_single_quote)
 		{
-			env_var = ft_var_exp(&exp_input, i);
-			expansion_replace_string(env_var, i, &exp_input);
-			i += ft_strlen(env_var);
+			env_var = ft_var_exp(&input, i);
+			expansion_replace_string(env_var, i, &input);
+			if (env_var)
+				i += ft_strlen(env_var);
 		}
 		else
 			i++;
 	}
-	return (free(input), exp_input);
+	return (input);
 }
