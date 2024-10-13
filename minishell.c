@@ -13,6 +13,18 @@
 #include "includes/minishell.h"
 
 /**
+ * @function: ft_free
+ * @brief:	function to free all created structs at exit.
+ * 
+ * @param token_data: linked-list that contains the stream of tokens
+ * @return: void
+ */
+void	ft_free(t_list **token_data)
+{
+	ft_lstclear(token_data, ft_free_lex_data);
+}
+
+/**
  * @function: main
  * @brief: this is the entry point to the minishell program
  * 
@@ -22,9 +34,10 @@
 int	main(void)
 {
 	char	*input;
+	t_list	*token_data;
 
 	input = readline("minishell>> ");
 	input = expansion(input);
-	lexer(input);
-	return (free(input), 1);
+	token_data = lexer(input);
+	return (free(input), ft_free(&token_data), 1);
 }

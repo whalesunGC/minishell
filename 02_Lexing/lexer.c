@@ -19,23 +19,23 @@
  * @param input: input token that will be a string
  * @return: the correct token type
  */
-token_type	lexer_token_type(const char *input)
+t_token_type	lexer_token_type(const char *input)
 {
 	if (*input == '\'' || *input == '"')
 	{
-		return TOKEN_COMMAND;
+		return (TOKEN_COMMAND);
 	}
 	else if (ft_strncmp(input, "|", 1) == 0)
 	{
-		return TOKEN_PIPE;
+		return (TOKEN_PIPE);
 	}
 	else if (ft_strncmp(input, "<", 1) == 0 || ft_strncmp(input, ">", 1) == 0)
 	{
-		return TOKEN_REDIRECTION;
+		return (TOKEN_REDIRECTION);
 	}
 	else if (ft_strncmp(input, "<<", 2 == 0 || ft_strncmp(input, ">>", 2) == 0))
 	{
-		return TOKEN_HEREDOC;
+		return (TOKEN_HEREDOC);
 	}
 	return (0);
 }
@@ -99,33 +99,32 @@ t_list	*lexer_init_data(char **tokens)
  * @param input: string after expansion (variable expansion, 
  * command substition and globbing).
  *
- * @return: returns an int, 0 for failure to create "stream of tokens",
- * 1 for success.
+ * @return: returns a linked-list "data" which is a stream of tokens
+ * if created or NULLL if not.
  */
-int	lexer(char *input)
+t_list	*lexer(char *input)
 {
 	char	**tokens;
 	int		i;
-	t_list	*data;
+	t_list	*token_data;
+	t_list	*buffer;
 
 	ft_printf("%s\n", input);
 	tokens = tokenize(input);
 	i = 0;
 	if (!tokens)
-		return (free(input), 0);
+		return (free(input), NULL);
 	else
 	{
-		while (tokens[i])
+		token_data = lexer_init_data(tokens);
+		buffer = token_data;
+		while (buffer)
 		{
-			ft_printf("printing tokens: %s\n", tokens[i]);
-			i++;
-		}
-		data = lexer_init_data(tokens);
-		while (data)
-		{
-			ft_printf("Token is %s, Token Type is %d\n", ((t_lex_data *)(data->content))->raw_string, ((t_lex_data *)(data->content))->type);
-			data = data->next;	
+			ft_printf("Token is %s, Token Type is %d\n",
+				((t_lex_data *)(buffer->content))->raw_string,
+				((t_lex_data *)(buffer->content))->type);
+			buffer = buffer->next;
 		}
 	}
-	return (ft_free_split(tokens), free(tokens), 1);
+	return (ft_free_split(tokens), free(tokens), token_data);
 }
