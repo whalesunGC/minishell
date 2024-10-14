@@ -13,6 +13,24 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: expansion_replace_string
+ * @brief: string replacement function for the expansion step.
+ * 
+ * @param env_var: replacement string
+ * @param index: index where "$" is found
+ * @param exp_input: pointer to final input string
+ * 
+ * @return: void function, no return value
+ */
+void	expansion_replace_string(char *env_var, int index, char **exp_input)
+{
+	if (env_var)
+		*exp_input = ft_str_replace(*exp_input, index, env_var);
+	else
+		*exp_input = ft_str_replace(*exp_input, index, "");
+}
+
+/**
  * @function: ft_env_search
  * @brief: takes a string "$VAR" and returns 
  	the corresponding string from the env list
@@ -99,32 +117,27 @@ char	*ft_var_exp(char **input, int start_index)
 char	*expansion(char *input)
 {
 	char	*env_var;
-	char	*exp_input;
 	int		in_single_quote;
 	int		i;
 
-	ft_printf("input from readline: %s\n", input);
-	exp_input = ft_strdup(input);
 	in_single_quote = 0;
 	i = 0;
-	while (exp_input[i])
+	while (input[i])
 	{
-		if (exp_input[i] == '\'')
+		if (input[i] == '\'')
 		{
 			in_single_quote = !in_single_quote;
 			i++;
 		}
-		else if (exp_input[i] == '$' && !in_single_quote)
+		else if (input[i] == '$' && !in_single_quote)
 		{
-			env_var = ft_var_exp(&exp_input, i);
+			env_var = ft_var_exp(&input, i);
+			expansion_replace_string(env_var, i, &input);
 			if (env_var)
-				exp_input = ft_str_replace(exp_input, i, env_var);
-			else
-				exp_input = ft_str_replace(exp_input, i, "");
-			i += ft_strlen(env_var);
+				i += ft_strlen(env_var);
 		}
 		else
 			i++;
 	}
-	return (free(input), exp_input);
+	return (input);
 }
