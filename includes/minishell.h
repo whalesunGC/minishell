@@ -17,6 +17,9 @@
 # include "expansion.h"
 # include "lexer.h"
 # include "parser.h"
+# include "signal_handler.h"
+# include "built_in.h"
+# include <signal.h>
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -25,10 +28,13 @@
 # include <dirent.h>
 # include <string.h>
 # include <sys/ioctl.h>
+# include <sys/wait.h>
 # include <stdlib.h>
 # include <termios.h>
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
+# include <limits.h>
+# include <fcntl.h>
 
 #endif
