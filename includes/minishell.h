@@ -18,6 +18,7 @@
 # include "lexer.h"
 # include "parser.h"
 # include "signal_handler.h"
+# include "built_in.h"
 # include <signal.h>
 # include <stdio.h>
 # include <readline/readline.h>

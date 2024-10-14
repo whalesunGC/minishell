@@ -34,12 +34,15 @@ void	ft_free(t_list **token_data)
  * @return: returns int at exit. 0 for failure, 1 for success,
  */
 
-int	main(void)
+int	main(int ac, char **av, char **envp)
 {
 	char		*input;
 	t_list		*token_data;
 	t_ast_node	*ast;
 
+	(void)ac;
+	(void)av;
+	(void)envp;
 	token_data = NULL;
 	ast = NULL;
 	setup_signal_handlers();
