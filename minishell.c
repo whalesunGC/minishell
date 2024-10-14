@@ -19,10 +19,14 @@
  * @param: None
  * @return: returns int at exit. 0 for failure, 1 for success,
  */
+
+int	g_exit_status = 0;
+ 
 int	main(void)
 {
 	char	*input;
 
+	setup_signal_handlers();
 	input = readline("minishell>> ");
 	input = expansion(input);
 	lexer(input);
