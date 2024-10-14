@@ -12,6 +12,8 @@
 
 #include "includes/minishell.h"
 
+int	g_exit_status = 0;
+
 /**
  * @function: ft_free
  * @brief:	function to free all created structs at exit.
@@ -40,9 +42,9 @@ int	main(void)
 
 	token_data = NULL;
 	ast = NULL;
+	setup_signal_handlers();
 	input = readline("minishell>> ");
 	input = expansion(input);
 	token_data = lexer(input);
-
 	return (free(input), ft_free(&token_data), 1);
 }

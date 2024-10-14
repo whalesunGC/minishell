@@ -8,11 +8,13 @@ LDFLAGS = -lreadline
 LEXER_FILES = lexer.c	tokenize.c	lexer_utils.c	ft_split_ignore_quotes.c	ft_strchr_ignore_quotes.c
 EXPANSION_FILES = expansion.c	expansion_utils_a.c
 PARSER_FILES = parser.c
+SIGNAL_FILES = signal_handler.c
 
 # Directories
 EXPANSION_DIR = 01_Expansion
 LEXER_DIR = 02_Lexing
 PARSER_DIR = 03_Parsing
+SIGNAL_DIR = 07_Signals
 
 # Program name
 NAME = minishell
@@ -21,7 +23,8 @@ NAME = minishell
 EXPANSION_SRCS = $(addprefix $(EXPANSION_DIR)/, $(EXPANSION_FILES))
 LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
 PARSER_SRS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
-SRCS = $(EXPANSION_SRCS) $(LEXER_SRCS) $(PARSER_SRCS) minishell.c 
+SIGNAL_SRCS = $(addprefix $(SIGNAL_DIR)/, $(SIGNAL_FILES))
+SRCS = $(EXPANSION_SRCS) $(LEXER_SRCS) $(PARSER_SRCS) $(SIGNAL_SRCS) minishell.c 
 		
 OBJS = $(SRCS:.c=.o)
 
