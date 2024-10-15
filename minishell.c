@@ -42,6 +42,6 @@ int	main(void)
 	input = readline("minishell>> ");
 	input = expansion(input);
 	token_data = lexer(input);
-
+	ast = parser(token_data);
 	return (free(input), ft_free(&token_data), 1);
 }
