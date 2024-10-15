@@ -18,6 +18,7 @@ char	*input_clean(char *input);
 char	*ft_input_swap_whitespace(char *input);
 char	*ft_input_remove_extra_whitespace(char *input);
 char	*ft_input_add_whitespace(char *input);
+int		ft_add_whitespace_helper(char **input, int i, int delta);
 //input_utils.c
 int		ft_iswhitespace(int i);
 int		ft_isspecial(int i);
