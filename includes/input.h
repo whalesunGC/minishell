@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansion.h                                        :+:      :+:    :+:   */
+/*   input.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/07 12:06:36 by wichee            #+#    #+#             */
-/*   Updated: 2024/10/15 17:09:56 by wichee           ###   ########.fr       */
+/*   Created: 2024/10/15 15:03:22 by wichee            #+#    #+#             */
+/*   Updated: 2024/10/15 15:03:39 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef EXPANSION_H
-# define EXPANSION_H
 
-//expansion.c
-char	*expansion(char *input);
-char	*ft_env_search(char *var);
-char	*ft_var_exp(char **input, int start_index);
-int		ft_env_len(const char *input);
+#ifndef INPUT_H
+# define INPUT_H
 
-//expansion_utils_a.c
-char	*ft_str_replace(char *input, int index, char *rep_substring);
-char	*ft_str_insert(char *input, int index, char *rep_substring);
+//input.c
+char	*input_clean(char *input);
+char	*ft_input_swap_whitespace(char *input);
+char	*ft_input_remove_extra_whitespace(char *input);
+char	*ft_input_add_whitespace(char *input);
+int		ft_add_whitespace_helper(char **input, int i, int delta);
+//input_utils.c
+int		ft_iswhitespace(int i);
+int		ft_isspecial(int i);
+
 #endif

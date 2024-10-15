@@ -17,10 +17,12 @@ typedef enum e_token_type
 	TOKEN_COMMAND,
 	TOKEN_STRING,
 	TOKEN_PIPE,
-	TOKEN_REDIRECTION,
+	TOKEN_REDIRECTION_STDOUT,
+	TOKEN_REDIRECTION_STDIN,
+	TOKEN_REDIRECTION_APPEND,
 	TOKEN_HEREDOC,
 	TOKEN_PARENTHESIS_L,
-	TOKEN_PARENTHESIS_R
+	TOKEN_PARENTHESIS_R,
 }	t_token_type;
 
 typedef struct s_lex_data
@@ -32,9 +34,11 @@ typedef struct s_lex_data
 //Lexer.c
 t_list	*lexer(char *input);
 char	**tokenize(char *input);
+
 //Lexer Utils
 void	ft_free_split(char **split);
 void	ft_free_lex_data(void *data);
+
 //ft_split_ignore_quotes.c
 char	**ft_split_ignore_quotes(const char *s, char c);
 char	*ft_strchr_ignore_quotes(const char *s, int c);

@@ -36,6 +36,8 @@ char	**updating_env(char ***env, char *old_pwd);
 void	pwd_command(int ac, char **av);
 void	env_command(int ac, char **av, char **env);
 void	exit_command(int ac, char **av, char **env, char *input);
+void	echo_command(int ac, char **av);
+char	**unset_command(int ac, char **av, char **env);
 
 //handle freeing of av after usage //
 void	free_tokens(char **av);
