@@ -34,9 +34,11 @@ typedef struct s_lex_data
 //Lexer.c
 t_list	*lexer(char *input);
 char	**tokenize(char *input);
+
 //Lexer Utils
 void	ft_free_split(char **split);
 void	ft_free_lex_data(void *data);
+
 //ft_split_ignore_quotes.c
 char	**ft_split_ignore_quotes(const char *s, char c);
 char	*ft_strchr_ignore_quotes(const char *s, int c);

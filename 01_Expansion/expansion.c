@@ -71,9 +71,13 @@ int	ft_env_len(const char *input)
 
 	len = 0;
 	if (input[len] == '$')
+	{
 		len++;
-	while (input[len] && (ft_isalnum(input[len]) || input[len] == '_'))
-		len++;
+		while (input[len] && (ft_isalnum(input[len]) || input[len] == '_'))
+			len++;
+	}
+	else
+		len = 1;
 	return (len);
 }
 

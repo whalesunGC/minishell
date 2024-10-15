@@ -33,9 +33,9 @@ t_token_type	lexer_token_type(const char *input)
 		return (TOKEN_REDIRECTION_APPEND);
 	else if (ft_strncmp(input, "<<", 2) == 0)
 		return (TOKEN_HEREDOC);
-	else if (ft_strncmp(input, "(", 1) == 1)
+	else if (ft_strncmp(input, "(", 1) == 0)
 		return (TOKEN_PARENTHESIS_L);
-	else if (ft_strncmp(input, ")", 1) == 1)
+	else if (ft_strncmp(input, ")", 1) == 0)
 		return (TOKEN_PARENTHESIS_R);
 	else
 		return (TOKEN_STRING);
