@@ -9,7 +9,8 @@
 /*   Updated: 2024/09/20 18:52:09 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+
+#include "../includes/minishell.h"
 
 /**
  * @function: handle_cd_error
