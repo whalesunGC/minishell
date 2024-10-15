@@ -47,6 +47,7 @@ int	main(int ac, char **av, char **envp)
 	ast = NULL;
 	setup_signal_handlers();
 	input = readline("minishell>> ");
+	input = input_clean(input);
 	input = expansion(input);
 	token_data = lexer(input);
 	return (free(input), ft_free(&token_data), 1);

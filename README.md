@@ -6,6 +6,8 @@
 Only one global variable to indicate received signal.
 Not interpretation of unclosed quotes or special characters such as \ (backslash) or ; (semicolon)
 
+(0) Input(Clean) - String manipulation
+
 (1) Expansion - ENV Variables, **envp
 
 (2) Lexing - Input validation, tokenization 
