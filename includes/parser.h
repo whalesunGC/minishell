@@ -14,12 +14,15 @@
 
 typedef struct s_ast_node
 {
-	t_token_type			type;
-	char					*raw_string;
+	void					*content;
 	struct s_ast_node		*root;
 	struct s_ast_node		*left_leaf;
 	struct s_ast_node		*right_leaf;
 }	t_ast_node;
 
+//parser.c
 t_ast_node	*parser(t_list *token_data);
 #endif
+
+//paser_utils.c
+void	ft_treeclear(t_ast_node **ast, void (*del)(void *));

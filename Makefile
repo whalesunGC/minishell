@@ -7,7 +7,7 @@ LDFLAGS = -lreadline
 # Source files names for each directory
 LEXER_FILES = lexer.c	tokenize.c	lexer_utils.c	ft_split_ignore_quotes.c	ft_strchr_ignore_quotes.c
 EXPANSION_FILES = expansion.c	expansion_utils_a.c
-PARSER_FILES = parser.c
+PARSER_FILES = parser.c	parser_utils_a.c
 BUILT_INS_FILES =	cd.c	updating_env_after_cd.c	copy_envp.c	copy_envp_with_ac.c env.c	free_dup_envp.c	exit.c	pwd.c	free_tokens.c	count_arg_validity.c	echo.c
 SIGNAL_FILES = signal_handler.c
 
@@ -27,7 +27,7 @@ LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
 PARSER_SRS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
 BUILT_INS_SRCS = $(addprefix $(BUILT_INS_DIR)/, $(BUILT_INS_FILES))
 SIGNAL_SRCS = $(addprefix $(SIGNAL_DIR)/, $(SIGNAL_FILES))
-SRCS = $(EXPANSION_SRCS) $(LEXER_SRCS) $(PARSER_SRCS) $(BUILT_INS_SRCS) $(SIGNAL_SRCS) minishell.c 
+SRCS = $(EXPANSION_SRCS) $(LEXER_SRCS) $(PARSER_SRS) $(BUILT_INS_SRCS) $(SIGNAL_SRCS) minishell.c 
 		
 OBJS = $(SRCS:.c=.o)
 
