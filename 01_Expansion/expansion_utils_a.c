@@ -18,28 +18,28 @@
  * the index
  * 
  * @param input: input string.
- * @param index: start position where replacement substring begins.
- * @param rep_substr: replacement substring.
+ * @param index: start position where inserted string begins.
+ * @param insert_string: inserted string.
  * 
  * @return: returns a new string that has the substring replaced
  */
-char	*ft_str_insert(char *input, int index, char *rep_substring)
+char	*ft_str_insert(char *input, int index, char *insert_string)
 {
 	char	*result;
 	int		input_len;
 	int		insert_len;
 	int		result_len;
 
-	if (!input || !rep_substring || index < 0)
+	if (!input || !insert_string || index < 0)
 		return (NULL);
 	input_len = ft_strlen(input);
-	insert_len = ft_strlen(rep_substring);
+	insert_len = ft_strlen(insert_string);
 	result_len = input_len + insert_len;
 	result = (char *)malloc(sizeof(char) * (result_len + 1));
 	if (!result)
 		return (NULL);
 	ft_strlcpy(result, input, index + 2);
-	ft_strlcat(result, rep_substring, result_len + 1);
+	ft_strlcat(result, insert_string, result_len + 1);
 	ft_strlcat(result, input + index + 1, result_len + 1);
 	return (free(input), result);
 }

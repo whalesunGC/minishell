@@ -20,5 +20,5 @@ int		ft_env_len(const char *input);
 
 //expansion_utils_a.c
 char	*ft_str_replace(char *input, int index, char *rep_substring);
-char	*ft_str_insert(char *input, int index, char *rep_substring);
+char	*ft_str_insert(char *input, int index, char *insert_string);
 #endif
