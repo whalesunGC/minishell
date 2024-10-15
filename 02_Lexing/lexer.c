@@ -22,22 +22,23 @@
 t_token_type	lexer_token_type(const char *input)
 {
 	if (*input == '\'' || *input == '"')
-	{
 		return (TOKEN_COMMAND);
-	}
 	else if (ft_strncmp(input, "|", 1) == 0)
-	{
 		return (TOKEN_PIPE);
-	}
-	else if (ft_strncmp(input, "<", 1) == 0 || ft_strncmp(input, ">", 1) == 0)
-	{
-		return (TOKEN_REDIRECTION);
-	}
-	else if (ft_strncmp(input, "<<", 2 == 0 || ft_strncmp(input, ">>", 2) == 0))
-	{
+	else if (ft_strncmp(input, ">", 1) == 0)
+		return (TOKEN_REDIRECTION_STDOUT);
+	else if (ft_strncmp(input, "<", 1) == 0)
+		return (TOKEN_REDIRECTION_STDIN);
+	else if (ft_strncmp(input, ">>", 2) == 0)
+		return (TOKEN_REDIRECTION_APPEND);
+	else if (ft_strncmp(input, "<<", 2) == 0)
 		return (TOKEN_HEREDOC);
-	}
-	return (0);
+	else if (ft_strncmp(input, "(", 1) == 1)
+		return (TOKEN_PARENTHESIS_L);
+	else if (ft_strncmp(input, ")", 1) == 1)
+		return (TOKEN_PARENTHESIS_R);
+	else
+		return (TOKEN_STRING);
 }
 
 /**
