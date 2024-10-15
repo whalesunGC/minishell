@@ -13,6 +13,30 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_add_whitespace_helper
+ * @brief: adds whitespace before and after the index.
+ * 
+ * @param input: address of the pointer to the input string
+ * @param i: interger value of index
+ * @param delta: the difference in the length of the matched string - 1.
+ * @return: value of index
+ */
+int	ft_add_whitespace_helper(char **input, int i, int delta)
+{
+	if (i != 0)
+	{
+		*input = ft_str_insert(*input, i - 1, " ");
+		i += 1;
+	}
+	*input = ft_str_insert(*input, i + delta, " ");
+	if (delta > 0)
+	{
+		i += delta;
+	}
+	return (i);
+}
+
+/**
  * @function: ft_isspecial
  * @brief: checks if input is a special character for the lexer in minishell
  * 
@@ -23,12 +47,10 @@ int	ft_isspecial(int i)
 {
 	int	pipe;
 	int	parenthesis;
-	int	quote;
 
 	pipe = (i == '|');
 	parenthesis = (i == '(' || i == ')');
-	quote = (i == '\'' || i == '\"');
-	return (pipe | parenthesis | quote);
+	return (pipe | parenthesis);
 }
 
 /**

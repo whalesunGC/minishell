@@ -25,5 +25,12 @@ t_ast_node	*parser(t_list *token_data)
 	t_ast_node	*ast_node;
 
 	ast_node = NULL;
+	while (token_data)
+		{
+			ft_printf("Token is %s, Token Type is %d\n",
+				((t_lex_data *)(token_data->content))->raw_string,
+				((t_lex_data *)(token_data->content))->type);
+			token_data = token_data->next;
+		}
 	return (ast_node);
 }

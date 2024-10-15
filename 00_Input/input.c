@@ -13,26 +13,28 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: ft_add_whitespace_helper
- * @brief: adds whitespace before and after the index.
+ * @function: ft_add_whitespace_special
+ * @brief: adds whitespaces around special characters
  * 
- * @param input: address of the pointer to the input string
- * @param i: interger value of index
- * @param delta: the difference in the length of the matched string - 1.
- * @return: value of index
+ * @param input: address to pointer of input string
+ * @param i: index of string
+ * @param in_s_q: in_single_quote
+ * @param in_d_q: in_double_quote
+ * 
+ * @return: index value
  */
-int	ft_add_whitespace_helper(char **input, int i, int delta)
+int	ft_add_whitespace_special(char **input, int i, int in_s_q, int in_d_q)
 {
-	if (i != 0)
-	{
-		*input = ft_str_insert(*input, i - 1, " ");
-		i += 1;
-	}
-	*input = ft_str_insert(*input, i + delta, " ");
-	if (delta > 0)
-	{
-		i += delta;
-	}
+	if (ft_isspecial((*input)[i]) && !in_s_q && !in_d_q)
+		i = ft_add_whitespace_helper(input, i, 0);
+	else if ((*input)[i] == '>' && (*input)[i + 1] != '>' && !in_s_q && !in_d_q)
+		i = ft_add_whitespace_helper(input, i, 0);
+	else if ((*input)[i] == '<' && (*input)[i + 1] != '<' && !in_s_q && !in_d_q)
+		i = ft_add_whitespace_helper(input, i, 0);
+	else if ((*input)[i] == '>' && (*input)[i + 1] == '>' && !in_s_q && !in_d_q)
+		i = ft_add_whitespace_helper(input, i, 1);
+	else if ((*input)[i] == '<' && (*input)[i + 1] == '<' && !in_s_q && !in_d_q)
+		i = ft_add_whitespace_helper(input, i, 1);
 	return (i);
 }
 
@@ -47,11 +49,20 @@ int	ft_add_whitespace_helper(char **input, int i, int delta)
 char	*ft_input_remove_extra_whitespace(char *input)
 {
 	int	i;
+	int	in_single_quote;
+	int	in_double_quote;
 
 	i = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
 	while (input[i])
 	{
-		if (ft_iswhitespace(input[i]) && ft_iswhitespace(input[i + 1]))
+		if (input[i] == '\'')
+			in_single_quote = !in_single_quote;
+		if (input[i] == '\"')
+			in_double_quote = !in_double_quote;
+		if (ft_iswhitespace(input[i]) && ft_iswhitespace(input[i + 1])
+			&& !in_single_quote && !in_double_quote)
 			input = ft_str_replace(input, i, "");
 		else
 			i++;
@@ -70,20 +81,25 @@ char	*ft_input_remove_extra_whitespace(char *input)
 char	*ft_input_add_whitespace(char *input)
 {
 	int	i;
+	int	in_s_q;
+	int	in_d_q;
 
 	i = 0;
+	in_s_q = 0;
+	in_d_q = 0;
 	while (input[i])
 	{
-		if (ft_isspecial(input[i]))
-			i = ft_add_whitespace_helper(&input, i, 0);
-		else if (input[i] == '>' && input[i + 1] != '>')
-			i = ft_add_whitespace_helper(&input, i, 0);
-		else if (input[i] == '<' && input[i + 1] != '<')
-			i = ft_add_whitespace_helper(&input, i, 0);
-		else if (input[i] == '>' && input [i + 1] == '>')
-			i = ft_add_whitespace_helper(&input, i, 1);
-		else if (input[i] == '<' && input [i + 1] == '<')
-			i = ft_add_whitespace_helper(&input, i, 1);
+		if (input[i] == '\'')
+			in_s_q = !in_s_q;
+		if (input[i] == '\"')
+			in_d_q = !in_d_q;
+		if ((input[i + 1] == '\'' || input[i + 1] == '\"')
+			&& !in_s_q && !in_d_q && input[i] != ' ')
+			input = ft_str_insert(input, i, " ");
+		if ((input[i + 1] == '\'' || input[i + 1] == '\"')
+			&& (in_s_q || in_d_q) && input[i + 2] != ' ')
+			input = ft_str_insert(input, i + 1, " ");
+		i = ft_add_whitespace_special(&input, i, in_s_q, in_d_q);
 		i++;
 	}
 	ft_printf("Output from add_whitespace: %s\n", input);
@@ -101,11 +117,20 @@ char	*ft_input_add_whitespace(char *input)
 char	*ft_input_swap_whitespace(char *input)
 {
 	int	i;
+	int	in_single_quote;
+	int	in_double_quote;
 
 	i = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
 	while (input[i])
 	{
-		if (ft_iswhitespace(input[i]) && input[i] != ' ')
+		if (input[i] == '\'')
+			in_single_quote = !in_single_quote;
+		if (input[i] == '\"')
+			in_double_quote = !in_double_quote;
+		if (ft_iswhitespace(input[i]) && input[i] != ' '
+			&& !in_single_quote && !in_double_quote)
 			input = ft_str_replace(input, i, " ");
 		i++;
 	}
