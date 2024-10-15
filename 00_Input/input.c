@@ -13,6 +13,30 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_add_whitespace_helper
+ * @brief: adds whitespace before and after the index.
+ * 
+ * @param input: address of the pointer to the input string
+ * @param i: interger value of index
+ * @param delta: the difference in the length of the matched string - 1.
+ * @return: value of index
+ */
+int	ft_add_whitespace_helper(char **input, int i, int delta)
+{
+	if (i != 0)
+	{
+		*input = ft_str_insert(*input, i - 1, " ");
+		i += 1;
+	}
+	*input = ft_str_insert(*input, i + delta, " ");
+	if (delta > 0)
+	{
+		i += delta;
+	}
+	return (i);
+}
+
+/**
  * @function: ft_input_remove_extra_whitespace
  * @brief: goes through the string and removes extra whitespaces
  * ie all whitespaces will not be preceeded by another whitespace.
@@ -51,14 +75,15 @@ char	*ft_input_add_whitespace(char *input)
 	while (input[i])
 	{
 		if (ft_isspecial(input[i]))
-		{
-			if (i != 0)
-			{
-				input = ft_str_insert(input, i - 1, " ");
-				i += 1;
-			}
-			input = ft_str_insert(input, i, " ");
-		}
+			i = ft_add_whitespace_helper(&input, i, 0);
+		else if (input[i] == '>' && input[i + 1] != '>')
+			i = ft_add_whitespace_helper(&input, i, 0);
+		else if (input[i] == '<' && input[i + 1] != '<')
+			i = ft_add_whitespace_helper(&input, i, 0);
+		else if (input[i] == '>' && input [i + 1] == '>')
+			i = ft_add_whitespace_helper(&input, i, 1);
+		else if (input[i] == '<' && input [i + 1] == '<')
+			i = ft_add_whitespace_helper(&input, i, 1);
 		i++;
 	}
 	ft_printf("Output from add_whitespace: %s\n", input);
