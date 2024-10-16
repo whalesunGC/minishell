@@ -15,38 +15,34 @@
 /**
  * @function: is_redirection
  * @brief: Checks if the current token is a redirection operator
- * 
+ *
  * @param context: The parser context containing token information
  * @return: 1 if the current token is a redirection operator, 0 otherwise
  */
-int is_redirection(t_parser_context *context)
+int	is_redirection(t_parser_context *context)
 {
-    return (is_token_type(context, TOKEN_REDIRECTION_STDOUT) ||
-            is_token_type(context, TOKEN_REDIRECTION_STDIN) ||
-            is_token_type(context, TOKEN_REDIRECTION_APPEND) ||
-            is_token_type(context, TOKEN_HEREDOC));
+	return (is_token_type(context, TOKEN_REDIRECTION_STDOUT)
+		|| is_token_type(context, TOKEN_REDIRECTION_STDIN)
+		|| is_token_type(context, TOKEN_REDIRECTION_APPEND)
+		|| is_token_type(context, TOKEN_HEREDOC));
 }
 
 /**
  * @function: ft_treeclear
  * @brief: thats the root of a tree and cleans its contents.
- * 
+ *
  * @param ast: the root node of the AST
  * @param del: the void function that recursively frees the
  * memory stored in content.
- * 
+ *
  * @return: no return value, void function.
  */
 void	ft_treeclear(t_ast_node **ast, void (*del)(void *))
 {
 	if (ast == NULL || *ast == NULL)
-		return;
-
-	// Recursively clear left and right subtrees
+		return ;
 	ft_treeclear(&((*ast)->left), del);
 	ft_treeclear(&((*ast)->right), del);
-
-	// Delete content and free the node
 	if (del)
 		del((*ast)->value);
 	free(*ast);

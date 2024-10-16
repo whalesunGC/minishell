@@ -26,25 +26,25 @@ typedef enum e_token_type
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_WILDCARD
-}	t_token_type;
+}					t_token_type;
 
 typedef struct s_lex_data
 {
 	t_token_type	type;
 	char			*raw_string;
-}	t_lex_data;
+}					t_lex_data;
 
-//Lexer.c
-t_list	*lexer(char *input);
-char	**tokenize(char *input);
-t_lex_data	*lexer_token_data(char *input, int is_first_token);
-t_list	*lexer_init_data(char **tokens);
+// Lexer.c
+t_list				*lexer(char *input);
+char				**tokenize(char *input);
+t_lex_data			*lexer_token_data(char *input, int is_first_token);
+t_list				*lexer_init_data(char **tokens);
 
-//Lexer Utils
-void	ft_free_split(char **split);
-void	ft_free_lex_data(void *data);
+// Lexer Utils
+void				ft_free_split(char **split);
+void				ft_free_lex_data(void *data);
 
-//ft_split_ignore_quotes.c
-char	**ft_split_ignore_quotes(const char *s, char c);
-char	*ft_strchr_ignore_quotes(const char *s, int c);
+// ft_split_ignore_quotes.c
+char				**ft_split_ignore_quotes(const char *s, char c);
+char				*ft_strchr_ignore_quotes(const char *s, int c);
 #endif

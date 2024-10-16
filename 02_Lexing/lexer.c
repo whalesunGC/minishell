@@ -15,14 +15,13 @@
 /**
  * @function: lexer_token_type
  * @brief: to match the input string to the correct token type
- * 
+ *
  * @param input: input token that will be a string
  * @param is_first_token: flag to indicate if the token is the first token
  * @return: the correct token type
  */
 t_token_type	lexer_token_type(const char *input, int is_first_token)
 {
-	// Check for operators first
 	if (ft_strncmp(input, "|", 1) == 0)
 		return (TOKEN_PIPE);
 	else if (ft_strncmp(input, ">", 1) == 0)
@@ -38,7 +37,7 @@ t_token_type	lexer_token_type(const char *input, int is_first_token)
 	else if (ft_strncmp(input, ")", 1) == 0)
 		return (TOKEN_PARENTHESIS_R);
 	else if (ft_strncmp(input, "&&", 2) == 0)
-		return (TOKEN_AND);	
+		return (TOKEN_AND);
 	else if (ft_strncmp(input, "||", 2) == 0)
 		return (TOKEN_OR);
 	else if (ft_strncmp(input, "*", 1) == 0)
@@ -52,7 +51,7 @@ t_token_type	lexer_token_type(const char *input, int is_first_token)
 /**
  * @function: lexer_token_data
  * @brief: to create lex_data from a raw input string.
- * 
+ *
  * @param input: input token that will be a string
  * @param is_first_token: flag to indicate if the token is the first token
  * @return: a struct with raw_string data and token_type.
@@ -72,11 +71,11 @@ t_lex_data	*lexer_token_data(char *input, int is_first_token)
 /**
  * @function: lexer_init_data
  * @brief: inits a linked-list of structs that contain 1)the raw token string,
- * the token_type and 
- * 
+ * the token_type and
+ *
  * @param tokens: an array of strings, each string is a token that needs to
  * be lexed.
- * 
+ *
  * @return: returns a pointer to the first node of the linked-list
  */
 t_list	*lexer_init_data(char **tokens)
@@ -90,7 +89,7 @@ t_list	*lexer_init_data(char **tokens)
 	i = 0;
 	new_node = NULL;
 	first_node = NULL;
-	is_first_token = 1;  // Start with true for the first token
+	is_first_token = 1;
 	while (tokens[i])
 	{
 		data = lexer_token_data(tokens[i], is_first_token);
@@ -110,8 +109,8 @@ t_list	*lexer_init_data(char **tokens)
 /**
  * @function: lexer
  * @brief: this is the entry point to the lexer module.
- * 
- * @param input: string after expansion (variable expansion, 
+ *
+ * @param input: string after expansion (variable expansion,
  * command substition and globbing).
  *
  * @return: returns a linked-list "data" which is a stream of tokens
