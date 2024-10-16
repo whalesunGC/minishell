@@ -25,4 +25,10 @@ int		ft_iswhitespace(int i);
 int		ft_isspecial(int i);
 int		ft_add_whitespace_helper(char **input, int i, int delta);
 
+//input_validation.c
+char	*ft_input_validation(char *input);
+int		check_quotes_balance(const char *input);
+int		check_parentheses_balance(const char *input);
+int		check_pipe_placement(const char *input);
+
 #endif

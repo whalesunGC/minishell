@@ -17,13 +17,13 @@
  * @brief: to match the input string to the correct token type
  * 
  * @param input: input token that will be a string
+ * @param is_first_token: flag to indicate if the token is the first token
  * @return: the correct token type
  */
-t_token_type	lexer_token_type(const char *input)
+t_token_type	lexer_token_type(const char *input, int is_first_token)
 {
-	if (*input == '\'' || *input == '"')
-		return (TOKEN_COMMAND);
-	else if (ft_strncmp(input, "|", 1) == 0)
+	// Check for operators first
+	if (ft_strncmp(input, "|", 1) == 0)
 		return (TOKEN_PIPE);
 	else if (ft_strncmp(input, ">", 1) == 0)
 		return (TOKEN_REDIRECTION_STDOUT);
@@ -37,6 +37,14 @@ t_token_type	lexer_token_type(const char *input)
 		return (TOKEN_PARENTHESIS_L);
 	else if (ft_strncmp(input, ")", 1) == 0)
 		return (TOKEN_PARENTHESIS_R);
+	else if (ft_strncmp(input, "&&", 2) == 0)
+		return (TOKEN_AND);	
+	else if (ft_strncmp(input, "||", 2) == 0)
+		return (TOKEN_OR);
+	else if (ft_strncmp(input, "*", 1) == 0)
+		return (TOKEN_WILDCARD);
+	else if (is_first_token)
+		return (TOKEN_COMMAND);
 	else
 		return (TOKEN_STRING);
 }
@@ -46,9 +54,10 @@ t_token_type	lexer_token_type(const char *input)
  * @brief: to create lex_data from a raw input string.
  * 
  * @param input: input token that will be a string
+ * @param is_first_token: flag to indicate if the token is the first token
  * @return: a struct with raw_string data and token_type.
  */
-t_lex_data	*lexer_token_data(char *input)
+t_lex_data	*lexer_token_data(char *input, int is_first_token)
 {
 	t_lex_data	*data;
 
@@ -56,7 +65,7 @@ t_lex_data	*lexer_token_data(char *input)
 	if (!data)
 		return (NULL);
 	data->raw_string = ft_strdup(input);
-	data->type = lexer_token_type(input);
+	data->type = lexer_token_type(input, is_first_token);
 	return (data);
 }
 
@@ -76,13 +85,15 @@ t_list	*lexer_init_data(char **tokens)
 	t_lex_data	*data;
 	t_list		*new_node;
 	t_list		*first_node;
+	int			is_first_token;
 
 	i = 0;
 	new_node = NULL;
 	first_node = NULL;
+	is_first_token = 1;  // Start with true for the first token
 	while (tokens[i])
 	{
-		data = lexer_token_data(tokens[i]);
+		data = lexer_token_data(tokens[i], is_first_token);
 		if (i == 0)
 			first_node = ft_lstnew(data);
 		else
@@ -90,6 +101,7 @@ t_list	*lexer_init_data(char **tokens)
 			new_node = ft_lstnew(data);
 			ft_lstadd_back(&first_node, new_node);
 		}
+		is_first_token = (data->type == TOKEN_PIPE);
 		i++;
 	}
 	return (first_node);
@@ -108,13 +120,11 @@ t_list	*lexer_init_data(char **tokens)
 t_list	*lexer(char *input)
 {
 	char	**tokens;
-	int		i;
 	t_list	*token_data;
 	t_list	*buffer;
 
 	ft_printf("%s\n", input);
 	tokens = tokenize(input);
-	i = 0;
 	if (!tokens)
 		return (free(input), NULL);
 	else

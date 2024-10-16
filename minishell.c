@@ -26,7 +26,7 @@ int	g_exit_status = 0;
 void	ft_free(t_list **token_data, t_ast_node **ast_root)
 {
 	ft_lstclear(token_data, ft_free_lex_data);
-	ft_treeclear(ast_root, ft_free_lex_data);
+	ft_treeclear(ast_root, free);
 }
 
 /**

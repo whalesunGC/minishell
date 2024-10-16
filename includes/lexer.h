@@ -23,6 +23,9 @@ typedef enum e_token_type
 	TOKEN_HEREDOC,
 	TOKEN_PARENTHESIS_L,
 	TOKEN_PARENTHESIS_R,
+	TOKEN_AND,
+	TOKEN_OR,
+	TOKEN_WILDCARD
 }	t_token_type;
 
 typedef struct s_lex_data
@@ -34,6 +37,8 @@ typedef struct s_lex_data
 //Lexer.c
 t_list	*lexer(char *input);
 char	**tokenize(char *input);
+t_lex_data	*lexer_token_data(char *input, int is_first_token);
+t_list	*lexer_init_data(char **tokens);
 
 //Lexer Utils
 void	ft_free_split(char **split);

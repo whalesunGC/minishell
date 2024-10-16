@@ -35,6 +35,10 @@ int	ft_add_whitespace_special(char **input, int i, int in_s_q, int in_d_q)
 		i = ft_add_whitespace_helper(input, i, 1);
 	else if ((*input)[i] == '<' && (*input)[i + 1] == '<' && !in_s_q && !in_d_q)
 		i = ft_add_whitespace_helper(input, i, 1);
+	else if ((*input)[i] == '&' && (*input)[i + 1] == '&' && !in_s_q && !in_d_q)
+		i = ft_add_whitespace_helper(input, i, 1);
+	else if ((*input)[i] == '|' && (*input)[i + 1] == '|' && !in_s_q && !in_d_q)
+		i = ft_add_whitespace_helper(input, i, 1);
 	return (i);
 }
 
@@ -153,5 +157,6 @@ char	*input_clean(char *input)
 	input = ft_input_add_whitespace(input);
 	input = ft_input_remove_extra_whitespace(input);
 	ft_printf("Cleaned input: %s\n", input);
+	input = ft_input_validation(input);
 	return (input);
 }

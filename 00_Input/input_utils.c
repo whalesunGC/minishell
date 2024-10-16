@@ -47,10 +47,12 @@ int	ft_isspecial(int i)
 {
 	int	pipe;
 	int	parenthesis;
+	int wildcard;
 
 	pipe = (i == '|');
 	parenthesis = (i == '(' || i == ')');
-	return (pipe | parenthesis);
+	wildcard = (i == '*');
+	return (pipe | parenthesis | wildcard);
 }
 
 /**
