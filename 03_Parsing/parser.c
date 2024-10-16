@@ -13,67 +13,6 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: ft_print_tree_helper
- * @brief: Recursively prints the AST in a tree-like format
- *
- * @param node: The current node in the AST
- * @param depth: The depth of the current node in the tree
- */
-void	ft_print_tree_helper(t_ast_node *node, int depth)
-{
-	int	i;
-
-	i = 0;
-	if (node == NULL)
-		return ;
-	while (i < depth)
-	{
-		ft_printf("  ");
-		i++;
-	}
-	switch (node->type)
-	{
-	case AST_COMMAND:
-		ft_printf("COMMAND: %s\n", node->value);
-		break ;
-	case AST_PIPE:
-		ft_printf("PIPE\n");
-		break ;
-	case AST_AND:
-		ft_printf("AND\n");
-		break ;
-	case AST_OR:
-		ft_printf("OR\n");
-		break ;
-	case AST_SUBSHELL:
-		ft_printf("SUBSHELL\n");
-		break ;
-	case AST_REDIRECTION:
-		ft_printf("REDIRECTION: %s\n", node->value);
-		break ;
-	case AST_ARGUMENT:
-		ft_printf("ARGUMENT: %s\n", node->value);
-		break ;
-	default:
-		ft_printf("UNKNOWN\n");
-	}
-	ft_print_tree_helper(node->left, depth + 1);
-	ft_print_tree_helper(node->right, depth + 1);
-}
-
-/**
- * @function: ft_print_tree
- * @brief: Prints the entire AST in a tree-like format
- *
- * @param root: The root node of the AST
- */
-void	ft_print_tree(t_ast_node *root)
-{
-	ft_printf("Abstract Syntax Tree:\n");
-	ft_print_tree_helper(root, 0);
-}
-
-/**
  * @function: parse_command_line
  * @brief: Parses the entire command line,
 	handling AND (&&) and OR (||) operators
@@ -87,12 +26,12 @@ t_ast_node	*parse_command_line(t_parser_context *context)
 	t_ast_node	*new_node;
 
 	node = parse_subshell_or_pipeline(context);
-	while (is_token_type(context, TOKEN_AND) || is_token_type(context,
-			TOKEN_OR))
+	while (is_token_type(context, TOKEN_AND_SEQ)
+		|| is_token_type(context, TOKEN_OR_SEQ))
 	{
-		if (is_token_type(context, TOKEN_AND))
+		if (is_token_type(context, TOKEN_AND_SEQ))
 			new_node = create_ast_node(AST_AND);
-		else if (is_token_type(context, TOKEN_OR))
+		else if (is_token_type(context, TOKEN_OR_SEQ))
 			new_node = create_ast_node(AST_OR);
 		new_node->left = node;
 		advance_token(context);

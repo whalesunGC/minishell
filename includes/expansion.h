@@ -13,12 +13,14 @@
 # define EXPANSION_H
 
 //expansion.c
-char	*expansion(char *input);
-char	*ft_env_search(char *var);
+t_list  *expansion(t_list *token_data);
+char	*expansion_string(char *input);
 char	*ft_var_exp(char **input, int start_index);
 int		ft_env_len(const char *input);
 
 //expansion_utils_a.c
 char	*ft_str_replace(char *input, int index, char *rep_substring);
 char	*ft_str_insert(char *input, int index, char *insert_string);
+char	*ft_env_search(char *var);
+void	expansion_replace_string(char *env_var, int index, char **exp_input);
 #endif

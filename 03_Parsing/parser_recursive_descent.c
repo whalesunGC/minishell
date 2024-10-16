@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_recursive_descent.c                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/16 14:29:17 by wichee            #+#    #+#             */
+/*   Updated: 2024/10/16 14:29:19 by wichee           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 /**
@@ -23,7 +35,8 @@ t_ast_node	*parse_command(t_parser_context *context)
 	}
 	if (is_token_type(context, TOKEN_COMMAND))
 	{
-		node->value = ft_strdup(((t_lex_data *)context->current_token->content)->raw_string);
+		node->value = ft_strdup(((t_lex_data *)
+					context->current_token->content)->raw_string);
 		advance_token(context);
 	}
 	else
@@ -35,7 +48,8 @@ t_ast_node	*parse_command(t_parser_context *context)
 	while (is_token_type(context, TOKEN_STRING))
 	{
 		arg_node = create_ast_node(AST_ARGUMENT);
-		arg_node->value = ft_strdup(((t_lex_data *)context->current_token->content)->raw_string);
+		arg_node->value = ft_strdup(((t_lex_data *)
+					context->current_token->content)->raw_string);
 		add_child_node(node, arg_node);
 		advance_token(context);
 	}
@@ -60,12 +74,13 @@ t_ast_node	*parse_redirection(t_parser_context *context)
 	t_ast_node	*target_node;
 
 	node = create_ast_node(AST_REDIRECTION);
-	if (is_token_type(context, TOKEN_REDIRECTION_STDOUT)
-		|| is_token_type(context, TOKEN_REDIRECTION_STDIN)
+	if (is_token_type(context, TOKEN_REDIRECTION_OUT)
+		|| is_token_type(context, TOKEN_REDIRECTION_IN)
 		|| is_token_type(context, TOKEN_REDIRECTION_APPEND)
 		|| is_token_type(context, TOKEN_HEREDOC))
 	{
-		node->value = ft_strdup(((t_lex_data *)context->current_token->content)->raw_string);
+		node->value = ft_strdup(((t_lex_data *)
+					context->current_token->content)->raw_string);
 		advance_token(context);
 	}
 	else
@@ -77,7 +92,8 @@ t_ast_node	*parse_redirection(t_parser_context *context)
 	if (is_token_type(context, TOKEN_STRING))
 	{
 		target_node = create_ast_node(AST_ARGUMENT);
-		target_node->value = ft_strdup(((t_lex_data *)context->current_token->content)->raw_string);
+		target_node->value = ft_strdup(((t_lex_data *)
+					context->current_token->content)->raw_string);
 		add_child_node(node, target_node);
 		advance_token(context);
 	}
