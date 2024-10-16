@@ -8,9 +8,9 @@ Not interpretation of unclosed quotes or special characters such as \ (backslash
 
 (0) Input(Clean) - String manipulation
 
-(1) Expansion - ENV Variables, **envp
+(1) Lexing - Input validation, tokenization 
 
-(2) Lexing - Input validation, tokenization 
+(2) Expansion - ENV Variables, **envp
 
 (3) Parsing - Syntax, data structure design
 
