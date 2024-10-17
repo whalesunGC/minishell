@@ -15,7 +15,7 @@
 /**
  * @function: ft_add_whitespace_helper
  * @brief: adds whitespace before and after the index.
- * 
+ *
  * @param input: address of the pointer to the input string
  * @param i: interger value of index
  * @param delta: the difference in the length of the matched string - 1.
@@ -39,7 +39,7 @@ int	ft_add_whitespace_helper(char **input, int i, int delta)
 /**
  * @function: ft_isspecial
  * @brief: checks if input is a special character for the lexer in minishell
- * 
+ *
  * @param i: input integer
  * @return: 1 if special, 0 if not
  */
@@ -56,12 +56,11 @@ int	ft_isspecial(int i)
 /**
  * @function: ft_iswhitespace
  * @brief: checks if is whitespace
- * 
+ *
  * @param i: input integer
  * @return: 1 if whitespace, 0 if not
  */
 int	ft_iswhitespace(int i)
 {
-	return (i == 32 || (i >= 9 && i <= 10)
-		|| (i >= 11 && i <= 13));
+	return (i == 32 || (i >= 9 && i <= 10) || (i >= 11 && i <= 13));
 }

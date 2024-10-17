@@ -13,52 +13,6 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: expansion_replace_string
- * @brief: string replacement function for the expansion step.
- * 
- * @param env_var: replacement string
- * @param index: index where "$" is found
- * @param exp_input: pointer to final input string
- * 
- * @return: void function, no return value
- */
-void	expansion_replace_string(char *env_var, int index, char **exp_input)
-{
-	if (env_var)
-		*exp_input = ft_str_replace(*exp_input, index, env_var);
-	else
-		*exp_input = ft_str_replace(*exp_input, index, "");
-}
-
-/**
- * @function: ft_env_search
- * @brief: takes a string "$VAR" and returns 
- 	the corresponding string from the env list
- * 
- * @param var: string that starts with '$' + word,
- 	this is malloced from a previous funciton.
- * 
- * @return: a new string that is a copy of the
- 	corresponding string from the env list if it exists.
-	Else it returns a whitespace (' ')
- */
-char	*ft_env_search(char *var)
-{
-	char	*env_var;
-
-	env_var = getenv(++var);
-	if (env_var != NULL)
-	{
-		ft_printf("env_var found: %s\n", env_var);
-	}
-	else
-	{
-		ft_printf("env_var not found: %s\n", env_var);
-	}
-	return (env_var);
-}
-
-/**
  * @function: ft_env_len
  * @brief: Calculates the length of an environment variable name
  * 
@@ -109,16 +63,15 @@ char	*ft_var_exp(char **input, int start_index)
 }
 /**
  * @function: expansion
- * @brief: takes input string from readline and 
- 	does variable expansion and command substition.
+ * @brief: takes input string and does variable expansion.
  * 
- * @param input: output of readline(), note that this
+ * @param input: any string, note that this
  	is malloced and needs to be freed after use.
  * 
  * @return: returns expanded string or NULL if expansion fails.
  */
 
-char	*expansion(char *input)
+char	*expansion_string(char *input)
 {
 	char	*env_var;
 	int		in_single_quote;
@@ -144,4 +97,41 @@ char	*expansion(char *input)
 			i++;
 	}
 	return (input);
+}
+/**
+ * @function: expansion
+ * @brief: iterates through linked-list and does expansion via
+ * variable substitution on raw_string.
+ * 
+ * @param token_data: linked-list of lexed token_data
+ * @return: linked-list of token_data with expansion
+ */
+t_list	*expansion(t_list *token_data)
+{
+	t_lex_data	*data;
+	t_list		*head;
+	int			i;
+
+	data = NULL;
+	head = token_data;
+	i = 0;
+	if (!token_data)
+		return (NULL);
+	else
+	{
+		while(token_data != NULL)
+		{
+			data = (t_lex_data *)token_data->content;
+			if (data->type == TOKEN_WILDCARD || data->type == TOKEN_COMMAND
+				|| data->type == TOKEN_INQUOTE || data->type == TOKEN_VARIABLE)
+			{
+				data->raw_string = expansion_string(data->raw_string);
+				data->type = lexer_token_type(data->raw_string,
+					data->is_first_token, data->in_quote, 0);
+			}
+			token_data = token_data->next;
+		}
+	}
+	ft_print_tokens(head);
+	return (head);
 }

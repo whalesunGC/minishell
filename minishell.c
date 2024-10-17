@@ -26,7 +26,7 @@ int	g_exit_status = 0;
 void	ft_free(t_list **token_data, t_ast_node **ast_root)
 {
 	ft_lstclear(token_data, ft_free_lex_data);
-	ft_treeclear(ast_root, ft_free_lex_data);
+	ft_treeclear(ast_root, free);
 }
 
 /**
@@ -51,8 +51,8 @@ int	main(int ac, char **av, char **envp)
 	setup_signal_handlers();
 	input = readline("minishell>> ");
 	input = input_clean(input);
-	input = expansion(input);
 	token_data = lexer(input);
+	token_data = expansion(token_data);
 	ast_root = parser(token_data);
 	return (free(input), ft_free(&token_data, &ast_root), 1);
 }

@@ -12,6 +12,17 @@
 
 #include "../includes/minishell.h"
 
+void	ft_print_tokens(t_list *token_data)
+{
+	while (token_data)
+	{
+		ft_printf("Token is %s, Token Type is %d\n",
+			((t_lex_data *)(token_data->content))->raw_string,
+			((t_lex_data *)(token_data->content))->type);
+		token_data = token_data->next;
+	}
+}
+
 /**
  * @function: ft_free_lex_data
  * @brief: function that takes the struct t_lex_data

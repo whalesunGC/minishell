@@ -13,6 +13,52 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: expansion_replace_string
+ * @brief: string replacement function for the expansion step.
+ * 
+ * @param env_var: replacement string
+ * @param index: index where "$" is found
+ * @param exp_input: pointer to final input string
+ * 
+ * @return: void function, no return value
+ */
+void	expansion_replace_string(char *env_var, int index, char **exp_input)
+{
+	if (env_var)
+		*exp_input = ft_str_replace(*exp_input, index, env_var);
+	else
+		*exp_input = ft_str_replace(*exp_input, index, "");
+}
+
+/**
+ * @function: ft_env_search
+ * @brief: takes a string "$VAR" and returns 
+ 	the corresponding string from the env list
+ * 
+ * @param var: string that starts with '$' + word,
+ 	this is malloced from a previous funciton.
+ * 
+ * @return: a new string that is a copy of the
+ 	corresponding string from the env list if it exists.
+	Else it returns a whitespace (' ')
+ */
+char	*ft_env_search(char *var)
+{
+	char	*env_var;
+
+	env_var = getenv(++var);
+	if (env_var != NULL)
+	{
+		ft_printf("env_var found: %s\n", env_var);
+	}
+	else
+	{
+		ft_printf("env_var not found: %s\n", env_var);
+	}
+	return (env_var);
+}
+
+/**
  * @function: ft_str_insert
  * @brief: takes a input string and inserts the substring after
  * the index
