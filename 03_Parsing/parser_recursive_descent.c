@@ -65,6 +65,11 @@ t_ast_node	*parse_command(t_parser_context *context)
 		redir_node = parse_redirection(context);
 		add_child_node(node, redir_node);
 	}
+	while (is_heredoc(context))
+	{
+		heredoc_node = parse_heredoc(context);
+		add_child_node(node, heredoc_node);
+	}
 	return (node);
 }
 
