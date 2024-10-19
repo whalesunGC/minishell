@@ -23,8 +23,12 @@ int	is_redirection(t_parser_context *context)
 {
 	return (is_token_type(context, TOKEN_REDIRECTION_OUT)
 		|| is_token_type(context, TOKEN_REDIRECTION_IN)
-		|| is_token_type(context, TOKEN_REDIRECTION_APPEND)
-		|| is_token_type(context, TOKEN_HEREDOC));
+		|| is_token_type(context, TOKEN_REDIRECTION_APPEND));
+}
+
+int	is_heredoc(t_parser_context *context)
+{
+	return (is_token_type(context, TOKEN_HEREDOC));
 }
 
 /**

@@ -6,7 +6,7 @@
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 12:01:18 by wichee            #+#    #+#             */
-/*   Updated: 2024/10/13 16:13:21 by wichee           ###   ########.fr       */
+/*   Updated: 2024/10/19 18:24:06 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef LEXER_H
@@ -26,8 +26,9 @@ typedef enum e_token_type
 	TOKEN_PARENTHESIS_R,
 	TOKEN_AND_SEQ,
 	TOKEN_OR_SEQ,
-	TOKEN_WILDCARD,
-	TOKEN_VARIABLE
+	TOKEN_VARIABLE,
+	TOKEN_HD_DELIMITER,
+	TOKEN_RD_FD
 }					t_token_type;
 
 typedef struct s_lex_data
@@ -36,14 +37,18 @@ typedef struct s_lex_data
 	char			*raw_string;
 	int				in_quote;
 	int				is_first_token;
+	int				is_hd_delimiter;
+	int				is_fd;
 }					t_lex_data;
 
 // lexer.c
 t_list			*lexer(char *input);
-t_lex_data		*lexer_token_data(char *input, int is_first_token);
+t_lex_data		*lexer_token_data(char *input, int is_first_token,
+					int is_hd_delimiter, int is_fd);
 t_list			*lexer_init_data(char **tokens);
-t_token_type	lexer_token_type(const char *input, int is_first_token,
-	int in_quote, int is_var);
+t_token_type	lexer_token_type_a(char *input, int is_first_token);
+t_token_type	lexer_token_type_b(char *input, int in_quote,
+					int is_hd_delimiter, int is_fd);
 
 // tokenize.c
 char			**tokenize(char *input);

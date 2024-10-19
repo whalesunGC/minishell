@@ -7,7 +7,7 @@ LDFLAGS = -lreadline
 # Source files names for each directory
 INPUT_FILES = input.c	input_utils.c	input_validation.c
 LEXER_FILES = lexer.c	tokenize.c	lexer_utils.c	ft_split_ignore_quotes.c	ft_strchr_ignore_quotes.c
-EXPANSION_FILES = expansion.c	expansion_utils_a.c
+EXPANSION_FILES = expansion.c	expansion_utils_a.c	expansion_utils_b.c
 PARSER_FILES = parser.c	parser_utils_a.c	parser_rd_helper.c	parser_recursive_descent.c	parser_print_tree.c
 BUILT_INS_FILES = cd.c	updating_env_after_cd.c	copy_envp.c	copy_envp_with_ac.c env.c	free_dup_envp.c	exit.c	pwd.c	free_tokens.c	count_arg_validity.c	echo.c
 SIGNAL_FILES = signal_handler.c

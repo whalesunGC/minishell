@@ -24,14 +24,21 @@ t_ast_node	*parse_command(t_parser_context *context)
 	t_ast_node	*node;
 	t_ast_node	*redir_node;
 	t_ast_node	*arg_node;
+	t_ast_node	*heredoc_node;
 
 	node = create_ast_node(AST_COMMAND);
 	redir_node = NULL;
 	arg_node = NULL;
+	heredoc_node = NULL;
 	while (is_redirection(context))
 	{
 		redir_node = parse_redirection(context);
 		add_child_node(node, redir_node);
+	}
+	while (is_heredoc(context))
+	{
+		heredoc_node = parse_heredoc(context);
+		add_child_node(node, heredoc_node);
 	}
 	if (is_token_type(context, TOKEN_COMMAND))
 	{
@@ -76,8 +83,7 @@ t_ast_node	*parse_redirection(t_parser_context *context)
 	node = create_ast_node(AST_REDIRECTION);
 	if (is_token_type(context, TOKEN_REDIRECTION_OUT)
 		|| is_token_type(context, TOKEN_REDIRECTION_IN)
-		|| is_token_type(context, TOKEN_REDIRECTION_APPEND)
-		|| is_token_type(context, TOKEN_HEREDOC))
+		|| is_token_type(context, TOKEN_REDIRECTION_APPEND))
 	{
 		node->value = ft_strdup(((t_lex_data *)
 					context->current_token->content)->raw_string);
@@ -89,7 +95,7 @@ t_ast_node	*parse_redirection(t_parser_context *context)
 		context->error_message = ft_strdup("Expected a redirection operator");
 		return (node);
 	}
-	if (is_token_type(context, TOKEN_STRING))
+	if (is_token_type(context, TOKEN_RD_FD))
 	{
 		target_node = create_ast_node(AST_ARGUMENT);
 		target_node->value = ft_strdup(((t_lex_data *)
@@ -101,6 +107,47 @@ t_ast_node	*parse_redirection(t_parser_context *context)
 	{
 		context->error = 1;
 		context->error_message = ft_strdup("Expected a redirection target");
+	}
+	return (node);
+}
+
+/**
+ * @function: parse_heredoc
+ * @brief: Parses a heredoc operator and its target
+ *
+ * @param context: The parser context containing token information
+ * @return: The AST node representing the heredoc
+ */
+t_ast_node	*parse_heredoc(t_parser_context *context)
+{
+	t_ast_node	*node;
+	t_ast_node	*target_node;
+
+	node = create_ast_node(AST_REDIRECTION);
+	if (is_token_type(context, TOKEN_HEREDOC))
+	{
+		node->value = ft_strdup(((t_lex_data *)
+					context->current_token->content)->raw_string);
+		advance_token(context);
+	}
+	else
+	{
+		context->error = 1;
+		context->error_message = ft_strdup("Expected a heredoc operator");
+		return (node);
+	}
+	if (is_token_type(context, TOKEN_HD_DELIMITER))
+	{
+		target_node = create_ast_node(AST_ARGUMENT);
+		target_node->value = ft_strdup(((t_lex_data *)
+					context->current_token->content)->raw_string);
+		add_child_node(node, target_node);
+		advance_token(context);
+	}
+	else
+	{
+		context->error = 1;
+		context->error_message = ft_strdup("Expected a heredoc target");
 	}
 	return (node);
 }
