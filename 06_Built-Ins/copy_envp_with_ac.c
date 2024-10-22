@@ -9,8 +9,7 @@
 /*   Updated: 2024/10/01 14:40:31 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 /**
  * @function: free_string_if_malloc_error_for_new_env
@@ -36,6 +35,31 @@ static void	free_string_if_malloc_error_for_new_env(char **new_env, int i)
 		i--;
 	}
 	free(new_env);
+}
+
+/**
+ * @function: initialise_null
+ * @brief: to set a null terminator on each
+ 	of the newly appended space after creation
+ * 
+ * @param **new_env: array of pointers belonging pertaining to each string.
+ 	      count: initial number of lines of old env
+ 	total count: total number of lines of newly created env
+ * 
+ * @return: void function
+ */
+
+static void	initialise_null(char **new_env, int count, int total_count)
+
+{
+	int	i;
+
+	i = count;
+	while (i < total_count)
+	{
+		new_env[i] = NULL;
+		i++;
+	}
 }
 
 /**
@@ -74,7 +98,7 @@ char	**copy_envp_with_ac(char **env, int valid_count)
 		ft_strlcpy(new_env[i], env[i], ft_strlen(env[i]) + 1);
 		i++;
 	}
-	new_env[count] = NULL;
+	initialise_null(new_env, count, count + valid_count + 1);
 	free_dup_envp(env);
 	return (new_env);
 }
