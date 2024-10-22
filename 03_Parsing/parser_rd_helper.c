@@ -13,6 +13,32 @@
 #include "../includes/minishell.h"
 
 /**
+ * @brief swaps the parent and child nodes.
+ *
+ * @param parent The parent node to which the child node will be swapped
+ * @param child The child node to be the parent.
+ */
+void	swap_parent_node(t_ast_node *parent, t_ast_node *child)
+{
+	if (!child->left)
+		child->left = parent;
+	else if (!child->right)
+		child->right = parent;
+	if (!parent->parent)
+		;
+	else if (parent->parent->left == parent)
+	{
+		parent->parent->left = child;
+		child->parent = parent->parent;
+	}
+	else if (parent->parent->right == parent)
+	{
+		parent->parent->right = child;
+		child->parent = parent->parent;
+	}
+}
+
+/**
  * @brief Adds a child node to the specified parent node
  *
  * @param parent The parent node to which the child node will be added

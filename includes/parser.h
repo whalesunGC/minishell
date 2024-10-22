@@ -17,6 +17,7 @@ typedef enum e_ast_node_type
 	AST_COMMAND,
 	AST_PIPE,
 	AST_REDIRECTION,
+	AST_HEREDOC,
 	AST_ARGUMENT,
 	AST_SUBSHELL,
 	AST_AND,
@@ -59,6 +60,7 @@ void		advance_token(t_parser_context *context);
 t_ast_node	*create_ast_node(t_ast_node_type type);
 int			expect_token(t_parser_context *context, t_token_type expected_type);
 void		add_child_node(t_ast_node *parent, t_ast_node *child);
+void		swap_parent_node(t_ast_node *parent, t_ast_node *child);
 
 // parser utils
 void		ft_treeclear(t_ast_node **ast, void (*del)(void *));
