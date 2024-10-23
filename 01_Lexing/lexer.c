@@ -6,7 +6,7 @@
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 11:58:49 by wichee            #+#    #+#             */
-/*   Updated: 2024/10/19 18:17:24 by wichee           ###   ########.fr       */
+/*   Updated: 2024/10/23 18:09:17 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,10 @@ t_token_type	lexer_token_type_a(char *input, int is_first_token)
 t_token_type	lexer_token_type_b(char *input, int in_quote,
 	int is_hd_delimiter, int is_fd)
 {
-	if (is_hd_delimiter)
-		return (TOKEN_HD_DELIMITER);
+	if (is_hd_delimiter && in_quote)
+		return (TOKEN_HD_DELIMITER_Q);
+	else if (is_hd_delimiter && !in_quote)
+		return (TOKEN_HD_DELIMITER_NQ);
 	else if (is_fd)
 		return (TOKEN_RD_FD);
 	else if (in_quote)

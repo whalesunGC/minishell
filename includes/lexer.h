@@ -27,7 +27,8 @@ typedef enum e_token_type
 	TOKEN_AND_SEQ,
 	TOKEN_OR_SEQ,
 	TOKEN_VARIABLE,
-	TOKEN_HD_DELIMITER,
+	TOKEN_HD_DELIMITER_Q,
+	TOKEN_HD_DELIMITER_NQ,
 	TOKEN_RD_FD
 }					t_token_type;
 

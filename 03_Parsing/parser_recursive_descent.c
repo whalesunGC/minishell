@@ -38,7 +38,8 @@ t_ast_node	*parse_command(t_parser_context *context)
 	while (is_heredoc(context))
 	{
 		heredoc_node = parse_heredoc(context);
-		add_child_node(node, heredoc_node);
+		swap_parent_node(node, heredoc_node);
+		node = heredoc_node;
 	}
 	if (is_token_type(context, TOKEN_COMMAND))
 	{
@@ -68,7 +69,16 @@ t_ast_node	*parse_command(t_parser_context *context)
 	while (is_heredoc(context))
 	{
 		heredoc_node = parse_heredoc(context);
-		add_child_node(node, heredoc_node);
+		swap_parent_node(node, heredoc_node);
+		node = heredoc_node;
+	}
+	while (is_token_type(context, TOKEN_STRING))
+	{
+		arg_node = create_ast_node(AST_ARGUMENT);
+		arg_node->value = ft_strdup(((t_lex_data *)
+					context->current_token->content)->raw_string);
+		add_child_node(node, arg_node);
+		advance_token(context);
 	}
 	return (node);
 }
@@ -86,9 +96,7 @@ t_ast_node	*parse_redirection(t_parser_context *context)
 	t_ast_node	*target_node;
 
 	node = create_ast_node(AST_REDIRECTION);
-	if (is_token_type(context, TOKEN_REDIRECTION_OUT)
-		|| is_token_type(context, TOKEN_REDIRECTION_IN)
-		|| is_token_type(context, TOKEN_REDIRECTION_APPEND))
+	if (is_redirection(context))
 	{
 		node->value = ft_strdup(((t_lex_data *)
 					context->current_token->content)->raw_string);
@@ -141,9 +149,17 @@ t_ast_node	*parse_heredoc(t_parser_context *context)
 		context->error_message = ft_strdup("Expected a heredoc operator");
 		return (node);
 	}
-	if (is_token_type(context, TOKEN_HD_DELIMITER))
+	if (is_token_type(context, TOKEN_HD_DELIMITER_Q))
 	{
-		target_node = create_ast_node(AST_ARGUMENT);
+		target_node = create_ast_node(AST_HD_DELIMITER_Q);
+		target_node->value = ft_strdup(((t_lex_data *)
+					context->current_token->content)->raw_string);
+		add_child_node(node, target_node);
+		advance_token(context);
+	}
+	else if (is_token_type(context, TOKEN_HD_DELIMITER_NQ))
+	{
+		target_node = create_ast_node(AST_HD_DELIMITER_NQ);
 		target_node->value = ft_strdup(((t_lex_data *)
 					context->current_token->content)->raw_string);
 		add_child_node(node, target_node);

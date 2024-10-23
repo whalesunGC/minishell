@@ -47,7 +47,7 @@ void	ft_treeclear(t_ast_node **ast, void (*del)(void *))
 		return ;
 	ft_treeclear(&((*ast)->left), del);
 	ft_treeclear(&((*ast)->right), del);
-	if (del)
+	if ((*ast)->value)
 		del((*ast)->value);
 	free(*ast);
 	*ast = NULL;

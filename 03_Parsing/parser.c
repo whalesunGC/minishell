@@ -114,6 +114,8 @@ t_ast_node	*parser(t_list *token_data)
 	context.error = 0;
 	context.error_message = NULL;
 	ast_root = parse_command_line(&context);
+	while (ast_root->parent)
+		ast_root = ast_root->parent;
 	if (context.error)
 	{
 		ft_printf("Error: %s\n", context.error_message);
