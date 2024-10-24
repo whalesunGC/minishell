@@ -43,8 +43,16 @@ void	ft_print_tree_helper(t_ast_node *node, int depth)
 		ft_printf("SUBSHELL\n");
 	else if (node->type == AST_REDIRECTION)
 		ft_printf("REDIRECTION: %s\n", node->value);
+	else if (node->type == AST_HEREDOC)
+		ft_printf("HEREDOC: %s\n", node->value);
 	else if (node->type == AST_ARGUMENT)
 		ft_printf("ARGUMENT: %s\n", node->value);
+	else if (node->type == AST_HD_DELIMITER_Q)
+		ft_printf("HD_DELIMITER_Q: %s\n", node->value);
+	else if (node->type == AST_HD_DELIMITER_NQ)
+		ft_printf("HD_DELIMITER_NQ: %s\n", node->value);
+	else if (node->type == AST_RD_FD)
+		ft_printf("RD_FD: %s\n", node->value);
 	else
 		ft_printf("UNKNOWN\n");
 	ft_print_tree_helper(node->left, depth + 1);

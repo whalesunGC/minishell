@@ -50,6 +50,7 @@ int	main(int ac, char **av, char **envp)
 	ast_root = NULL;
 	setup_signal_handlers();
 	input = readline("minishell>> ");
+	add_history(input);
 	input = input_clean(input);
 	token_data = lexer(input);
 	token_data = expansion(token_data);
