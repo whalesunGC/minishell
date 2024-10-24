@@ -22,7 +22,6 @@
  * @return: differences between 2 strings if any. 0 if its the same.
  */
 
-
 int	ft_strcmp(const char *s1, const char *s2)
 
 {
