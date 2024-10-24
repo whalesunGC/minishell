@@ -67,11 +67,14 @@ char	*ft_var_exp(char **input, int start_index)
  * 
  * @param input: any string, note that this
  	is malloced and needs to be freed after use.
+	@param ignore_quote: flag to check if expansion should
+ * ignore quotes.
+ * 
  * 
  * @return: returns expanded string or NULL if expansion fails.
  */
 
-char	*expansion_string(char *input)
+char	*expansion_string(char *input, int ignore_quote)
 {
 	char	*env_var;
 	int		in_single_quote;
@@ -86,7 +89,7 @@ char	*expansion_string(char *input)
 			in_single_quote = !in_single_quote;
 			i++;
 		}
-		else if (input[i] == '$' && !in_single_quote)
+		else if (input[i] == '$' && (!in_single_quote || ignore_quote))
 		{
 			env_var = ft_var_exp(&input, i);
 			expansion_replace_string(env_var, i, &input);
@@ -98,6 +101,7 @@ char	*expansion_string(char *input)
 	}
 	return (input);
 }
+
 /**
  * @function: expansion
  * @brief: iterates through linked-list and does expansion via
@@ -108,30 +112,14 @@ char	*expansion_string(char *input)
  */
 t_list	*expansion(t_list *token_data)
 {
-	t_lex_data	*data;
 	t_list		*head;
-	int			i;
 
-	data = NULL;
 	head = token_data;
-	i = 0;
 	if (!token_data)
 		return (NULL);
 	else
-	{
-		while(token_data != NULL)
-		{
-			data = (t_lex_data *)token_data->content;
-			if (data->type == TOKEN_WILDCARD || data->type == TOKEN_COMMAND
-				|| data->type == TOKEN_INQUOTE || data->type == TOKEN_VARIABLE)
-			{
-				data->raw_string = expansion_string(data->raw_string);
-				data->type = lexer_token_type(data->raw_string,
-					data->is_first_token, data->in_quote, 0);
-			}
-			token_data = token_data->next;
-		}
-	}
+		while (token_data != NULL)
+			token_data = ft_expansion_tokens(&token_data);
 	ft_print_tokens(head);
 	return (head);
 }
