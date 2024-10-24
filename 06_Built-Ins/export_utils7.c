@@ -9,7 +9,8 @@
 /*   Updated: 2024/10/21 22:09:12 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+
+#include "../includes/minishell.h"
 
 /**
  * @function: append_new_env_if_data_exists

@@ -9,7 +9,8 @@
 /*   Updated: 2024/10/14 21:07:50 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+
+#include "../includes/minishell.h"
 
 /**
  * @function: only_export_command

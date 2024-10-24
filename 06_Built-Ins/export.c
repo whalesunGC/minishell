@@ -9,7 +9,8 @@
 /*   Updated: 2024/09/30 21:02:14 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+
+#include "../includes/minishell.h"
 
 /**
  * @function: setting_up_ac_av

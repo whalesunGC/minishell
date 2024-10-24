@@ -9,7 +9,8 @@
 /*   Updated: 2024/10/14 21:49:59 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+
+#include "../includes/minishell.h"
 
 /**
  * @function: removal_of_duplicates_in_var_name

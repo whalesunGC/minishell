@@ -12,8 +12,6 @@
 #ifndef BUILT_IN_H
 # define BUILT_IN_H
 
-# include <stdlib.h>
-
 typedef struct s_export_params
 {
 	char	**new_env;

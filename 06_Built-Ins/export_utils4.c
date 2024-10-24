@@ -9,7 +9,8 @@
 /*   Updated: 2024/10/15 20:10:53 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+
+#include "../includes/minishell.h"
 
 /**
  * @function: variable_name_first_character_check_fail

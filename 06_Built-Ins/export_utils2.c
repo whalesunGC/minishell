@@ -9,7 +9,8 @@
 /*   Updated: 2024/10/14 21:12:58 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+
+#include "../includes/minishell.h"
 
 /**
  * @function: splitting_arguments_by_delimiter

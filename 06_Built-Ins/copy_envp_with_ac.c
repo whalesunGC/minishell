@@ -9,7 +9,8 @@
 /*   Updated: 2024/10/01 14:40:31 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+
+#include "../includes/minishell.h"
 
 /**
  * @function: free_string_if_malloc_error_for_new_env
