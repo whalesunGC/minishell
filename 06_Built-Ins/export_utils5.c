@@ -9,7 +9,8 @@
 /*   Updated: 2024/10/21 19:48:29 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+
+#include "../includes/minishell.h"
 
 /**
  * @function: has_equal_sign
