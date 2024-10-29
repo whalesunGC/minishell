@@ -66,7 +66,7 @@ char	**no_equal_sign(t_export_params *params)
 
 	params->new_env[params->j] = (char *)malloc
 		(sizeof(char) * (ft_strlen(params->av[params->i]) + 4));
-	if (params->new_env[params->j] != NULL)
+	if (params->new_env[params->j] == NULL)
 		return (NULL);
 	str1 = ft_strjoin(params->var_name[params->b], "=''");
 	ft_strlcpy(params->new_env[params->j], str1, ft_strlen(str1) + 1);
