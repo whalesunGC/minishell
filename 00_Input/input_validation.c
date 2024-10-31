@@ -64,28 +64,10 @@ int	check_pipe_placement(const char *input)
 	{
 		if ((*input == '\'' || *input == '"') && (!in_quotes
 				|| *input == quote_char))
-		{
-			in_quotes = !in_quotes;
-			if (in_quotes)
-				quote_char = *input;
-			else
-				quote_char = 0;
-		}
+			handle_quotes(&in_quotes, &quote_char, *input);
 		if (!in_quotes)
-		{
-			if (*input == '|' && ft_strncmp(input, "||", 2))
-			{
-				if (!found_non_space || last_char_pipe)
-					return (0);
-				last_char_pipe = 1;
-				found_non_space = 0;
-			}
-			else if (!ft_iswhitespace(*input))
-			{
-				found_non_space = 1;
-				last_char_pipe = 0;
-			}
-		}
+			if (!handle_pipe_flags(input, &found_non_space, &last_char_pipe))
+				return (0);
 		input++;
 	}
 	return (!last_char_pipe);
@@ -95,7 +77,7 @@ int	check_pipe_placement(const char *input)
  * @function: check_or_placement
  * @brief: check if || is not at the end or the beginning of the
  * command string
- * 
+ *
  * @param input: input string from readline
  * @return: 1 if valid, 0 if not
  */
@@ -114,29 +96,11 @@ int	check_or_placement(const char *input)
 	{
 		if ((*input == '\'' || *input == '"') && (!in_quotes
 				|| *input == quote_char))
-		{
-			in_quotes = !in_quotes;
-			if (in_quotes)
-				quote_char = *input;
-			else
-				quote_char = 0;
-		}
+			handle_quotes(&in_quotes, &quote_char, *input);
 		if (!in_quotes)
-		{
-			if (!ft_strncmp(input, "||", 2))
-			{
-				if (!found_non_space || last_char_or)
-					return (0);
-				last_char_or = 1;
-				found_non_space = 0;
-				input++;
-			}
-			else if (!ft_iswhitespace(*input))
-			{
-				found_non_space = 1;
-				last_char_or = 0;
-			}
-		}
+			if (!handle_seq_flags(&input, &found_non_space, &last_char_or,
+					"||"))
+				return (0);
 		input++;
 	}
 	return (!last_char_or);
@@ -146,7 +110,7 @@ int	check_or_placement(const char *input)
  * @function: check_and_placement
  * @brief: check if && is not at the end or the beginning of the
  * command string
- * 
+ *
  * @param input: input string from readline
  * @return: 1 if valid, 0 if not
  */
@@ -165,29 +129,11 @@ int	check_and_placement(const char *input)
 	{
 		if ((*input == '\'' || *input == '"') && (!in_quotes
 				|| *input == quote_char))
-		{
-			in_quotes = !in_quotes;
-			if (in_quotes)
-				quote_char = *input;
-			else
-				quote_char = 0;
-		}
+			handle_quotes(&in_quotes, &quote_char, *input);
 		if (!in_quotes)
-		{
-			if (!ft_strncmp(input, "&&", 2))
-			{
-				if (!found_non_space || last_char_and)
-					return (0);
-				last_char_and = 1;
-				found_non_space = 0;
-				input++;
-			}
-			else if (!ft_iswhitespace(*input))
-			{
-				found_non_space = 1;
-				last_char_and = 0;
-			}
-		}
+			if (!handle_seq_flags(&input, &found_non_space, &last_char_and,
+					"&&"))
+				return (0);
 		input++;
 	}
 	return (!last_char_and);

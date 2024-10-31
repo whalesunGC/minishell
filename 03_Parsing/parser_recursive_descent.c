@@ -153,7 +153,8 @@ t_ast_node	*parse_heredoc(t_parser_context *context)
  * @param context: The parser context containing token information
  * @return: The AST node representing commands
  */
-t_ast_node *ft_parse_command(t_parser_context *context, t_ast_node **node, t_ast_node **arg_node)
+t_ast_node	*ft_parse_command(t_parser_context *context, t_ast_node **node,
+		t_ast_node **arg_node)
 {
 	if (is_token_type(context, TOKEN_COMMAND))
 	{

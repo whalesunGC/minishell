@@ -12,6 +12,52 @@
 
 #include "../includes/minishell.h"
 
+void	handle_quotes(int *in_quotes, char *quote_char, char current_char)
+{
+	*in_quotes = !*in_quotes;
+	if (*in_quotes)
+		*quote_char = current_char;
+	else
+		*quote_char = 0;
+}
+
+int	handle_pipe_flags(const char *input, int *found_non_space,
+		int *last_char_pipe)
+{
+	if (*input == '|' && ft_strncmp(input, "||", 2))
+	{
+		if (!*found_non_space || *last_char_pipe)
+			return (0);
+		*last_char_pipe = 1;
+		*found_non_space = 0;
+	}
+	else if (!ft_iswhitespace(*input))
+	{
+		*found_non_space = 1;
+		*last_char_pipe = 0;
+	}
+	return (1);
+}
+
+int	handle_seq_flags(const char **input, int *found_non_space, int *last_char_or,
+		const char *seq)
+{
+	if (!ft_strncmp(*input, seq, 2))
+	{
+		if (!*found_non_space || *last_char_or)
+			return (0);
+		*last_char_or = 1;
+		*found_non_space = 0;
+		(*input)++;
+	}
+	else if (!ft_iswhitespace(**input))
+	{
+		*found_non_space = 1;
+		*last_char_or = 0;
+	}
+	return (1);
+}
+
 /**
  * @function: check_quotes_balance
  * @brief: function checks if the quotes in the input string are balanced

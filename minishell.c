@@ -60,5 +60,6 @@ int	main(int ac, char **av, char **envp)
 	token_data = expansion(token_data);
 	ast_root = parser(token_data);
 	exec_data = ft_ast_to_linkedlist(ast_root);
+	ft_print_exec_list(exec_data);
 	return (free(input), ft_free(&token_data, &ast_root), 1);
 }
