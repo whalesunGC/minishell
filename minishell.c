@@ -42,18 +42,23 @@ int	main(int ac, char **av, char **envp)
 	char		*input;
 	t_list		*token_data;
 	t_ast_node	*ast_root;
+	t_list		*exec_data;
 
 	(void)ac;
 	(void)av;
 	(void)envp;
 	token_data = NULL;
 	ast_root = NULL;
+	exec_data = NULL;
 	setup_signal_handlers();
 	input = readline("minishell>> ");
 	add_history(input);
 	input = input_clean(input);
+	if (input == NULL)
+		return (free(input), ft_free(&token_data, &ast_root), 1);
 	token_data = lexer(input);
 	token_data = expansion(token_data);
 	ast_root = parser(token_data);
+	exec_data = ft_ast_to_linkedlist(ast_root);
 	return (free(input), ft_free(&token_data, &ast_root), 1);
 }

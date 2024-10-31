@@ -56,6 +56,7 @@ void		ft_print_tree(t_ast_node *node);
 t_ast_node	*parse_command(t_parser_context *context);
 t_ast_node	*parse_redirection(t_parser_context *context);
 t_ast_node	*parse_heredoc(t_parser_context *context);
+t_ast_node	*ft_parse_command(t_parser_context *context, t_ast_node **node, t_ast_node **arg_node);
 
 // parser_rd_helper.c
 int			is_token_type(t_parser_context *context, t_token_type type);
@@ -75,4 +76,7 @@ int			is_heredoc(t_parser_context *context);
 // parser_print.c
 void		ft_print_tree_helper(t_ast_node *node, int depth);
 void		ft_print_tree(t_ast_node *root);
+
+// parser_ast_to_ll.c
+t_list		*ft_ast_to_linkedlist(t_ast_node *node);
 #endif

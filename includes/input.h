@@ -27,8 +27,12 @@ int		ft_add_whitespace_helper(char **input, int i, int delta);
 
 //input_validation.c
 char	*ft_input_validation(char *input);
+int		check_pipe_placement(const char *input);
+int     check_or_placement(const char *input);
+int     check_and_placement(const char *input);
+
+//input_validation_helper.c
 int		check_quotes_balance(const char *input);
 int		check_parentheses_balance(const char *input);
-int		check_pipe_placement(const char *input);
 
 #endif

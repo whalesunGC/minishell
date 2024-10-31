@@ -25,9 +25,7 @@
  */
 int	ft_add_whitespace_special(char **input, int i, int in_s_q, int in_d_q)
 {
-	if (ft_isspecial((*input)[i]) && !in_s_q && !in_d_q)
-		i = ft_add_whitespace_helper(input, i, 0);
-	else if ((*input)[i] == '>' && (*input)[i + 1] != '>' && !in_s_q && !in_d_q)
+	if ((*input)[i] == '>' && (*input)[i + 1] != '>' && !in_s_q && !in_d_q)
 		i = ft_add_whitespace_helper(input, i, 0);
 	else if ((*input)[i] == '<' && (*input)[i + 1] != '<' && !in_s_q && !in_d_q)
 		i = ft_add_whitespace_helper(input, i, 0);
@@ -41,6 +39,8 @@ int	ft_add_whitespace_special(char **input, int i, int in_s_q, int in_d_q)
 		i = ft_add_whitespace_helper(input, i, 1);
 	else if ((*input)[i] == '*' && !!in_s_q && !in_d_q)
 		*input = ft_str_insert(*input, i, " ");
+	else if (ft_isspecial((*input)[i]) && !in_s_q && !in_d_q)
+		i = ft_add_whitespace_helper(input, i, 0);
 	return (i);
 }
 

@@ -22,9 +22,7 @@
  */
 t_token_type	lexer_token_type_a(char *input, int is_first_token)
 {
-	if (ft_strncmp(input, "|", 1) == 0)
-		return (TOKEN_PIPE);
-	else if (ft_strncmp(input, ">>", 2) == 0)
+	if (ft_strncmp(input, ">>", 2) == 0)
 		return (TOKEN_REDIRECTION_APPEND);
 	else if (ft_strncmp(input, "<<", 2) == 0)
 		return (TOKEN_HEREDOC);
@@ -40,6 +38,8 @@ t_token_type	lexer_token_type_a(char *input, int is_first_token)
 		return (TOKEN_AND_SEQ);
 	else if (ft_strncmp(input, "||", 2) == 0)
 		return (TOKEN_OR_SEQ);
+	else if (ft_strncmp(input, "|", 1) == 0)
+		return (TOKEN_PIPE);
 	else if (is_first_token)
 		return (TOKEN_COMMAND);
 	else
@@ -147,7 +147,8 @@ t_list	*lexer_init_data(char **tokens)
 			ft_lstadd_back(&first_node, new_node);
 		}
 		is_first_token = (data->type == TOKEN_PIPE) || (data->type
-				== TOKEN_PARENTHESIS_L);
+				== TOKEN_PARENTHESIS_L || data->type == TOKEN_AND_SEQ
+				|| data->type == TOKEN_OR_SEQ);
 		is_hd_delimiter = (data->type == TOKEN_HEREDOC);
 		is_fd = (data->type == TOKEN_REDIRECTION_APPEND || data->type
 				== TOKEN_REDIRECTION_IN || data->type == TOKEN_REDIRECTION_OUT);
