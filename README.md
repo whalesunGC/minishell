@@ -16,6 +16,8 @@ Not interpretation of unclosed quotes or special characters such as \ (backslash
 
 (4) Redirection - heredocs and normal
 
+![Table summary for Heredocs, Redirections and Pipes](References/Pipes_RD_HD.png "Reference Table").
+
 (5) Execution - pipex, PATH variable, working history
 
 (6) Built-Ins - echo, cd, pwd, export, unset, env, exit
