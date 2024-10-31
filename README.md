@@ -18,7 +18,9 @@ Not interpretation of unclosed quotes or special characters such as \ (backslash
 
 ![Table summary for Heredocs, Redirections and Pipes](References/Pipes_RD_HD.png "Reference Table").
 
-(5) Execution - pipex, PATH variable, working history
+(5a) Piping -  fork() child processes, dup2() redirect FDs, FD hygiene.
+
+(5b) Execution - PATH variable, working history
 
 (6) Built-Ins - echo, cd, pwd, export, unset, env, exit
 
