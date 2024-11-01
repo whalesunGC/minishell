@@ -46,11 +46,15 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	(void)envp;
+	if (envp[0] == NULL)
+	{
+		ft_printf("envp not initialised\n");
+		exit(EXIT_FAILURE);
+	}
 	token_data = NULL;
 	ast_root = NULL;
 	exec_data = NULL;
-	setup_signal_handlers();
+	parent_signal_handlers();
 	input = readline("minishell>> ");
 	add_history(input);
 	input = input_clean(input);

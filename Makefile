@@ -9,6 +9,7 @@ INPUT_FILES = input.c	input_utils.c	input_validation.c	input_validation_helper.c
 LEXER_FILES = lexer.c	tokenize.c	lexer_utils.c	ft_split_ignore_quotes.c	ft_strchr_ignore_quotes.c
 EXPANSION_FILES = expansion.c	expansion_utils_a.c	expansion_utils_b.c
 PARSER_FILES = parser.c	parser_utils_a.c	parser_rd_helper.c	parser_rd_helper_b.c	parser_recursive_descent.c	parser_print_tree.c	parser_ast_to_ll.c
+REDIRECTION_FILES = path_construction.c	path_construction_utils.c	piping.c	redirections_utils.c	redirections_utils1.c	redirections_utils2.c	redirections_utils4.c
 BUILT_INS_FILES = cd.c	updating_env_after_cd.c	copy_envp.c	copy_envp_with_ac.c env.c	free_dup_envp.c	exit.c	pwd.c	free_tokens.c	echo.c	unset.c	export.c	export_utils1.c	export_utils2.c	export_utils3.c	export_utils4.c	export_utils5.c	export_utils6.c	export_utils7.c	ft_strcmp.c
 SIGNAL_FILES = signal_handler.c
 
@@ -17,6 +18,7 @@ INPUT_DIR = 00_Input
 LEXER_DIR = 01_Lexing
 EXPANSION_DIR = 02_Expansion
 PARSER_DIR = 03_Parsing
+REDIRECTION_DIR = 04_Redirection
 BUILT_INS_DIR = 06_Built-Ins
 SIGNAL_DIR = 07_Signals
 
@@ -28,6 +30,7 @@ INPUT_SRCS = $(addprefix $(INPUT_DIR)/, $(INPUT_FILES))
 LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
 EXPANSION_SRCS = $(addprefix $(EXPANSION_DIR)/, $(EXPANSION_FILES))
 PARSER_SRS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
+REDIRECTION_SRCS = $(addprefix $(REDIRECTION_DIR)/, $(REDIRECTION_FILES))
 BUILT_INS_SRCS = $(addprefix $(BUILT_INS_DIR)/, $(BUILT_INS_FILES))
 SIGNAL_SRCS = $(addprefix $(SIGNAL_DIR)/, $(SIGNAL_FILES))
 SRCS = $(INPUT_SRCS) $(EXPANSION_SRCS) $(LEXER_SRCS) $(PARSER_SRS) $(BUILT_INS_SRCS) $(SIGNAL_SRCS) minishell.c 

@@ -13,7 +13,7 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: free_string_if_malloc_error_for_new_env
+ * @function: handle_error_for_new_env_string
  * @brief: freeing strings if malloc fails during building
  		of each line while copying from env
  * 
@@ -23,13 +23,11 @@
  * @return: void function
  */
 
-static void	free_string_if_malloc_error_for_new_env(char **new_env, int i)
+static void	handle_error_for_new_env_string(char **new_env, int i)
 
 {
 	if (i == 0)
-	{
 		free(new_env[i]);
-	}
 	while (i > 0)
 	{
 		free(new_env[i - 1]);
@@ -93,7 +91,7 @@ char	**copy_envp_with_ac(char **env, int valid_count)
 		new_env[i] = (char *)malloc(sizeof(char) * (ft_strlen(env[i]) + 1));
 		if (new_env[i] == NULL)
 		{
-			free_string_if_malloc_error_for_new_env(new_env, i);
+			handle_error_for_new_env_string(new_env, i);
 			return (NULL);
 		}
 		ft_strlcpy(new_env[i], env[i], ft_strlen(env[i]) + 1);
