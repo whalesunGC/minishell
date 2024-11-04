@@ -137,7 +137,10 @@ void	ft_print_exec_list(t_list *exec_node)
 			{
 				ft_printf("Redirections:\n");
 				ft_printf("    type: %s, file: %s\n",
-					node->redirection == AST_REDIR_IN ? "<" : node->redirection == AST_REDIR_OUT ? ">" : node->redirection == AST_REDIR_APPEND ? ">>" : "?",
+					node->redirection == AST_REDIR_IN ? "<" :
+					node->redirection == AST_REDIR_OUT ? ">" :
+					node->redirection == AST_REDIR_APPEND ? ">>" :
+					node->heredoc == AST_HEREDOC ? "<<" : "?",
 					node->rd_arg);
 			}
 		}
