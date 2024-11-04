@@ -44,14 +44,14 @@ void	swap_parent_node(t_ast_node *parent, t_ast_node *child)
 /**
  * @function: create_redir
  * @brief: creates ast_nodes that reflect the correct redirection token type
- * 
+ *
  * @params: context
  * @return: pointer to ast_node;
  */
 t_ast_node	*create_redir(t_parser_context *context)
 {
-	t_ast_node	*node;
-	
+	t_ast_node *node;
+
 	node = NULL;
 	if (is_token_type(context, TOKEN_REDIRECTION_IN))
 		node = create_ast_node(AST_REDIR_IN);

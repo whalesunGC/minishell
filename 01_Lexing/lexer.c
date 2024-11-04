@@ -59,7 +59,7 @@ t_token_type	lexer_token_type_a(char *input, int is_first_token)
  * @return: the correct token type
  */
 t_token_type	lexer_token_type_b(char *input, int in_quote,
-	int is_hd_delimiter, int is_fd)
+		int is_hd_delimiter, int is_fd)
 {
 	if (is_hd_delimiter && in_quote)
 		return (TOKEN_HD_DELIMITER_Q);
@@ -84,7 +84,7 @@ t_token_type	lexer_token_type_b(char *input, int in_quote,
  * @return: a struct with raw_string data and token_type.
  */
 t_lex_data	*lexer_token_data(char *input, int is_first_token,
-	int is_hd_delimiter, int is_fd)
+		int is_hd_delimiter, int is_fd)
 {
 	t_lex_data	*data;
 	int			in_quote;
@@ -104,8 +104,8 @@ t_lex_data	*lexer_token_data(char *input, int is_first_token,
 	data->is_fd = is_fd;
 	data->type = lexer_token_type_a(input, is_first_token);
 	if (data->type == 42)
-		data->type = lexer_token_type_b(input, in_quote,
-				is_hd_delimiter, is_fd);
+		data->type = lexer_token_type_b(input, in_quote, is_hd_delimiter,
+				is_fd);
 	return (data);
 }
 
@@ -137,8 +137,8 @@ t_list	*lexer_init_data(char **tokens)
 	is_fd = 0;
 	while (tokens[i])
 	{
-		data = lexer_token_data(tokens[i], is_first_token,
-				is_hd_delimiter, is_fd);
+		data = lexer_token_data(tokens[i], is_first_token, is_hd_delimiter,
+				is_fd);
 		if (i == 0)
 			first_node = ft_lstnew(data);
 		else
@@ -146,12 +146,13 @@ t_list	*lexer_init_data(char **tokens)
 			new_node = ft_lstnew(data);
 			ft_lstadd_back(&first_node, new_node);
 		}
-		is_first_token = (data->type == TOKEN_PIPE) || (data->type
-				== TOKEN_PARENTHESIS_L || data->type == TOKEN_AND_SEQ
+		is_first_token = (data->type == TOKEN_PIPE)
+			|| (data->type == TOKEN_PARENTHESIS_L || data->type == TOKEN_AND_SEQ
 				|| data->type == TOKEN_OR_SEQ);
 		is_hd_delimiter = (data->type == TOKEN_HEREDOC);
-		is_fd = (data->type == TOKEN_REDIRECTION_APPEND || data->type
-				== TOKEN_REDIRECTION_IN || data->type == TOKEN_REDIRECTION_OUT);
+		is_fd = (data->type == TOKEN_REDIRECTION_APPEND
+				|| data->type == TOKEN_REDIRECTION_IN
+				|| data->type == TOKEN_REDIRECTION_OUT);
 		i++;
 	}
 	return (first_node);

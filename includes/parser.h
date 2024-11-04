@@ -58,52 +58,56 @@ typedef struct s_ast_node
 }						t_ast_node;
 
 // parser.c
-t_ast_node	*parser(t_list *token_data);
-t_ast_node	*parse_command_line(t_parser_context *context);
-t_ast_node	*parse_pipeline(t_parser_context *context);
-t_ast_node	*parse_subshell_or_pipeline(t_parser_context *context);
-void		ft_print_tree_helper(t_ast_node *node, int depth);
-void		ft_print_tree(t_ast_node *node);
+t_ast_node				*parser(t_list *token_data);
+t_ast_node				*parse_command_line(t_parser_context *context);
+t_ast_node				*parse_pipeline(t_parser_context *context);
+t_ast_node				*parse_subshell_or_pipeline(t_parser_context *context);
+void					ft_print_tree_helper(t_ast_node *node, int depth);
+void					ft_print_tree(t_ast_node *node);
 
 // parser_recursive_descent.c
-t_ast_node	*parse_command(t_parser_context *context);
-t_ast_node	*parse_redirection(t_parser_context *context);
-t_ast_node	*parse_heredoc(t_parser_context *context);
-t_ast_node	*ft_parse_command(t_parser_context *context, t_ast_node **node,
-				t_ast_node **arg_node);
+t_ast_node				*parse_command(t_parser_context *context);
+t_ast_node				*parse_redirection(t_parser_context *context);
+t_ast_node				*parse_heredoc(t_parser_context *context);
+t_ast_node				*ft_parse_command(t_parser_context *context,
+							t_ast_node **node, t_ast_node **arg_node);
 
 // parser_rd_helper.c
-int			is_token_type(t_parser_context *context, t_token_type type);
-void		advance_token(t_parser_context *context);
-t_ast_node	*create_ast_node(t_ast_node_type type);
-int			expect_token(t_parser_context *context, t_token_type expected_type);
-void		add_child_node(t_ast_node *parent, t_ast_node *child);
+int						is_token_type(t_parser_context *context,
+							t_token_type type);
+void					advance_token(t_parser_context *context);
+t_ast_node				*create_ast_node(t_ast_node_type type);
+int						expect_token(t_parser_context *context,
+							t_token_type expected_type);
+void					add_child_node(t_ast_node *parent, t_ast_node *child);
 
 // parser_rd_helper_b.c
-void		swap_parent_node(t_ast_node *parent, t_ast_node *child);
-t_ast_node	*create_redir(t_parser_context *context);
+void					swap_parent_node(t_ast_node *parent, t_ast_node *child);
+t_ast_node				*create_redir(t_parser_context *context);
 
 // parser utils
-void		ft_treeclear(t_ast_node **ast, void (*del)(void *));
-int			is_redirection(t_parser_context *context);
-int			is_heredoc(t_parser_context *context);
-void		ft_free_exec_data(void *data);
+void					ft_treeclear(t_ast_node **ast, void (*del)(void *));
+int						is_redirection(t_parser_context *context);
+int						is_heredoc(t_parser_context *context);
+void					ft_free_exec_data(void *data);
 
 // parser_print.c
-void		ft_print_tree_helper(t_ast_node *node, int depth);
-void		ft_print_tree(t_ast_node *root);
+void					ft_print_tree_helper(t_ast_node *node, int depth);
+void					ft_print_tree(t_ast_node *root);
 
 // parser_ast_to_ll.c
-t_list  	*ft_ast_preorder(t_ast_node *node);
-t_list		*ft_ast_to_linkedlist(t_ast_node *node);
-void		ft_print_exec_list(t_list *node);
-t_list		*ft_exec_node(t_list *list);
+t_list					*ft_ast_preorder(t_ast_node *node);
+t_list					*ft_ast_to_linkedlist(t_ast_node *node);
+void					ft_print_exec_list(t_list *node);
+t_list					*ft_exec_node(t_list *list);
 
-//parser_exec.c
-char    	**ft_add_string(char **string_array, char *string);
-t_exec_node *ft_fill_exec_node(t_exec_node *exec_node, t_list *list);
-void    	ft_fill_helper(t_exec_node *exec_node, t_ast_node_type type,
-				t_ast_node *ast_node);
-t_exec_node *ft_create_exec_node(t_ast_node_type type, t_ast_node *ast_node);
-int 		ast_is_redirection(t_ast_node *ast_node);
+// parser_exec.c
+char					**ft_add_string(char **string_array, char *string);
+t_exec_node				*ft_fill_exec_node(t_exec_node *exec_node,
+							t_list *list);
+void					ft_fill_helper(t_exec_node *exec_node,
+							t_ast_node_type type, t_ast_node *ast_node);
+t_exec_node				*ft_create_exec_node(t_ast_node_type type,
+							t_ast_node *ast_node);
+int						ast_is_redirection(t_ast_node *ast_node);
 #endif
