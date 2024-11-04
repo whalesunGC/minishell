@@ -20,6 +20,7 @@
 # include "parser.h"
 # include "signal_handler.h"
 # include "built_in.h"
+# include "redirections.h"
 # include <signal.h>
 # include <stdio.h>
 # include <readline/readline.h>

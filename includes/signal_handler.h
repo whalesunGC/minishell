@@ -15,7 +15,10 @@
 extern int	g_exit_status;
 
 // handling ctrl + c and ctrl + / //
-void	handle_sigint(int signum);
-void	setup_signal_handlers(void);
+void	handle_child_sigint(int signum);
+void	handle_parent_sigint(int signum);
+void	parent_signal_handlers(void);
+void	ignore_parent_signals(void);
+void	setup_signal_handlers_for_child(void);
 
 #endif 
