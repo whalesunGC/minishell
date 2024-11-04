@@ -39,8 +39,8 @@ int	handle_pipe_flags(const char *input, int *found_non_space,
 	return (1);
 }
 
-int	handle_seq_flags(const char **input, int *found_non_space, int *last_char_or,
-		const char *seq)
+int	handle_seq_flags(const char **input, int *found_non_space,
+		int *last_char_or, const char *seq)
 {
 	if (!ft_strncmp(*input, seq, 2))
 	{

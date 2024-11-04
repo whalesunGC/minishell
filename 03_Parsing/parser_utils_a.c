@@ -52,3 +52,36 @@ void	ft_treeclear(t_ast_node **ast, void (*del)(void *))
 	free(*ast);
 	*ast = NULL;
 }
+
+/**
+ * @function: ft_free_exec_data
+ * @brief: function that takes the struct t_exec_node
+ * and frees all elements within it.
+ *
+ * @param data: the struct t_exec_node
+ * @return: no return value, void function.
+ */
+void	ft_free_exec_data(void *data)
+{
+	t_exec_node	*node;
+	int			len;
+	int			i;
+
+	node = NULL;
+	len = 0;
+	i = 0;
+	if (data)
+	{
+		node = (t_exec_node *)data;
+		free(node->rd_arg);
+		if (node->cmd)
+		{
+			while (node->cmd && node->cmd[len])
+				len++;
+			while (i > len)
+				free(node->cmd[i]);
+		}
+		free(node->cmd);
+		free(node);
+	}
+}

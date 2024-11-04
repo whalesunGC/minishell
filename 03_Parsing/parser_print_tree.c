@@ -41,7 +41,7 @@ void	ft_print_tree_helper(t_ast_node *node, int depth)
 		ft_printf("OR\n");
 	else if (node->type == AST_SUBSHELL)
 		ft_printf("SUBSHELL\n");
-	else if (node->type == AST_REDIRECTION)
+	else if (ast_is_redirection(node))
 		ft_printf("REDIRECTION: %s\n", node->value);
 	else if (node->type == AST_HEREDOC)
 		ft_printf("HEREDOC: %s\n", node->value);
@@ -57,40 +57,6 @@ void	ft_print_tree_helper(t_ast_node *node, int depth)
 		ft_printf("UNKNOWN\n");
 	ft_print_tree_helper(node->left, depth + 1);
 	ft_print_tree_helper(node->right, depth + 1);
-}
-
-/**
- * @function: ft_print_exec_helper
- * @brief: prints the exec node
- *
- * @param node: The node on the list.
- */
-void	ft_print_exec_helper(t_ast_node *node)
-{
-	if (node->type == AST_COMMAND)
-		ft_printf("COMMAND: %s\n", node->value);
-	else if (node->type == AST_PIPE)
-		ft_printf("PIPE\n");
-	else if (node->type == AST_AND)
-		ft_printf("AND\n");
-	else if (node->type == AST_OR)
-		ft_printf("OR\n");
-	else if (node->type == AST_SUBSHELL)
-		ft_printf("SUBSHELL\n");
-	else if (node->type == AST_REDIRECTION)
-		ft_printf("REDIRECTION: %s\n", node->value);
-	else if (node->type == AST_HEREDOC)
-		ft_printf("HEREDOC: %s\n", node->value);
-	else if (node->type == AST_ARGUMENT)
-		ft_printf("ARGUMENT: %s\n", node->value);
-	else if (node->type == AST_HD_DELIMITER_Q)
-		ft_printf("HD_DELIMITER_Q: %s\n", node->value);
-	else if (node->type == AST_HD_DELIMITER_NQ)
-		ft_printf("HD_DELIMITER_NQ: %s\n", node->value);
-	else if (node->type == AST_RD_FD)
-		ft_printf("RD_FD: %s\n", node->value);
-	else
-		ft_printf("UNKNOWN\n");
 }
 
 /**

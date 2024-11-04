@@ -37,6 +37,6 @@ int		check_parentheses_balance(const char *input);
 void	handle_quotes(int *in_quotes, char *quote_char, char current_char);
 int		handle_pipe_flags(const char *input, int *found_non_space,
 			int *last_char_pipe);
-int		handle_seq_flags(const char **input, int *found_non_space, int *last_char_or,
-			const char *seq);
+int		handle_seq_flags(const char **input, int *found_non_space,
+			int *last_char_or, const char *seq);
 #endif

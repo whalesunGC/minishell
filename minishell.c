@@ -21,12 +21,14 @@ int	g_exit_status = 0;
  * @param token_data: linked-list that contains the stream of tokens
  * @param ast_root: root of the ast that is a binary tree of
  * the bash syntax.
+ * @param exec_data: head of exec_data
  * @return: void
  */
-void	ft_free(t_list **token_data, t_ast_node **ast_root)
+void	ft_free(t_list **token_data, t_ast_node **ast_root, t_list **exec_data)
 {
 	ft_lstclear(token_data, ft_free_lex_data);
 	ft_treeclear(ast_root, free);
+	ft_lstclear(exec_data, ft_free_exec_data);
 }
 
 /**
@@ -59,11 +61,10 @@ int	main(int ac, char **av, char **envp)
 	add_history(input);
 	input = input_clean(input);
 	if (input == NULL)
-		return (free(input), ft_free(&token_data, &ast_root), 1);
+		return (free(input), ft_free(&token_data, &ast_root, NULL), 1);
 	token_data = lexer(input);
 	token_data = expansion(token_data);
 	ast_root = parser(token_data);
 	exec_data = ft_ast_to_linkedlist(ast_root);
-	ft_print_exec_list(exec_data);
-	return (free(input), ft_free(&token_data, &ast_root), 1);
+	return (free(input), ft_free(&token_data, &ast_root, &exec_data), 1);
 }
