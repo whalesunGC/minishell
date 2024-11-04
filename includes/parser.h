@@ -16,7 +16,9 @@ typedef enum e_ast_node_type
 {
 	AST_COMMAND,
 	AST_PIPE,
-	AST_REDIRECTION,
+	AST_REDIR_IN,
+	AST_REDIR_OUT,
+	AST_REDIR_APPEND,
 	AST_RD_FD,
 	AST_HEREDOC,
 	AST_HD_DELIMITER_Q,
@@ -26,6 +28,17 @@ typedef enum e_ast_node_type
 	AST_AND,
 	AST_OR
 }						t_ast_node_type;
+
+typedef struct s_exec_node
+{
+	t_ast_node_type		type;
+	char				**cmd;
+	t_ast_node_type		redirection;
+	char				*rd_arg;
+	t_ast_node_type		heredoc;
+	t_ast_node_type		delim_type;
+	char				*delimiter;
+}						t_exec_node;
 
 typedef struct s_parser_context
 {
@@ -68,19 +81,29 @@ void		add_child_node(t_ast_node *parent, t_ast_node *child);
 
 // parser_rd_helper_b.c
 void		swap_parent_node(t_ast_node *parent, t_ast_node *child);
+t_ast_node	*create_redir(t_parser_context *context);
 
 // parser utils
 void		ft_treeclear(t_ast_node **ast, void (*del)(void *));
 int			is_redirection(t_parser_context *context);
 int			is_heredoc(t_parser_context *context);
+void		ft_free_exec_data(void *data);
 
 // parser_print.c
 void		ft_print_tree_helper(t_ast_node *node, int depth);
 void		ft_print_tree(t_ast_node *root);
-void		ft_print_exec_helper(t_ast_node *node);
 
 // parser_ast_to_ll.c
+t_list  	*ft_ast_preorder(t_ast_node *node);
 t_list		*ft_ast_to_linkedlist(t_ast_node *node);
 void		ft_print_exec_list(t_list *node);
+t_list		*ft_exec_node(t_list *list);
 
+//parser_exec.c
+char    	**ft_add_string(char **string_array, char *string);
+t_exec_node *ft_fill_exec_node(t_exec_node *exec_node, t_list *list);
+void    	ft_fill_helper(t_exec_node *exec_node, t_ast_node_type type,
+				t_ast_node *ast_node);
+t_exec_node *ft_create_exec_node(t_ast_node_type type, t_ast_node *ast_node);
+int 		ast_is_redirection(t_ast_node *ast_node);
 #endif

@@ -8,7 +8,7 @@ LDFLAGS = -lreadline
 INPUT_FILES = input.c	input_utils.c	input_validation.c	input_validation_helper.c
 LEXER_FILES = lexer.c	tokenize.c	lexer_utils.c	ft_split_ignore_quotes.c	ft_strchr_ignore_quotes.c
 EXPANSION_FILES = expansion.c	expansion_utils_a.c	expansion_utils_b.c
-PARSER_FILES = parser.c	parser_utils_a.c	parser_rd_helper.c	parser_rd_helper_b.c	parser_recursive_descent.c	parser_print_tree.c	parser_ast_to_ll.c
+PARSER_FILES = parser.c	parser_utils_a.c	parser_rd_helper.c	parser_rd_helper_b.c	parser_recursive_descent.c	parser_print_tree.c	parser_ast_to_ll.c	parser_exec.c
 BUILT_INS_FILES = cd.c	updating_env_after_cd.c	copy_envp.c	copy_envp_with_ac.c env.c	free_dup_envp.c	exit.c	pwd.c	free_tokens.c	echo.c	unset.c	export.c	export_utils1.c	export_utils2.c	export_utils3.c	export_utils4.c	export_utils5.c	export_utils6.c	export_utils7.c	ft_strcmp.c
 SIGNAL_FILES = signal_handler.c
 
