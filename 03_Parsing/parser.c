@@ -81,13 +81,13 @@ t_ast_node	*parse_pipeline(t_parser_context *context)
 	t_ast_node	*node;
 	t_ast_node	*pipe_node;
 
-	node = parse_command(context);
+	node = parse_command(context, NULL);
 	while (is_token_type(context, TOKEN_PIPE))
 	{
 		pipe_node = create_ast_node(AST_PIPE);
 		pipe_node->left = node;
 		advance_token(context);
-		pipe_node->right = parse_command(context);
+		pipe_node->right = parse_command(context, NULL);
 		node = pipe_node;
 	}
 	return (node);

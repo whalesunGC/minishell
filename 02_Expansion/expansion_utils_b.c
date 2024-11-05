@@ -26,7 +26,8 @@ t_list	*ft_expansion_tokens(t_list **token_data)
 
 	data = (t_lex_data *)(*token_data)->content;
 	if (data->type == TOKEN_COMMAND || data->type == TOKEN_INQUOTE
-		|| data->type == TOKEN_VARIABLE)
+		|| data->type == TOKEN_VARIABLE || data->type == TOKEN_RD_FD
+		|| data->type == TOKEN_STRING)
 	{
 		data->raw_string = expansion_string(data->raw_string, 0);
 		data->type = lexer_token_type_a(data->raw_string,

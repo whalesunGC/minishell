@@ -50,7 +50,7 @@ void	swap_parent_node(t_ast_node *parent, t_ast_node *child)
  */
 t_ast_node	*create_redir(t_parser_context *context)
 {
-	t_ast_node *node;
+	t_ast_node	*node;
 
 	node = NULL;
 	if (is_token_type(context, TOKEN_REDIRECTION_IN))
