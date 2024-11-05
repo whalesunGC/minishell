@@ -66,12 +66,15 @@ t_exec_node	*ft_fill_exec_node(t_exec_node *exec_node, t_list *list)
 		if (ast_node->type == AST_COMMAND)
 			break ;
 		else if (ast_is_redirection(ast_node))
-			exec_node->redirect = ft_add_string(exec_node->redirect, ast_node->value);
+			exec_node->redirect = ft_add_string(exec_node->redirect,
+					ast_node->value);
 		else if (ast_node->type == AST_HD_DELIMITER_NQ
 			|| ast_node->type == AST_HD_DELIMITER_Q)
-			exec_node->delimiter = ft_add_string(exec_node->delimiter, ast_node->value);
+			exec_node->delimiter = ft_add_string(exec_node->delimiter,
+					ast_node->value);
 		else if (ast_node->type == AST_RD_FD)
-			exec_node->rd_arg = ft_add_string(exec_node->rd_arg, ast_node->value);
+			exec_node->rd_arg = ft_add_string(exec_node->rd_arg,
+					ast_node->value);
 		else if (ast_node->type == AST_ARGUMENT)
 			exec_node->cmd = ft_add_string(exec_node->cmd, ast_node->value);
 		list = list->next;

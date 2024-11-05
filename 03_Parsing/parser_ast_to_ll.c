@@ -131,7 +131,7 @@ void	ft_print_exec_list(t_list *exec_node)
 			{
 				ft_printf("Redirects:\n");
 				ft_print_stringarray(node->redirect, 0);
-				if (node->redirect)
+				if (node->rd_arg)
 				{
 					ft_printf("Redirect Arguments:\n");
 					ft_print_stringarray(node->rd_arg, 0);
