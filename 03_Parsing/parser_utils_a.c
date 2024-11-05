@@ -73,7 +73,8 @@ void	ft_free_exec_data(void *data)
 	if (data)
 	{
 		node = (t_exec_node *)data;
-		free(node->rd_arg);
+		if (node->rd_arg)
+			free(node->rd_arg);
 		if (node->cmd)
 		{
 			while (node->cmd && node->cmd[len])

@@ -61,7 +61,7 @@ int	main(int ac, char **av, char **envp)
 	add_history(input);
 	input = input_clean(input);
 	if (input == NULL)
-		return (free(input), ft_free(&token_data, &ast_root, NULL), 1);
+		return (0);
 	token_data = lexer(input);
 	token_data = expansion(token_data);
 	ast_root = parser(token_data);

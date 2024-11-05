@@ -74,7 +74,7 @@ t_exec_node	*ft_fill_exec_node(t_exec_node *exec_node, t_list *list)
 		else if (ast_node->type == AST_HD_DELIMITER_Q)
 			ft_fill_helper(exec_node, AST_HD_DELIMITER_Q, ast_node);
 		else if (ast_node->type == AST_RD_FD)
-			exec_node->rd_arg = ast_node->value;
+			exec_node->rd_arg = ft_strdup(ast_node->value);
 		else if (ast_node->type == AST_ARGUMENT)
 			exec_node->cmd = ft_add_string(exec_node->cmd, ast_node->value);
 		list = list->next;
@@ -94,7 +94,7 @@ void	ft_fill_helper(t_exec_node *exec_node, t_ast_node_type type,
 		t_ast_node *ast_node)
 {
 	exec_node->delim_type = type;
-	exec_node->rd_arg = ast_node->value;
+	exec_node->rd_arg = ft_strdup(ast_node->value);
 }
 
 /**
