@@ -115,7 +115,6 @@ t_list	*ft_ast_to_linkedlist(t_ast_node *node)
 void	ft_print_exec_list(t_list *exec_node)
 {
 	t_exec_node	*node;
-	int			i;
 
 	ft_printf("\n=== EXECUTION LIST ===\n");
 	while (exec_node)
@@ -126,26 +125,43 @@ void	ft_print_exec_list(t_list *exec_node)
 		if (node->type == AST_COMMAND)
 		{
 			ft_printf("Command: %s\n", node->cmd[0]);
-			ft_printf("Arguments:\n");
-			i = 1;
-			while (node->cmd[i])
+			ft_printf("Command Arguments:\n");
+			ft_print_stringarray(node->cmd, 1);
+			if (node->redirect)
 			{
-				ft_printf("  [%d]: %s\n", i, node->cmd[i]);
-				i++;
-			}
-			if (node->redirection)
-			{
-				ft_printf("Redirections:\n");
-				ft_printf("    type: %s, file: %s\n",
-					node->redirection == AST_REDIR_IN ? "<" :
-					node->redirection == AST_REDIR_OUT ? ">" :
-					node->redirection == AST_REDIR_APPEND ? ">>" :
-					node->heredoc == AST_HEREDOC ? "<<" : "?",
-					node->rd_arg);
+				ft_printf("Redirects:\n");
+				ft_print_stringarray(node->redirect, 0);
+				if (node->redirect)
+				{
+					ft_printf("Redirect Arguments:\n");
+					ft_print_stringarray(node->rd_arg, 0);
+				}
+				if (node->delimiter)
+				{
+					ft_printf("Heredoc Delimiter:\n");
+					ft_print_stringarray(node->delimiter,0);
+				}	
 			}
 		}
 		ft_printf("-------------------\n");
 		exec_node = exec_node->next;
 	}
 	ft_printf("=== END OF LIST ===\n\n");
+}
+
+/**
+ * @function: ft_print_stringarray
+ * @brief: prints out a stringarray from an index
+ *
+ * @param stringarray: pointer the string array
+ * @param i: index from which to start printing
+ * @return: void function
+ */
+void	ft_print_stringarray(char **stringarray, int i)
+{
+	while (stringarray[i])
+	{
+		ft_printf("  [%d]: %s\n", i, stringarray[i]);
+		i++;
+	}
 }

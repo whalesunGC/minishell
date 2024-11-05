@@ -66,35 +66,17 @@ t_exec_node	*ft_fill_exec_node(t_exec_node *exec_node, t_list *list)
 		if (ast_node->type == AST_COMMAND)
 			break ;
 		else if (ast_is_redirection(ast_node))
-			exec_node->redirection = ast_node->type;
-		else if (ast_node->type == AST_HEREDOC)
-			exec_node->heredoc = AST_HEREDOC;
-		else if (ast_node->type == AST_HD_DELIMITER_NQ)
-			ft_fill_helper(exec_node, AST_HD_DELIMITER_NQ, ast_node);
-		else if (ast_node->type == AST_HD_DELIMITER_Q)
-			ft_fill_helper(exec_node, AST_HD_DELIMITER_Q, ast_node);
+			exec_node->redirect = ft_add_string(exec_node->redirect, ast_node->value);
+		else if (ast_node->type == AST_HD_DELIMITER_NQ
+			|| ast_node->type == AST_HD_DELIMITER_Q)
+			exec_node->delimiter = ft_add_string(exec_node->delimiter, ast_node->value);
 		else if (ast_node->type == AST_RD_FD)
-			exec_node->rd_arg = ft_strdup(ast_node->value);
+			exec_node->rd_arg = ft_add_string(exec_node->rd_arg, ast_node->value);
 		else if (ast_node->type == AST_ARGUMENT)
 			exec_node->cmd = ft_add_string(exec_node->cmd, ast_node->value);
 		list = list->next;
 	}
 	return (exec_node);
-}
-
-/**
- * @function: ft_fill_helper
- * @brief: used to reduce lines in fill_exec_node
- *
- * @param exec_node: current exec_node
- * @param type: delimiter type
- * @param ast_node: current ast_node
- */
-void	ft_fill_helper(t_exec_node *exec_node, t_ast_node_type type,
-		t_ast_node *ast_node)
-{
-	exec_node->delim_type = type;
-	exec_node->rd_arg = ft_strdup(ast_node->value);
 }
 
 /**
@@ -120,10 +102,8 @@ t_exec_node	*ft_create_exec_node(t_ast_node_type type, t_ast_node *ast_node)
 		exec_node->cmd[0] = ast_node->value;
 		exec_node->cmd[1] = NULL;
 	}
-	exec_node->redirection = 42;
+	exec_node->redirect = NULL;
 	exec_node->rd_arg = NULL;
-	exec_node->heredoc = 42;
-	exec_node->delim_type = 42;
 	exec_node->delimiter = NULL;
 	return (exec_node);
 }
@@ -142,6 +122,8 @@ int	ast_is_redirection(t_ast_node *ast_node)
 	else if (ast_node->type == AST_REDIR_OUT)
 		return (1);
 	else if (ast_node->type == AST_REDIR_APPEND)
+		return (1);
+	else if (ast_node->type == AST_HEREDOC)
 		return (1);
 	else
 		return (0);

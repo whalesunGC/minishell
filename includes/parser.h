@@ -33,11 +33,9 @@ typedef struct s_exec_node
 {
 	t_ast_node_type		type;
 	char				**cmd;
-	t_ast_node_type		redirection;
-	char				*rd_arg;
-	t_ast_node_type		heredoc;
-	t_ast_node_type		delim_type;
-	char				*delimiter;
+	char				**redirect;
+	char				**rd_arg;
+	char				**delimiter;
 }						t_exec_node;
 
 typedef struct s_parser_context
@@ -66,11 +64,10 @@ void					ft_print_tree_helper(t_ast_node *node, int depth);
 void					ft_print_tree(t_ast_node *node);
 
 // parser_recursive_descent.c
-t_ast_node				*parse_command(t_parser_context *context);
+t_ast_node				*parse_command(t_parser_context *context, t_ast_node *node);
 t_ast_node				*parse_redirection(t_parser_context *context);
 t_ast_node				*parse_heredoc(t_parser_context *context);
-t_ast_node				*ft_parse_command(t_parser_context *context,
-							t_ast_node **node, t_ast_node **arg_node);
+t_ast_node				*ft_parse_command(t_parser_context *context, t_ast_node **node);
 
 // parser_rd_helper.c
 int						is_token_type(t_parser_context *context,
@@ -90,6 +87,7 @@ void					ft_treeclear(t_ast_node **ast, void (*del)(void *));
 int						is_redirection(t_parser_context *context);
 int						is_heredoc(t_parser_context *context);
 void					ft_free_exec_data(void *data);
+void					ft_free_exec_helper(char **stringarray);
 
 // parser_print.c
 void					ft_print_tree_helper(t_ast_node *node, int depth);
@@ -100,13 +98,12 @@ t_list					*ft_ast_preorder(t_ast_node *node);
 t_list					*ft_ast_to_linkedlist(t_ast_node *node);
 void					ft_print_exec_list(t_list *node);
 t_list					*ft_exec_node(t_list *list);
+void					ft_print_stringarray(char **stringarray, int i);
 
 // parser_exec.c
 char					**ft_add_string(char **string_array, char *string);
 t_exec_node				*ft_fill_exec_node(t_exec_node *exec_node,
 							t_list *list);
-void					ft_fill_helper(t_exec_node *exec_node,
-							t_ast_node_type type, t_ast_node *ast_node);
 t_exec_node				*ft_create_exec_node(t_ast_node_type type,
 							t_ast_node *ast_node);
 int						ast_is_redirection(t_ast_node *ast_node);

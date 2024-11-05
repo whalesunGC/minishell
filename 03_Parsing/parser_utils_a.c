@@ -64,25 +64,51 @@ void	ft_treeclear(t_ast_node **ast, void (*del)(void *))
 void	ft_free_exec_data(void *data)
 {
 	t_exec_node	*node;
-	int			len;
-	int			i;
 
 	node = NULL;
-	len = 0;
-	i = 0;
 	if (data)
 	{
 		node = (t_exec_node *)data;
-		if (node->rd_arg)
-			free(node->rd_arg);
 		if (node->cmd)
 		{
-			while (node->cmd && node->cmd[len])
-				len++;
-			while (i > len)
-				free(node->cmd[i]);
+			ft_free_exec_helper(node->cmd);
+			free(node->cmd);
 		}
-		free(node->cmd);
+		if (node->rd_arg)
+		{
+			ft_free_exec_helper(node->rd_arg);
+			free(node->rd_arg);
+		}
+		if (node->delimiter)
+		{
+			ft_free_exec_helper(node->delimiter);
+			free(node->delimiter);
+		}
+		if (node->redirect)
+		{
+			ft_free_exec_helper(node->redirect);
+			free(node->redirect);
+		}
 		free(node);
 	}
+}
+
+/**
+ * @function: ft_free_exec_helper
+ * @brief: takes an array of strings and frees its contents.
+ *
+ * @param data: the struct t_exec_node
+ * @return: no return value, void function.
+ */
+void	ft_free_exec_helper(char **stringarray)
+{
+	int	len;
+	int	i;
+
+	len = 0;
+	i = 0;
+	while (stringarray && stringarray[len])
+		len++;
+	while (i > len)
+		free(stringarray[i]);
 }

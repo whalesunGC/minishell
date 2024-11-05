@@ -19,16 +19,14 @@
  * @param context: The parser context containing token information
  * @return: The AST node representing the command
  */
-t_ast_node	*parse_command(t_parser_context *context)
+t_ast_node	*parse_command(t_parser_context *context, t_ast_node *node)
 {
-	t_ast_node	*node;
 	t_ast_node	*redir_node;
-	t_ast_node	*arg_node;
 	t_ast_node	*heredoc_node;
 
-	node = create_ast_node(AST_COMMAND);
+	if (!node)
+		node = create_ast_node(AST_COMMAND);
 	redir_node = NULL;
-	arg_node = NULL;
 	heredoc_node = NULL;
 	while (is_redirection(context))
 	{
@@ -40,18 +38,11 @@ t_ast_node	*parse_command(t_parser_context *context)
 		heredoc_node = parse_heredoc(context);
 		add_child_node(node, heredoc_node);
 	}
-	node = ft_parse_command(context, &node, &arg_node);
-	while (is_redirection(context))
-	{
-		redir_node = parse_redirection(context);
-		add_child_node(node, redir_node);
-	}
-	while (is_heredoc(context))
-	{
-		heredoc_node = parse_heredoc(context);
-		add_child_node(node, heredoc_node);
-	}
-	return (node = ft_parse_command(context, &node, &arg_node));
+	node = ft_parse_command(context, &node);
+	if (is_redirection(context) || is_heredoc(context)
+		|| is_token_type(context, TOKEN_STRING))
+		return (parse_command(context, node));
+	return (node);
 }
 
 /**
@@ -151,9 +142,11 @@ t_ast_node	*parse_heredoc(t_parser_context *context)
  * @param context: The parser context containing token information
  * @return: The AST node representing commands
  */
-t_ast_node	*ft_parse_command(t_parser_context *context, t_ast_node **node,
-		t_ast_node **arg_node)
+t_ast_node	*ft_parse_command(t_parser_context *context, t_ast_node **node)
 {
+	t_ast_node	*arg_node;
+
+	arg_node = NULL;
 	if (is_token_type(context, TOKEN_COMMAND))
 	{
 		(*node)->value = ft_strdup(((t_lex_data *)
@@ -162,10 +155,10 @@ t_ast_node	*ft_parse_command(t_parser_context *context, t_ast_node **node,
 	}
 	while (is_token_type(context, TOKEN_STRING))
 	{
-		(*arg_node) = create_ast_node(AST_ARGUMENT);
-		(*arg_node)->value = ft_strdup(((t_lex_data *)
+		arg_node = create_ast_node(AST_ARGUMENT);
+		arg_node->value = ft_strdup(((t_lex_data *)
 					context->current_token->content)->raw_string);
-		add_child_node(*node, *arg_node);
+		add_child_node(*node, arg_node);
 		advance_token(context);
 	}
 	return (*node);
