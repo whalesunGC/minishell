@@ -64,10 +64,12 @@ void					ft_print_tree_helper(t_ast_node *node, int depth);
 void					ft_print_tree(t_ast_node *node);
 
 // parser_recursive_descent.c
-t_ast_node				*parse_command(t_parser_context *context, t_ast_node *node);
+t_ast_node				*parse_command(t_parser_context *context,
+							t_ast_node *node);
 t_ast_node				*parse_redirection(t_parser_context *context);
 t_ast_node				*parse_heredoc(t_parser_context *context);
-t_ast_node				*ft_parse_command(t_parser_context *context, t_ast_node **node);
+t_ast_node				*ft_parse_command(t_parser_context *context,
+							t_ast_node **node);
 
 // parser_rd_helper.c
 int						is_token_type(t_parser_context *context,

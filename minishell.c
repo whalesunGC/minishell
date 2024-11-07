@@ -41,6 +41,7 @@ void	ft_free(t_list **token_data, t_ast_node **ast_root, t_list **exec_data)
 
 int	main(int ac, char **av, char **envp)
 {
+	char		**env;
 	char		*input;
 	t_list		*token_data;
 	t_ast_node	*ast_root;
@@ -53,19 +54,37 @@ int	main(int ac, char **av, char **envp)
 		ft_printf("envp not initialised\n");
 		exit(EXIT_FAILURE);
 	}
+	parent_signal_handlers();
+	env = copy_envp(envp);
+	if (env == NULL)
+	{
+		ft_printf("Duplicate of envp error!\n");
+		exit(EXIT_FAILURE);
+	}
 	token_data = NULL;
 	ast_root = NULL;
 	exec_data = NULL;
-	parent_signal_handlers();
-	input = readline("minishell>> ");
-	add_history(input);
-	input = input_clean(input);
-	if (input == NULL)
-		return (0);
-	token_data = lexer(input);
-	token_data = expansion(token_data);
-	ast_root = parser(token_data);
-	exec_data = ft_ast_to_linkedlist(ast_root);
-	free(input);
+	while (1)
+	{
+		input = readline("minishell>> ");
+		if (input == NULL)
+		{
+			ft_printf("Exiting minishell\n");
+			break ;
+		}
+		add_history(input);
+		input = input_clean(input);
+		if (input == NULL)
+			return (0);
+		token_data = lexer(input);
+		token_data = expansion(token_data);
+		ast_root = parser(token_data);
+		exec_data = ft_ast_to_linkedlist(ast_root);
+		execution(exec_data, &env, input);
+		execution_with_pipes(exec_data, env);
+		free(input);
+	}
+	free_dup_envp(env);
+	rl_clear_history();
 	return (ft_free(&token_data, &ast_root, &exec_data), 1);
 }

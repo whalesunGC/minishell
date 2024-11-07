@@ -21,6 +21,7 @@
 # include "signal_handler.h"
 # include "built_in.h"
 # include "redirections.h"
+# include "execution.h"
 # include <signal.h>
 # include <stdio.h>
 # include <readline/readline.h>
