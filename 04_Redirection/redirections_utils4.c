@@ -26,7 +26,7 @@
  * @return: void function
  */
 
-static void	child_process(t_redirections_params *params,
+static void	child_process_append(t_redirections_params *params,
 	char **av, char **env, char *input)
 
 {
@@ -76,7 +76,7 @@ int	append_output_redirections_operator(t_redirections_params *params,
 		return (-1);
 	}
 	if (params->pid == 0)
-		child_process(params, av, env, input);
+		child_process_append(params, av, env, input);
 	else
 		wait(NULL);
 	return (0);

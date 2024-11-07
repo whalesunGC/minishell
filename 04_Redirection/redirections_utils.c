@@ -103,7 +103,7 @@ static void	handle_execve_error(t_redirections_params *params,
  * @return: void function
  */
 
-static void	child_process(t_redirections_params *params,
+static void	child_process_input(t_redirections_params *params,
 	char **av, char **env, char *input)
 
 {
@@ -149,7 +149,7 @@ int	input_redirections_operator(t_redirections_params *params,
 			return (-1);
 		}
 		if (params->pid == 0)
-			child_process(params, av, env, input);
+			child_process_input(params, av, env, input);
 		else
 			wait(NULL);
 	}
