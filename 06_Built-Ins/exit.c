@@ -109,26 +109,23 @@ static int	is_argument_numeric(const char *arg)
 void	exit_command(int ac, char **av, char **env, char *input)
 
 {
-	int	i;
-
-	i = 0;
-	if (ac > 0 && ft_strncmp(av[i], "exit", 4) == 0)
+	if (ac > 0 && ft_strncmp(av[0], "exit", 4) == 0)
 	{
-		if (ac == 1 && ft_strlen(av[i]) == 4)
+		if (ac == 1 && ft_strlen(av[0]) == 4)
 			exit_is_the_only_argument(av, env, input);
-		else if (ac == 1 && ft_strlen(av[i]) != 4)
-			ft_printf("%s: command not found\n", av[i]);
-		else if (ac == 2 && ft_strlen(av[i]) == 4)
+		else if (ac == 1 && ft_strlen(av[0]) != 4)
+			ft_printf("%s: command not found\n", av[0]);
+		else if (ac == 2 && ft_strlen(av[0]) == 4)
 		{
 			if (is_argument_numeric(av[1]) == 0)
 			{
 				ft_printf("%s: %s: numberic"
-					" argument required\n", av[i], av[1]);
+					" argument required\n", av[0], av[1]);
 				return ;
 			}
 			exit_with_one_other_argument(av, env, input);
 		}
 		else
-			ft_printf("%s: too many arguments\n", av[i]);
+			ft_printf("%s: too many arguments\n", av[0]);
 	}
 }
