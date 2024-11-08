@@ -89,10 +89,10 @@ int	check_valid_split(t_command_params *params)
 
 {
 	params->tokens = ft_split(params->path, ':');
+	free(params->path);
 	if (params->tokens == NULL)
 	{
 		ft_printf("memory allocation failed when splitting PATH.\n");
-		free(params->path);
 		return (-1);
 	}
 	return (0);
@@ -116,7 +116,6 @@ int	check_valid_temp_path(t_command_params *params)
 	if (params->temp_path == NULL)
 	{
 		ft_printf("memory allocation failed for temp_path.\n");
-		free(params->path);
 		free_tokens(params->tokens);
 		return (-1);
 	}
@@ -141,7 +140,6 @@ int	check_valid_full_path(t_command_params *params, char **av, int index)
 	if (params->full_path == NULL)
 	{
 		ft_printf("memory allocation failed for full_path.\n");
-		free(params->path);
 		free_path_tokens(params);
 		return (-1);
 	}
