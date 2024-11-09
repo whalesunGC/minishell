@@ -62,5 +62,5 @@ int	ft_isspecial(int i)
  */
 int	ft_iswhitespace(int i)
 {
-	return (i == 32 || (i >= 9 && i <= 10) || (i >= 11 && i <= 13));
+	return (i == ' ' || i == '\t');
 }

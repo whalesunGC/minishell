@@ -13,6 +13,32 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_string_remove_quotes
+ * @brief: takes a string, removes quotes from both ends and returns the
+ * resulting new string.
+ * 
+ * @param string: pointer to the address of the input string 
+ * (passed by reference)
+ * @return: new_string freeing the previous string
+ */
+char	*ft_string_remove_quotes(char **string)
+{
+	int		len;
+	char	*new_string;
+	char	*og_string;
+
+	if (!*string)
+		return (NULL);
+	og_string = *string;
+	len = ft_strlen(*string);
+	new_string = (char *)malloc((len - 1) * sizeof(char));
+	if (!new_string)
+		return (NULL);
+	ft_strlcpy(new_string, *string + 1, len - 1);
+	return (free(og_string), new_string);
+}
+
+/**
  * @function: ft_expansion_tokens
  * @brief: this handles the expansion post tokenization
  * 
@@ -25,6 +51,8 @@ t_list	*ft_expansion_tokens(t_list **token_data)
 	t_lex_data	*data;
 
 	data = (t_lex_data *)(*token_data)->content;
+	if (data->type == TOKEN_COMMAND && data->in_quote)
+		data->raw_string = ft_string_remove_quotes(&data->raw_string);
 	if (data->type == TOKEN_COMMAND || data->type == TOKEN_INQUOTE
 		|| data->type == TOKEN_VARIABLE || data->type == TOKEN_RD_FD
 		|| data->type == TOKEN_STRING)

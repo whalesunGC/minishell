@@ -75,16 +75,23 @@ int	main(int ac, char **av, char **envp)
 		add_history(input);
 		input = input_clean(input);
 		if (input == NULL)
-			return (0);
+			continue ;
 		token_data = lexer(input);
 		token_data = expansion(token_data);
 		ast_root = parser(token_data);
 		exec_data = ft_ast_to_linkedlist(ast_root);
+		if (!exec_data)
+		{
+			free(input);
+			ft_free(&token_data, &ast_root, &exec_data);
+			continue ;
+		}
 		execution(exec_data, &env, input);
 		execution_with_pipes(exec_data, env);
 		free(input);
 	}
 	free_dup_envp(env);
 	rl_clear_history();
+	free(input);
 	return (ft_free(&token_data, &ast_root, &exec_data), 1);
 }

@@ -25,5 +25,6 @@ char	*ft_env_search(char *var);
 void	expansion_replace_string(char *env_var, int index, char **exp_input);
 
 //expansion_utils_b.c
+char	*ft_string_remove_quotes(char **string);
 t_list	*ft_expansion_tokens(t_list **token_data);
 #endif
