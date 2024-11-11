@@ -82,8 +82,6 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env)
 	t_lex_data	*data;
 
 	data = (t_lex_data *)(*token_data)->content;
-	if (data->type == TOKEN_COMMAND && data->in_quote)
-		data->raw_string = ft_string_remove_quotes(&data->raw_string);
 	if (data->type == TOKEN_COMMAND || data->type == TOKEN_INQUOTE
 		|| data->type == TOKEN_VARIABLE || data->type == TOKEN_RD_FD
 		|| data->type == TOKEN_STRING)
@@ -95,6 +93,9 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env)
 			data->type = lexer_token_type_b(data->raw_string, data->in_quote,
 					data->is_hd_delimiter, data->is_fd);
 	}
+	if ((data->type == TOKEN_COMMAND && data->in_quote)
+		|| (data->type == TOKEN_INQUOTE && data->in_quote))
+		data->raw_string = ft_string_remove_quotes(&data->raw_string);
 	*token_data = (*token_data)->next;
 	return (*token_data);
 }
