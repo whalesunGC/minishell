@@ -89,7 +89,8 @@ char	*expansion_string(char *input, int ignore_quote, char **env)
 			in_single_quote = !in_single_quote;
 			i++;
 		}
-		else if (input[i] == '$' && (!in_single_quote || ignore_quote))
+		else if ((input[i] == '$' && ft_is_env(input[i + 1]))
+			&& (!in_single_quote || ignore_quote))
 		{
 			env_var = ft_var_exp(&input, i, env);
 			expansion_replace_string(env_var, i, &input);
