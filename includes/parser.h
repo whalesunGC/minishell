@@ -83,24 +83,31 @@ void					add_child_node(t_ast_node *parent, t_ast_node *child);
 // parser_rd_helper_b.c
 void					swap_parent_node(t_ast_node *parent, t_ast_node *child);
 t_ast_node				*create_redir(t_parser_context *context);
+void					handle_redirection_target(t_parser_context *context,
+							t_ast_node *node);
+void					handle_heredoc_delimiter(t_parser_context *context,
+							t_ast_node *node);
 
-// parser utils
+// parser utils_a
 void					ft_treeclear(t_ast_node **ast, void (*del)(void *));
 int						is_redirection(t_parser_context *context);
 int						is_heredoc(t_parser_context *context);
 void					ft_free_exec_data(void *data);
 void					ft_free_exec_helper(char **stringarray);
 
-// parser_print.c
+// parser utils_b
+void					ft_free_node_components(t_exec_node *node);
+
+// parser_print_tree.c
 void					ft_print_tree_helper(t_ast_node *node, int depth);
 void					ft_print_tree(t_ast_node *root);
+void					ft_print_exec_list(t_list *node);
+void					ft_print_stringarray(char **stringarray, int i);
 
 // parser_ast_to_ll.c
 t_list					*ft_ast_preorder(t_ast_node *node);
 t_list					*ft_ast_to_linkedlist(t_ast_node *node);
-void					ft_print_exec_list(t_list *node);
 t_list					*ft_exec_node(t_list *list);
-void					ft_print_stringarray(char **stringarray, int i);
 
 // parser_exec.c
 char					**ft_add_string(char **string_array, char *string);

@@ -65,32 +65,11 @@ void	ft_free_exec_data(void *data)
 {
 	t_exec_node	*node;
 
-	node = NULL;
-	if (data)
-	{
-		node = (t_exec_node *)data;
-		if (node->cmd)
-		{
-			ft_free_exec_helper(node->cmd);
-			free(node->cmd);
-		}
-		if (node->rd_arg)
-		{
-			ft_free_exec_helper(node->rd_arg);
-			free(node->rd_arg);
-		}
-		if (node->delimiter)
-		{
-			ft_free_exec_helper(node->delimiter);
-			free(node->delimiter);
-		}
-		if (node->redirect)
-		{
-			ft_free_exec_helper(node->redirect);
-			free(node->redirect);
-		}
-		free(node);
-	}
+	if (!data)
+		return ;
+	node = (t_exec_node *)data;
+	ft_free_node_components(node);
+	free(node);
 }
 
 /**

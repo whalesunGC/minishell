@@ -55,7 +55,6 @@ t_ast_node	*parse_command(t_parser_context *context, t_ast_node *node)
 t_ast_node	*parse_redirection(t_parser_context *context)
 {
 	t_ast_node	*node;
-	t_ast_node	*target_node;
 
 	node = create_redir(context);
 	if (is_redirection(context))
@@ -70,19 +69,7 @@ t_ast_node	*parse_redirection(t_parser_context *context)
 		context->error_message = ft_strdup("Expected a redirection operator");
 		return (node);
 	}
-	if (is_token_type(context, TOKEN_RD_FD))
-	{
-		target_node = create_ast_node(AST_RD_FD);
-		target_node->value = ft_strdup(((t_lex_data *)
-					context->current_token->content)->raw_string);
-		add_child_node(node, target_node);
-		advance_token(context);
-	}
-	else
-	{
-		context->error = 1;
-		context->error_message = ft_strdup("Expected a redirection target");
-	}
+	handle_redirection_target(context, node);
 	return (node);
 }
 
@@ -96,7 +83,6 @@ t_ast_node	*parse_redirection(t_parser_context *context)
 t_ast_node	*parse_heredoc(t_parser_context *context)
 {
 	t_ast_node	*node;
-	t_ast_node	*target_node;
 
 	node = create_ast_node(AST_HEREDOC);
 	if (is_token_type(context, TOKEN_HEREDOC))
@@ -111,27 +97,7 @@ t_ast_node	*parse_heredoc(t_parser_context *context)
 		context->error_message = ft_strdup("Expected a heredoc operator");
 		return (node);
 	}
-	if (is_token_type(context, TOKEN_HD_DELIMITER_Q))
-	{
-		target_node = create_ast_node(AST_HD_DELIMITER_Q);
-		target_node->value = ft_strdup(((t_lex_data *)
-					context->current_token->content)->raw_string);
-		add_child_node(node, target_node);
-		advance_token(context);
-	}
-	else if (is_token_type(context, TOKEN_HD_DELIMITER_NQ))
-	{
-		target_node = create_ast_node(AST_HD_DELIMITER_NQ);
-		target_node->value = ft_strdup(((t_lex_data *)
-					context->current_token->content)->raw_string);
-		add_child_node(node, target_node);
-		advance_token(context);
-	}
-	else
-	{
-		context->error = 1;
-		context->error_message = ft_strdup("Expected a heredoc delimiter");
-	}
+	handle_heredoc_delimiter(context, node);
 	return (node);
 }
 
