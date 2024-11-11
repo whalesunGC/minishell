@@ -99,12 +99,12 @@ char	*ft_input_add_whitespace(char *input)
 			in_s_q = !in_s_q;
 		if (input[i] == '\"')
 			in_d_q = !in_d_q;
-		if ((input[i + 1] == '\'' || input[i + 1] == '\"')
-			&& !in_s_q && !in_d_q && input[i] != ' ')
-			input = ft_str_insert(input, i, " ");
-		if ((input[i + 1] == '\'' || input[i + 1] == '\"')
-			&& (in_s_q || in_d_q) && input[i + 2] != ' ')
-			input = ft_str_insert(input, i + 1, " ");
+		//if ((input[i + 1] == '\'' || input[i + 1] == '\"')
+		//	&& !in_s_q && !in_d_q && input[i] != ' ')
+		//	input = ft_str_insert(input, i, " ");
+		//if ((input[i + 1] == '\'' || input[i + 1] == '\"')
+		//	&& (in_s_q || in_d_q) && input[i + 2] != ' ')
+		//	input = ft_str_insert(input, i + 1, " ");
 		i = ft_add_whitespace_special(&input, i, in_s_q, in_d_q);
 		i++;
 	}

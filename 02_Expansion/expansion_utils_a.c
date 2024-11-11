@@ -42,11 +42,11 @@ void	expansion_replace_string(char *env_var, int index, char **exp_input)
  	corresponding string from the env list if it exists.
 	Else it returns a whitespace (' ')
  */
-char	*ft_env_search(char *var)
+char	*ft_env_search(char *var, char **env)
 {
 	char	*env_var;
 
-	env_var = getenv(++var);
+	env_var = ft_getenv(++var, env);
 	if (env_var != NULL)
 	{
 		ft_printf("env_var found: %s\n", env_var);

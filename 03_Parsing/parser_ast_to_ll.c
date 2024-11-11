@@ -62,8 +62,11 @@ t_list	*ft_exec_node(t_list *list)
 		ast_node = (t_ast_node *)list->content;
 		if (ast_node->type == AST_AND
 			|| ast_node->type == AST_OR)
-				return (ft_lstclear(&exec_list, ft_free_exec_data),
-					ft_printf("Syntax error: && or  ||\n"), NULL);
+			return (ft_lstclear(&exec_list, ft_free_exec_data),
+				ft_printf("Syntax error: && or ||\n"), NULL);
+		if (ast_node->type == AST_SUBSHELL)
+			return (ft_lstclear(&exec_list, ft_free_exec_data),
+				ft_printf("Syntax error: Subshell\n"), NULL);
 		if (ast_node->type == AST_PIPE)
 			exec_node = ft_create_exec_node(AST_PIPE, ast_node);
 		else if (ast_node->type == AST_COMMAND)

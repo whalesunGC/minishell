@@ -13,6 +13,37 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_getenv
+ * @brief: takes a string and searches the env array for a corresponding
+ * string after the = sign
+ * 
+ * @param string: search string
+ * @param env: array of strings to search
+ * @return: the result env if found, NULL if not found.
+ */
+char	*ft_getenv(char *string, char **env)
+{
+	int		i;
+	int		len;
+	char	*value;
+
+	if (!string || !env)
+		return (NULL);
+	len = ft_strlen(string);
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], string, len) == 0 && env[i][len] == '=')
+		{
+			value = ft_strdup(env[i] + len + 1);
+			return (value);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
+/**
  * @function: ft_string_remove_quotes
  * @brief: takes a string, removes quotes from both ends and returns the
  * resulting new string.
@@ -46,7 +77,7 @@ char	*ft_string_remove_quotes(char **string)
  * a node on the token linked_list.
  * @return: a pointer to the next token.
  */
-t_list	*ft_expansion_tokens(t_list **token_data)
+t_list	*ft_expansion_tokens(t_list **token_data, char **env)
 {
 	t_lex_data	*data;
 
@@ -57,7 +88,7 @@ t_list	*ft_expansion_tokens(t_list **token_data)
 		|| data->type == TOKEN_VARIABLE || data->type == TOKEN_RD_FD
 		|| data->type == TOKEN_STRING)
 	{
-		data->raw_string = expansion_string(data->raw_string, 0);
+		data->raw_string = expansion_string(data->raw_string, 0, env);
 		data->type = lexer_token_type_a(data->raw_string,
 				data->is_first_token);
 		if (data->type == 42)

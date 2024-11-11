@@ -109,6 +109,6 @@ void	ft_free_exec_helper(char **stringarray)
 	i = 0;
 	while (stringarray && stringarray[len])
 		len++;
-	while (i > len)
-		free(stringarray[i]);
+	while (i < len)
+		free(stringarray[i++]);
 }

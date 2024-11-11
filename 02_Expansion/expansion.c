@@ -46,10 +46,10 @@ int	ft_env_len(const char *input)
  * 
  * @return: returns a string with the '$VAR' replaced with
  	its corresponding env variable if found, else it returns
-	a string with '$VAR' replaced with a whitespace(' ') 
+	a string with '$VAR' replaced with a NULL 
  */
 
-char	*ft_var_exp(char **input, int start_index)
+char	*ft_var_exp(char **input, int start_index, char **env)
 {
 	int		env_len;
 	char	*var;
@@ -58,7 +58,7 @@ char	*ft_var_exp(char **input, int start_index)
 	env_len = ft_env_len(*input + start_index);
 	var = ft_substr(*input + start_index, 0, env_len);
 	ft_printf("variable found: %s\n", var);
-	env_var = ft_env_search(var);
+	env_var = ft_env_search(var, env);
 	return (free(var), env_var);
 }
 /**
@@ -74,7 +74,7 @@ char	*ft_var_exp(char **input, int start_index)
  * @return: returns expanded string or NULL if expansion fails.
  */
 
-char	*expansion_string(char *input, int ignore_quote)
+char	*expansion_string(char *input, int ignore_quote, char **env)
 {
 	char	*env_var;
 	int		in_single_quote;
@@ -91,10 +91,13 @@ char	*expansion_string(char *input, int ignore_quote)
 		}
 		else if (input[i] == '$' && (!in_single_quote || ignore_quote))
 		{
-			env_var = ft_var_exp(&input, i);
+			env_var = ft_var_exp(&input, i, env);
 			expansion_replace_string(env_var, i, &input);
 			if (env_var)
+			{
 				i += ft_strlen(env_var);
+				free(env_var);
+			}
 		}
 		else
 			i++;
@@ -110,7 +113,7 @@ char	*expansion_string(char *input, int ignore_quote)
  * @param token_data: linked-list of lexed token_data
  * @return: linked-list of token_data with expansion
  */
-t_list	*expansion(t_list *token_data)
+t_list	*expansion(t_list *token_data, char **env)
 {
 	t_list		*head;
 
@@ -119,7 +122,7 @@ t_list	*expansion(t_list *token_data)
 		return (NULL);
 	else
 		while (token_data != NULL)
-			token_data = ft_expansion_tokens(&token_data);
+			token_data = ft_expansion_tokens(&token_data, env);
 	ft_print_tokens(head);
 	return (head);
 }

@@ -139,6 +139,8 @@ t_list	*lexer_init_data(char **tokens)
 	{
 		data = lexer_token_data(tokens[i], is_first_token, is_hd_delimiter,
 				is_fd);
+		if (!data)
+			return (NULL);
 		if (i == 0)
 			first_node = ft_lstnew(data);
 		else
@@ -179,6 +181,7 @@ t_list	*lexer(char *input)
 	else
 	{
 		token_data = lexer_init_data(tokens);
+		if (!token_data)
 		ft_print_tokens(token_data);
 	}
 	return (ft_free_split(tokens), free(tokens), token_data);
