@@ -153,7 +153,8 @@ t_ast_node	*ft_parse_command(t_parser_context *context, t_ast_node **node)
 					context->current_token->content)->raw_string);
 		advance_token(context);
 	}
-	while (is_token_type(context, TOKEN_STRING))
+	while (is_token_type(context, TOKEN_STRING)
+		|| is_token_type(context, TOKEN_INQUOTE))
 	{
 		arg_node = create_ast_node(AST_ARGUMENT);
 		arg_node->value = ft_strdup(((t_lex_data *)

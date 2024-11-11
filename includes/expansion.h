@@ -13,17 +13,19 @@
 # define EXPANSION_H
 
 //expansion.c
-t_list	*expansion(t_list *token_data);
-char	*expansion_string(char *input, int ignore_quote);
-char	*ft_var_exp(char **input, int start_index);
+t_list	*expansion(t_list *token_data, char **env);
+char	*expansion_string(char *input, int ignore_quote, char **env);
+char	*ft_var_exp(char **input, int start_index, char **env);
 int		ft_env_len(const char *input);
 
 //expansion_utils_a.c
 char	*ft_str_replace(char *input, int index, char *rep_substring);
 char	*ft_str_insert(char *input, int index, char *insert_string);
-char	*ft_env_search(char *var);
+char	*ft_env_search(char *var, char **env);
 void	expansion_replace_string(char *env_var, int index, char **exp_input);
 
 //expansion_utils_b.c
-t_list	*ft_expansion_tokens(t_list **token_data);
+char	*ft_string_remove_quotes(char **string);
+t_list	*ft_expansion_tokens(t_list **token_data, char **env);
+char	*ft_getenv(char *string, char **env);
 #endif

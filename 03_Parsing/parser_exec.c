@@ -39,7 +39,7 @@ char	**ft_add_string(char **string_array, char *string)
 		new_array[i] = string_array[i];
 		i++;
 	}
-	new_array[i] = string;
+	new_array[i] = ft_strdup(string);
 	new_array[i + 1] = NULL;
 	free(string_array);
 	return (new_array);
@@ -102,7 +102,7 @@ t_exec_node	*ft_create_exec_node(t_ast_node_type type, t_ast_node *ast_node)
 	else if (type == AST_COMMAND)
 	{
 		exec_node->cmd = (char **)malloc(2 * sizeof(char *));
-		exec_node->cmd[0] = ast_node->value;
+		exec_node->cmd[0] = ft_strdup(ast_node->value);
 		exec_node->cmd[1] = NULL;
 	}
 	exec_node->redirect = NULL;

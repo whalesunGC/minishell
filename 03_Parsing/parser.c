@@ -109,6 +109,8 @@ t_ast_node	*parser(t_list *token_data)
 	t_parser_context	context;
 	t_ast_node			*ast_root;
 
+	if (!token_data)
+		return (NULL);
 	context.current_token = token_data;
 	context.token_list = token_data;
 	context.error = 0;
