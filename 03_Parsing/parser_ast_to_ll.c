@@ -41,6 +41,52 @@ t_list	*ft_ast_preorder(t_ast_node *node)
 }
 
 /**
+ * @function: ft_handle_invalid_nodes
+ * @brief: checks for invalid node types and handles errors
+ * 
+ * @param ast_node: current AST node being processed
+ * @param exec_list: list to clear in case of error
+ * @return: 1 if invalid node found, 0 otherwise
+ */
+static int	ft_handle_invalid_nodes(t_ast_node *ast_node, t_list *exec_list)
+{
+	if (ast_node->type == AST_AND || ast_node->type == AST_OR)
+	{
+		ft_lstclear(&exec_list, ft_free_exec_data);
+		ft_printf("Syntax error: && or ||\n");
+		return (1);
+	}
+	if (ast_node->type == AST_SUBSHELL)
+	{
+		ft_lstclear(&exec_list, ft_free_exec_data);
+		ft_printf("Syntax error: Subshell\n");
+		return (1);
+	}
+	return (0);
+}
+
+/**
+ * @function: ft_process_exec_node
+ * @brief: processes and adds an exec node to the list
+ * 
+ * @param exec_node: node to process
+ * @param exec_list: list to add node to
+ * @param list: current position in AST list
+ * @return: updated exec_list or NULL on error
+ */
+static t_list	*ft_process_exec_node(t_exec_node *exec_node,
+									t_list *exec_list, t_list *list)
+{
+	if (exec_node->type == AST_COMMAND)
+		exec_node = ft_fill_exec_node(exec_node, list);
+	if (!exec_list)
+		exec_list = ft_lstnew(exec_node);
+	else
+		ft_lstadd_back(&exec_list, ft_lstnew(exec_node));
+	return (exec_list);
+}
+
+/**
  * @function: ft_exec_node
  * @brief: takes a linked-list that has been pre-order
  * traversed and outputs a linked-list containing
@@ -60,25 +106,15 @@ t_list	*ft_exec_node(t_list *list)
 	while (list)
 	{
 		ast_node = (t_ast_node *)list->content;
-		if (ast_node->type == AST_AND
-			|| ast_node->type == AST_OR)
-			return (ft_lstclear(&exec_list, ft_free_exec_data),
-				ft_printf("Syntax error: && or ||\n"), NULL);
-		if (ast_node->type == AST_SUBSHELL)
-			return (ft_lstclear(&exec_list, ft_free_exec_data),
-				ft_printf("Syntax error: Subshell\n"), NULL);
+		if (ft_handle_invalid_nodes(ast_node, exec_list))
+			return (NULL);
 		if (ast_node->type == AST_PIPE)
 			exec_node = ft_create_exec_node(AST_PIPE, ast_node);
 		else if (ast_node->type == AST_COMMAND)
 			exec_node = ft_create_exec_node(AST_COMMAND, ast_node);
 		if (exec_node)
 		{
-			if (exec_node->type == AST_COMMAND)
-				exec_node = ft_fill_exec_node(exec_node, list);
-			if (!exec_list)
-				exec_list = ft_lstnew(exec_node);
-			else
-				ft_lstadd_back(&exec_list, ft_lstnew(exec_node));
+			exec_list = ft_process_exec_node(exec_node, exec_list, list);
 			exec_node = NULL;
 		}
 		list = list->next;
@@ -112,65 +148,4 @@ t_list	*ft_ast_to_linkedlist(t_ast_node *node)
 		return (NULL);
 	ft_print_exec_list(exec_node);
 	return (exec_node);
-}
-
-/**
- * @function: ft_print_exec_list
- * @brief: prints out the entire exec list
- *
- * @param node: pointer to the head of the linked list
- * @return: void function
- */
-void	ft_print_exec_list(t_list *exec_node)
-{
-	t_exec_node	*node;
-
-	ft_printf("\n=== EXECUTION LIST ===\n");
-	while (exec_node)
-	{
-		node = (t_exec_node *)exec_node->content;
-		ft_printf("Node Type: %s\n",
-			node->type == AST_PIPE ? "PIPE" : "COMMAND");
-		if (node->type == AST_COMMAND)
-		{
-			ft_printf("Command: %s\n", node->cmd[0]);
-			ft_printf("Command Arguments:\n");
-			ft_print_stringarray(node->cmd, 1);
-			if (node->redirect)
-			{
-				ft_printf("Redirects:\n");
-				ft_print_stringarray(node->redirect, 0);
-				if (node->rd_arg)
-				{
-					ft_printf("Redirect Arguments:\n");
-					ft_print_stringarray(node->rd_arg, 0);
-				}
-				if (node->delimiter)
-				{
-					ft_printf("Heredoc Delimiter:\n");
-					ft_print_stringarray(node->delimiter,0);
-				}	
-			}
-		}
-		ft_printf("-------------------\n");
-		exec_node = exec_node->next;
-	}
-	ft_printf("=== END OF LIST ===\n\n");
-}
-
-/**
- * @function: ft_print_stringarray
- * @brief: prints out a stringarray from an index
- *
- * @param stringarray: pointer the string array
- * @param i: index from which to start printing
- * @return: void function
- */
-void	ft_print_stringarray(char **stringarray, int i)
-{
-	while (stringarray[i])
-	{
-		ft_printf("  [%d]: %s\n", i, stringarray[i]);
-		i++;
-	}
 }

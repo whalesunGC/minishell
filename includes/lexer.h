@@ -42,24 +42,33 @@ typedef struct s_lex_data
 	int				is_fd;
 }					t_lex_data;
 
+typedef struct s_lex_init_state
+{
+	int				i;
+	int				in_quote;
+	int				is_first_token;
+	int				is_hd_delimiter;
+	int				is_fd;
+}					t_lex_init_state;
+
 // lexer.c
-t_list			*lexer(char *input);
-t_lex_data		*lexer_token_data(char *input, int is_first_token,
-					int is_hd_delimiter, int is_fd);
-t_list			*lexer_init_data(char **tokens);
-t_token_type	lexer_token_type_a(char *input, int is_first_token);
-t_token_type	lexer_token_type_b(char *input, int in_quote,
-					int is_hd_delimiter, int is_fd);
+t_list				*lexer(char *input);
+t_lex_data			*lexer_token_data(char *input, int is_first_token,
+						int is_hd_delimiter, int is_fd);
+t_list				*lexer_init_data(char **tokens);
 
 // tokenize.c
-char			**tokenize(char *input);
-
+char				**tokenize(char *input);
+t_token_type		lexer_token_type_a(char *input, int is_first_token);
+t_token_type		lexer_token_type_b(char *input, int in_quote,
+						int is_hd_delimiter, int is_fd);
 // lexer Utils
-void			ft_free_split(char **split);
-void			ft_free_lex_data(void *data);
-void			ft_print_tokens(t_list *token_data);
+void				ft_free_split(char **split);
+void				ft_free_lex_data(void *data);
+void				ft_print_tokens(t_list *token_data);
+t_lex_init_state	*ft_lexer_init_state(t_lex_init_state *state);
 
 // ft_split_ignore_quotes.c
-char			**ft_split_ignore_quotes(const char *s, char c);
-char			*ft_strchr_ignore_quotes(const char *s, int c);
+char				**ft_split_ignore_quotes(const char *s, char c);
+char				*ft_strchr_ignore_quotes(const char *s, int c);
 #endif

@@ -70,3 +70,64 @@ void	ft_print_tree(t_ast_node *root)
 	ft_printf("Abstract Syntax Tree:\n");
 	ft_print_tree_helper(root, 0);
 }
+
+/**
+ * @function: ft_print_exec_list
+ * @brief: prints out the entire exec list
+ *
+ * @param node: pointer to the head of the linked list
+ * @return: void function
+ */
+void	ft_print_exec_list(t_list *exec_node)
+{
+	t_exec_node	*node;
+
+	ft_printf("\n=== EXECUTION LIST ===\n");
+	while (exec_node)
+	{
+		node = (t_exec_node *)exec_node->content;
+		ft_printf("Node Type: %s\n",
+			node->type == AST_PIPE ? "PIPE" : "COMMAND");
+		if (node->type == AST_COMMAND)
+		{
+			ft_printf("Command: %s\n", node->cmd[0]);
+			ft_printf("Command Arguments:\n");
+			ft_print_stringarray(node->cmd, 1);
+			if (node->redirect)
+			{
+				ft_printf("Redirects:\n");
+				ft_print_stringarray(node->redirect, 0);
+				if (node->rd_arg)
+				{
+					ft_printf("Redirect Arguments:\n");
+					ft_print_stringarray(node->rd_arg, 0);
+				}
+				if (node->delimiter)
+				{
+					ft_printf("Heredoc Delimiter:\n");
+					ft_print_stringarray(node->delimiter,0);
+				}	
+			}
+		}
+		ft_printf("-------------------\n");
+		exec_node = exec_node->next;
+	}
+	ft_printf("=== END OF LIST ===\n\n");
+}
+
+/**
+ * @function: ft_print_stringarray
+ * @brief: prints out a stringarray from an index
+ *
+ * @param stringarray: pointer the string array
+ * @param i: index from which to start printing
+ * @return: void function
+ */
+void	ft_print_stringarray(char **stringarray, int i)
+{
+	while (stringarray[i])
+	{
+		ft_printf("  [%d]: %s\n", i, stringarray[i]);
+		i++;
+	}
+}

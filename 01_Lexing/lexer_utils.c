@@ -12,6 +12,33 @@
 
 #include "../includes/minishell.h"
 
+/**
+ * @function: ft_lexer_init_state
+ * @brief: function that inits the state of the lexer before assigning token
+ * types
+ * 
+ * @param state: the struct
+ * @return: no return value, void function.
+ */
+t_lex_init_state	*ft_lexer_init_state(t_lex_init_state *state)
+{
+	state = (t_lex_init_state *)malloc(sizeof(t_lex_init_state));
+	if (!state)
+		return (NULL);
+	state->i = 0;
+	state->is_first_token = 1;
+	state->is_hd_delimiter = 0;
+	state->is_fd = 0;
+	return (state);
+}
+
+/**
+ * @function: ft_print_tokens
+ * @brief: function that takes the list and prints it.
+ * 
+ * @param token_data: pointer to the head of the list
+ * @return: no return value, void function.
+ */
 void	ft_print_tokens(t_list *token_data)
 {
 	while (token_data)

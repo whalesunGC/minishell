@@ -24,6 +24,7 @@ int		ft_add_whitespace_special(char **input, int i, int in_s_q, int in_d_q);
 int		ft_iswhitespace(int i);
 int		ft_isspecial(int i);
 int		ft_add_whitespace_helper(char **input, int i, int delta);
+int		ft_is_env(int i);
 
 // input_validation.c
 char	*ft_input_validation(char *input);

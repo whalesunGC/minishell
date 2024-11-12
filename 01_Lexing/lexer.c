@@ -13,69 +13,6 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: lexer_token_type_a
- * @brief: to match the input string to the correct token type
- *
- * @param input: input token that will be a string
- * @param is_first_token: flag to indicate if the token is the first token
- * @return: the correct token type
- */
-t_token_type	lexer_token_type_a(char *input, int is_first_token)
-{
-	if (ft_strncmp(input, ">>", 2) == 0)
-		return (TOKEN_REDIRECTION_APPEND);
-	else if (ft_strncmp(input, "<<", 2) == 0)
-		return (TOKEN_HEREDOC);
-	else if (ft_strncmp(input, ">", 1) == 0)
-		return (TOKEN_REDIRECTION_OUT);
-	else if (ft_strncmp(input, "<", 1) == 0)
-		return (TOKEN_REDIRECTION_IN);
-	else if (ft_strncmp(input, "(", 1) == 0)
-		return (TOKEN_PARENTHESIS_L);
-	else if (ft_strncmp(input, ")", 1) == 0)
-		return (TOKEN_PARENTHESIS_R);
-	else if (ft_strncmp(input, "&&", 2) == 0)
-		return (TOKEN_AND_SEQ);
-	else if (ft_strncmp(input, "||", 2) == 0)
-		return (TOKEN_OR_SEQ);
-	else if (ft_strncmp(input, "|", 1) == 0)
-		return (TOKEN_PIPE);
-	else if (is_first_token)
-		return (TOKEN_COMMAND);
-	else
-		return (42);
-}
-
-/**
- * @function: lexer_token_type_b
- * @brief: to match the input string to the correct token type
- *
- * @param input: input token that will be a string
- * @param in_quote: flag to indicate if token is in_quotes
- * @param is_hd_delimiter: flag to indicate if token is a delimiter for
- * heredoc
- * @param is_fd: flag to indicate if a token is a file descriptor that follows
- * a redirection
- * @return: the correct token type
- */
-t_token_type	lexer_token_type_b(char *input, int in_quote,
-		int is_hd_delimiter, int is_fd)
-{
-	if (is_hd_delimiter && in_quote)
-		return (TOKEN_HD_DELIMITER_Q);
-	else if (is_hd_delimiter && !in_quote)
-		return (TOKEN_HD_DELIMITER_NQ);
-	else if (is_fd)
-		return (TOKEN_RD_FD);
-	else if (in_quote)
-		return (TOKEN_INQUOTE);
-	else if (ft_strncmp(input, "$", 1) == 0)
-		return (TOKEN_VARIABLE);
-	else
-		return (TOKEN_STRING);
-}
-
-/**
  * @function: lexer_token_data
  * @brief: to create lex_data from a raw input string.
  *
@@ -109,6 +46,39 @@ t_lex_data	*lexer_token_data(char *input, int is_first_token,
 	return (data);
 }
 
+static void	update_state_flags(t_lex_init_state *state, t_lex_data *data)
+{
+	state->is_first_token = (data->type == TOKEN_PIPE
+			|| data->type == TOKEN_PARENTHESIS_L || data->type == TOKEN_AND_SEQ
+			|| data->type == TOKEN_OR_SEQ);
+	state->is_hd_delimiter = (data->type == TOKEN_HEREDOC);
+	state->is_fd = (data->type == TOKEN_REDIRECTION_APPEND
+			|| data->type == TOKEN_REDIRECTION_IN
+			|| data->type == TOKEN_REDIRECTION_OUT);
+	state->i++;
+}
+
+static t_list	*create_token_node(t_lex_init_state *state, char **tokens,
+		t_list *first_node)
+{
+	t_lex_data	*data;
+	t_list		*new_node;
+
+	data = lexer_token_data(tokens[state->i], state->is_first_token,
+			state->is_hd_delimiter, state->is_fd);
+	if (!data)
+		return (NULL);
+	if (state->i == 0)
+		first_node = ft_lstnew(data);
+	else
+	{
+		new_node = ft_lstnew(data);
+		ft_lstadd_back(&first_node, new_node);
+	}
+	update_state_flags(state, data);
+	return (first_node);
+}
+
 /**
  * @function: lexer_init_data
  * @brief: inits a linked-list of structs that contain 1)the raw token string,
@@ -121,42 +91,19 @@ t_lex_data	*lexer_token_data(char *input, int is_first_token,
  */
 t_list	*lexer_init_data(char **tokens)
 {
-	int			i;
-	t_lex_data	*data;
-	t_list		*new_node;
-	t_list		*first_node;
-	int			is_first_token;
-	int			is_hd_delimiter;
-	int			is_fd;
+	t_lex_init_state	*state;
+	t_list				*first_node;
 
-	i = 0;
-	new_node = NULL;
+	state = NULL;
+	state = ft_lexer_init_state(state);
 	first_node = NULL;
-	is_first_token = 1;
-	is_hd_delimiter = 0;
-	is_fd = 0;
-	while (tokens[i])
+	while (tokens[state->i])
 	{
-		data = lexer_token_data(tokens[i], is_first_token, is_hd_delimiter,
-				is_fd);
-		if (!data)
-			return (NULL);
-		if (i == 0)
-			first_node = ft_lstnew(data);
-		else
-		{
-			new_node = ft_lstnew(data);
-			ft_lstadd_back(&first_node, new_node);
-		}
-		is_first_token = (data->type == TOKEN_PIPE)
-			|| (data->type == TOKEN_PARENTHESIS_L || data->type == TOKEN_AND_SEQ
-				|| data->type == TOKEN_OR_SEQ);
-		is_hd_delimiter = (data->type == TOKEN_HEREDOC);
-		is_fd = (data->type == TOKEN_REDIRECTION_APPEND
-				|| data->type == TOKEN_REDIRECTION_IN
-				|| data->type == TOKEN_REDIRECTION_OUT);
-		i++;
+		first_node = create_token_node(state, tokens, first_node);
+		if (!first_node)
+			return (free(state), NULL);
 	}
+	free(state);
 	return (first_node);
 }
 
@@ -182,7 +129,7 @@ t_list	*lexer(char *input)
 	{
 		token_data = lexer_init_data(tokens);
 		if (!token_data)
-		ft_print_tokens(token_data);
+			ft_print_tokens(token_data);
 	}
 	return (ft_free_split(tokens), free(tokens), token_data);
 }

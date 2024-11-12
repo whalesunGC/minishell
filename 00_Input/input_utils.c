@@ -13,6 +13,18 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_not_env
+ * @brief: checks if not a valid starting env name
+ * 
+ * @param input: input char
+ * @return: 1 if not valid, 0 if valid
+ */
+int	ft_is_env(int i)
+{
+	return (ft_isalpha(i) || i == '_');
+}
+
+/**
  * @function: ft_add_whitespace_helper
  * @brief: adds whitespace before and after the index.
  *
