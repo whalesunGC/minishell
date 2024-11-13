@@ -24,7 +24,6 @@
  */
 
 void	finding_heredocs(t_redirect_single_command_params *params, t_list *node)
-
 {	
 	params->traverse = node;
 	while (params->traverse)
@@ -60,10 +59,8 @@ void	finding_heredocs(t_redirect_single_command_params *params, t_list *node)
  * 
  * @return: -1 if there is an error, 0 if success
  */
-
 int	handling_no_heredocs(t_redirect_single_command_params
 *params, char ***env, char *input, t_list *node)
-
 {	
 	ft_printf("handling no heredocs\n");
 	params->traverse = node;
@@ -99,7 +96,6 @@ int	handling_no_heredocs(t_redirect_single_command_params
  */
 
 int	creating_pipes(t_redirect_single_command_params *params)
-
 {
 	ft_printf("Total heredocs found: %d\n", params->pipe_count);
 	params->pipes = creating_new_pipes(params->pipe_count);
@@ -138,7 +134,6 @@ int	creating_pipes(t_redirect_single_command_params *params)
 
 int	handling_heredocs(t_redirect_single_command_params
 *params, char ***env, char *input, t_list *node)
-
 {	
 	params->traverse = node;
 	while (params->traverse)
@@ -179,7 +174,6 @@ int	handling_heredocs(t_redirect_single_command_params
  */
 
 void	execution(t_list *node, char ***env, char *input)
-
 {
 	t_redirect_single_command_params	params;
 
@@ -188,6 +182,7 @@ void	execution(t_list *node, char ***env, char *input)
 	ft_memset(&params, 0, sizeof(t_redirect_single_command_params));
 	ft_printf("Entering process of single command execution\n");
 	finding_heredocs(&params, node);
+	params.exec_data_head = node;
 	if (params.pipe_count == 0)
 		handling_no_heredocs(&params, env, input, node);
 	else
