@@ -78,7 +78,7 @@ re: fclean all
 
 # Valgrind call
 valgrind: $(NAME)
-			valgrind --leak-check=full ./$(NAME) 
+			valgrind --leak-check=full --trace-children=yes --show-leak-kinds=all --track-fds=yes --suppressions=readline.supp ./$(NAME)
 
 # Phony targets to prevent conflicts with files named 'clean', 'fclean', or 'all'
 .PHONY: all bonus clean fclean re
