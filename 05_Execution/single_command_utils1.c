@@ -29,28 +29,34 @@ void	handle_redirections_file_opening(
 {
 	while (params->k < params->i)
 	{
-		if (ft_strcmp(params->result->redirect[params->k], "<") == 0)
-			params->input_fd = open(params->result->rd_arg[params->k],
-					O_RDONLY);
+		if (ft_strcmp(params->result->redirect[params->k], "a") == 0)
+		{
+			params->k++;
+			continue ;
+		}
+		else if (ft_strcmp(params->result->redirect[params->k], "<") == 0)
+			params->input_fd = open(params->result
+					->rd_arg[params->rd_arg_counter], O_RDONLY);
 		else if (ft_strcmp(params->result->redirect[params->k], ">") == 0)
-			params->output_fd = open(params->result->rd_arg[params->k],
-					O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			params->output_fd = open(params->result->rd_arg
+				[params->rd_arg_counter], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else if (ft_strcmp(params->result->redirect[params->k], ">>") == 0)
-			params->output_fd = open(params->result->rd_arg[params->k],
-					O_WRONLY | O_CREAT | O_APPEND, 0644);
+			params->output_fd = open(params->result->rd_arg
+				[params->rd_arg_counter], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (params->input_fd < 0 || params->output_fd < 0)
 		{
-			ft_printf("%s: ", params->result->rd_arg[params->k]);
+			ft_printf("%s: ", params->result->rd_arg[params->rd_arg_counter]);
 			perror("Error opening file");
 			exit(EXIT_FAILURE);
 		}
+		params->rd_arg_counter++;
 		params->k++;
 	}
 }
 
 /**
  * @function: handle_dup_and_closing_fd
- * @brief: handling dup function calls for both input and output
+ * @brief: handling dup function calls for both input and output fd
  * 
  * @param t_redirect_single_command_params *params : structure to
  	store parameters for handling redirects / no redirects
@@ -82,54 +88,50 @@ void	handle_dup_and_closing_fd(t_redirect_single_command_params *params)
 }
 
 /**
- * @function: handle_execve_for_redirections
- * @brief: handling execve when there is redirections
+ * @function: executing_execve_redirections
+ * @brief: executing execve function if redirections are called
  * 
  * @param t_redirect_single_command_params *params : structure to
  	store parameters for handling redirects / no redirects
- 	char ***env : *** is called in calling function
- 		only needed ** for freeing in child process
- 	char *input : initial readline from main function
- 		used for freeing purposes if program fails
+ 	char ***env: *** is declared in main. needed **
+ 	to be freed in case of error
+ 	char *input: readline to be freed in main function in case of error
  * 
- * @return: -1 if forking fails, 0 if all commands is executed
+ * @return: void function
  */
 
-void	handle_execve_for_redirections(t_redirect_single_command_params *params,
-	char ***env, char *input)
+void	executing_execve_redirections(t_redirect_single_command_params
+*params, char ***env, char *input)
 
 {
-	if (params->result->cmd[0] == NULL)
+	write(2, "Entering the redirect loop\n", 27);
+	if (params->input_fd == 0)
 	{
-		ft_printf("No commands found, so we just exit\n");
-		free(input);
-		free_dup_envp(*env);
-		rl_clear_history();
-		exit(EXIT_SUCCESS);
-	}
-	else
-	{
-		if (access(params->result->cmd[0], F_OK) == 0)
-			params->command_path = params->result->cmd[0];
-		else
-			params->command_path = find_command
-				(&params->result->cmd[0], 0, *env);
-		if (execve(params->command_path, params->result->cmd, *env) == -1)
+		write(2, "I should not come here\n", 23);
+		if (dup2(params->pipes[params->pipe_count - 1][0], STDIN_FILENO) == -1)
 		{
-			if (params->command_path != params->result->cmd[0])
-				free(params->command_path);
-			free(input);
-			free_dup_envp(*env);
-			rl_clear_history();
+			perror("dup2 failed");
 			exit(EXIT_FAILURE);
 		}
-	}					
+	}
+	write(2, "I should come here\n", 19);
+	if (access(params->result->cmd[0], F_OK) == 0)
+		params->command_path = params->result->cmd[0];
+	else
+		params->command_path = find_command
+			(&params->result->cmd[0], 0, *env);
+	if (execve(params->command_path, params->result->cmd, *env) == -1)
+	{
+		if (params->command_path != params->result->cmd[0])
+			free(params->command_path);
+		clean_up_function(params, env, input);
+		exit(EXIT_FAILURE);
+	}
 }
 
 /**
- * @function: execute_child_process_for_redirections
- * @brief: further summarising the above processes
- 	into a cleaner structure to read
+ * @function: handle_execve_for_redirections
+ * @brief: handling execve conditions when there is redirections
  * 
  * @param t_redirect_single_command_params *params : structure to
  	store parameters for handling redirects / no redirects
@@ -141,11 +143,20 @@ void	handle_execve_for_redirections(t_redirect_single_command_params *params,
  * @return: void function
  */
 
-void	execute_child_process_for_redirections(t_redirect_single_command_params
-*params, char ***env, char *input)
+void	handle_execve_for_redirections(t_redirect_single_command_params *params,
+	char ***env, char *input)
 
 {
-	handle_redirections_file_opening(params);
-	handle_dup_and_closing_fd(params);
-	handle_execve_for_redirections(params, env, input);
+	write(2, "Entering the redirect loop\n", 27);
+	if (params->result->cmd[0] == NULL)
+	{
+		write(2, "No commands found, so we just exit\n", 35);
+		clean_up_function(params, env, input);
+		exit(EXIT_SUCCESS);
+	}
+	if (params->pipe_count > 0)
+		exiting_conditions_nonzero_pipecount(params, env, input);
+	else
+		exiting_conditions_zero_pipecount(params, env, input);
+	executing_execve_redirections(params, env, input);
 }
