@@ -99,11 +99,16 @@ t_exec_node	*ft_create_exec_node(t_ast_node_type type, t_ast_node *ast_node)
 	exec_node->type = type;
 	if (type == AST_PIPE)
 		exec_node->cmd = NULL;
-	else if (type == AST_COMMAND)
+	else if (type == AST_COMMAND && ast_node->value)
 	{
 		exec_node->cmd = (char **)malloc(2 * sizeof(char *));
 		exec_node->cmd[0] = ft_strdup(ast_node->value);
 		exec_node->cmd[1] = NULL;
+	}
+	else
+	{
+		exec_node->cmd = (char **)malloc(1 * sizeof(char *));
+		exec_node->cmd[0] = NULL;
 	}
 	exec_node->redirect = NULL;
 	exec_node->rd_arg = NULL;
