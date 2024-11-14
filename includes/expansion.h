@@ -25,7 +25,12 @@ char	*ft_env_search(char *var, char **env);
 void	expansion_replace_string(char *env_var, int index, char **exp_input);
 
 //expansion_utils_b.c
-char	*ft_string_remove_quotes(char **string);
+char	*ft_string_trim_ends(char **string);
 t_list	*ft_expansion_tokens(t_list **token_data, char **env);
 char	*ft_getenv(char *string, char **env);
+
+//expansion_utils_c.c
+int     ft_has_whitespace(char *string);
+char    *ft_remove_quote(char *string);
+int     ft_has_quote(char *string);
 #endif
