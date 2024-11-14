@@ -92,7 +92,10 @@ void	ft_print_exec_list(t_list *exec_node)
 		{
 			ft_printf("Command: %s\n", node->cmd[0]);
 			ft_printf("Command Arguments:\n");
-			ft_print_stringarray(node->cmd, 1);
+			if (node->cmd[0])
+				ft_print_stringarray(node->cmd, 1);
+			else
+				ft_print_stringarray(node->cmd, 0);
 			if (node->redirect)
 			{
 				ft_printf("Redirects:\n");

@@ -7,7 +7,7 @@ LDFLAGS = -lreadline
 # Source files names for each directory
 INPUT_FILES = input.c	input_utils.c	input_validation.c	input_validation_helper.c
 LEXER_FILES = lexer.c	tokenize.c	lexer_utils.c	ft_split_ignore_quotes.c	ft_strchr_ignore_quotes.c
-EXPANSION_FILES = expansion.c	expansion_utils_a.c	expansion_utils_b.c
+EXPANSION_FILES = expansion.c	expansion_utils_a.c	expansion_utils_b.c	expansion_utils_c.c
 PARSER_FILES = parser.c	parser_utils_a.c	parser_utils_b.c	parser_rd_helper.c	parser_rd_helper_b.c	parser_recursive_descent.c	parser_print_tree.c	parser_ast_to_ll.c	parser_exec.c
 REDIRECTION_FILES = path_construction.c	path_construction_utils.c	piping.c	redirections_utils.c	redirections_utils1.c	redirections_utils2.c	redirections_utils4.c
 EXECUTION_FILES = single_command.c	single_command_utils1.c	single_command_utils2.c	single_command_utils3.c	single_command_utils4.c	multiple_commands.c	multiple_commands_utils1.c	heredocs.c	heredocs_utils1.c	heredocs_utils2.c	free_pipes.c
@@ -78,7 +78,7 @@ re: fclean all
 
 # Valgrind call
 valgrind: $(NAME)
-			valgrind --leak-check=full ./$(NAME) 
+			valgrind --leak-check=full --trace-children=yes --show-leak-kinds=all --track-fds=yes --suppressions=readline.supp ./$(NAME)
 
 # Phony targets to prevent conflicts with files named 'clean', 'fclean', or 'all'
 .PHONY: all bonus clean fclean re

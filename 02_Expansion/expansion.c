@@ -24,7 +24,9 @@ int	ft_env_len(const char *input)
 	int	len;
 
 	len = 0;
-	if (input[len] == '$')
+	if (ft_strncmp(input, "$?", 2) == 0)
+		len = 2;
+	else if (input[len] == '$')
 	{
 		len++;
 		while (input[len] && (ft_isalnum(input[len]) || input[len] == '_'))
@@ -113,6 +115,8 @@ char	*expansion_string(char *input, int ignore_quote, char **env)
 			in_single_quote = !in_single_quote;
 			i++;
 		}
+		else if ((input[i] == '$' && input[i + 1] == '?'))
+			input = ft_str_replace(input, i, ft_itoa(g_exit_status));
 		else if ((input[i] == '$' && ft_is_env(input[i + 1]))
 			&& (!in_single_quote || ignore_quote))
 			handle_env_variable(&input, &i, env);

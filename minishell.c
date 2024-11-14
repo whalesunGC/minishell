@@ -49,10 +49,7 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	if (envp[0] == NULL)
-	{
 		ft_printf("envp not initialised\n");
-		exit(EXIT_FAILURE);
-	}
 	parent_signal_handlers();
 	env = copy_envp(envp);
 	if (env == NULL)
