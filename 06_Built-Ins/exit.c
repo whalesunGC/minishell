@@ -24,14 +24,15 @@
  * @return: void function
  */
 
-static void	exit_is_the_only_argument(char **av, char **env, char *input)
+static void	exit_is_the_only_argument(t_redirect_single_command_params *params,
+		char **env, char *input)
 
 {
-	free_tokens(av);
 	free(input);
 	free_dup_envp(env);
 	rl_clear_history();
 	ft_printf("exit\n");
+	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	exit(EXIT_SUCCESS);
 }
 
@@ -48,20 +49,21 @@ static void	exit_is_the_only_argument(char **av, char **env, char *input)
  * @return: void function
  */
 
-static void	exit_with_one_other_argument(char **av,
+static void	exit_with_one_other_argument(
+		t_redirect_single_command_params *params,
 		char **env, char *input)
 
 {
 	int	exit_status;
 
 	exit_status = 0;
-	exit_status = ft_atoi(av[1]);
-	free_tokens(av);
+	exit_status = ft_atoi(params->av[1]);
 	free(input);
 	free_dup_envp(env);
 	rl_clear_history();
 	ft_printf("exit\n");
 	exit_status = (exit_status % 256 + 256) % 256;
+	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	exit(exit_status);
 }
 
@@ -82,6 +84,8 @@ static int	is_argument_numeric(const char *arg)
 	int	i;
 
 	i = 0;
+	if (arg[i] == '-' || arg[i] == '+')
+		i = 1;
 	while (arg[i] != '\0')
 	{
 		if (ft_isdigit(arg[i]) == 0)
@@ -106,26 +110,29 @@ static int	is_argument_numeric(const char *arg)
  * @return: void function
  */
 
-void	exit_command(int ac, char **av, char **env, char *input)
-
+void	exit_command(t_redirect_single_command_params *params,
+		char **env, char *input)
 {
-	if (ac > 0 && ft_strncmp(av[0], "exit", 4) == 0)
+	if (params->ac > 0 && ft_strncmp(params->av[0], "exit", 4) == 0)
 	{
-		if (ac == 1 && ft_strlen(av[0]) == 4)
-			exit_is_the_only_argument(av, env, input);
-		else if (ac == 1 && ft_strlen(av[0]) != 4)
-			ft_printf("%s: command not found\n", av[0]);
-		else if (ac == 2 && ft_strlen(av[0]) == 4)
+		if (params->ac == 1 && ft_strlen(params->av[0]) == 4)
+			exit_is_the_only_argument(params, env, input);
+		else if (params->ac == 1 && ft_strlen(params->av[0]) != 4)
+			ft_dprintf(2, "%s: command not found\n", params->av[0]);
+		else if (params->ac == 2 && ft_strlen(params->av[0]) == 4)
 		{
-			if (is_argument_numeric(av[1]) == 0)
+			if (is_argument_numeric(params->av[1]) == 0)
 			{
-				ft_printf("%s: %s: numberic"
-					" argument required\n", av[0], av[1]);
-				return ;
+				ft_dprintf(2, "%s: %s: numberic"
+					" argument required\n", params->av[0], params->av[1]);
+				exit_is_the_only_argument(params, env, input);
 			}
-			exit_with_one_other_argument(av, env, input);
+			exit_with_one_other_argument(params, env, input);
 		}
 		else
-			ft_printf("%s: too many arguments\n", av[0]);
+		{
+			ft_dprintf(2, "%s: too many arguments\n", params->av[0]);
+			exit_is_the_only_argument(params, env, input);
+		}
 	}
 }

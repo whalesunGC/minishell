@@ -39,7 +39,7 @@ int ft_has_whitespace(char *string)
  * @param string: input string
  * @return: new string with no quotes
  */
-char *ft_remove_quote(char *string)
+char    *ft_remove_quote(char *string)
 {
     int i;
 
