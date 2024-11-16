@@ -13,6 +13,59 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_word_split
+ * @brief: handles additional word splitting after the expansion step
+ * 
+ * @param string: input string
+ * @param current_token: current token position
+ * @return: current token position
+ */
+t_list	**handle_word_split(char *string, t_list **current_token)
+{
+	t_list		*node;
+	t_list		*node_head;
+	char		*clean_string;
+
+    node = NULL;
+    node_head = NULL;
+	clean_string = input_clean(string);
+	if (ft_has_whitespace(clean_string) 
+		&& !ft_iswhitespace(*clean_string))
+		node = lexer(clean_string);
+	if (!node)
+		return (current_token);
+    free(((t_lex_data *)((*current_token)->content))->raw_string);
+	((t_lex_data *)((*current_token)->content))->raw_string = ft_strdup(((t_lex_data *)
+        (node->content))->raw_string);
+	node_head = node;
+	node = node->next;
+	*current_token = ft_lstinsert(node, *current_token);
+	return (ft_free_lex_data(node_head->content), free(node_head), current_token);
+}
+
+/*/**
+ * @function: ft_lstinsert
+ * @brief: inserts lst into lst
+ * 
+ * @param node: new list
+ * @param current: current list
+ * @return: pointer to head of current list
+ */
+t_list	*ft_lstinsert(t_list *node, t_list *current)
+{
+	t_list	*current_next;
+	t_list	*current_head;
+
+	current_head = current;
+	current_next = current->next;
+	current->next = node;
+	while (current->next)
+		current = current->next;
+	current->next = current_next;
+	return (current_head);
+}
+
+/**
  * @function: ft_has_whitespace
  * @brief: checks if string has whitespace
  * 

@@ -89,12 +89,12 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env)
 		|| data->type == TOKEN_STRING)
 	{
 		data->raw_string = expansion_string(data->raw_string, 0, env);
-		if (ft_has_whitespace(data->raw_string))
-			node = lexer(data->raw_string);
+		token_data = handle_word_split(data->raw_string, token_data);
+		data = (t_lex_data *)(*token_data)->content;
 		data->type = lexer_token_type_a(data->raw_string, data->is_first_token);
 		if (data->type == 42)
-			data->type = lexer_token_type_b(data->raw_string, data->in_quote, data->is_hd_delimiter,
-				data->is_fd);
+			data->type = lexer_token_type_b(data->raw_string, data->in_quote,
+					data->is_hd_delimiter, data->is_fd);
 	}
 	if ((data->type == TOKEN_COMMAND && data->in_quote)
 		|| (data->type == TOKEN_INQUOTE && data->in_quote))

@@ -129,7 +129,8 @@ t_list	*lexer(char *input)
 	{
 		token_data = lexer_init_data(tokens);
 		if (!token_data)
-			ft_print_tokens(token_data);
+			return (ft_free_split(tokens), free(tokens), NULL);
+		ft_print_tokens(token_data);
 	}
 	return (ft_free_split(tokens), free(tokens), token_data);
 }
