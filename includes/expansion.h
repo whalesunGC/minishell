@@ -6,7 +6,7 @@
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 12:06:36 by wichee            #+#    #+#             */
-/*   Updated: 2024/10/19 18:21:41 by wichee           ###   ########.fr       */
+/*   Updated: 2024/11/16 16:44:00 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef EXPANSION_H
@@ -30,7 +30,9 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env);
 char	*ft_getenv(char *string, char **env);
 
 //expansion_utils_c.c
-int     ft_has_whitespace(char *string);
-char    *ft_remove_quote(char *string);
-int     ft_has_quote(char *string);
+int		ft_has_whitespace(char *string);
+char	*ft_remove_quote(char *string);
+int		ft_has_quote(char *string);
+t_list	**handle_word_split(char *string, t_list **current_token);
+t_list	*ft_lstinsert(t_list *node, t_list *current);
 #endif
