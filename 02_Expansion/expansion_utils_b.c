@@ -93,8 +93,8 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env)
 			node = lexer(data->raw_string);
 		data->type = lexer_token_type_a(data->raw_string, data->is_first_token);
 		if (data->type == 42)
-			data->type = lexer_token_type_b(data->raw_string, data->in_quote, data->is_hd_delimiter,
-				data->is_fd);
+			data->type = lexer_token_type_b(data->raw_string, data->in_quote,
+					data->is_hd_delimiter, data->is_fd);
 	}
 	if ((data->type == TOKEN_COMMAND && data->in_quote)
 		|| (data->type == TOKEN_INQUOTE && data->in_quote))

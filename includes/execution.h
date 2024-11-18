@@ -16,6 +16,7 @@ typedef struct s_redirect_single_command_params
 {
 	char		**av;
 	int			**pipes;
+	t_list		*exec_data_head;
 	t_list		*traverse;
 	t_exec_node	*result;
 	char		*command_path;
