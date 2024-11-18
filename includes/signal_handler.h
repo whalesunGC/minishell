@@ -14,6 +14,12 @@
 
 extern int	g_exit_status;
 
+typedef struct s_signal_data
+{
+    t_list  *exec_data_head;
+    int     exit_status;
+}       t_signal_data;
+
 // handling ctrl + c and ctrl + / //
 void	handle_child_sigint(int signum);
 void	handle_parent_sigint(int signum);
