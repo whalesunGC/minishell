@@ -40,11 +40,14 @@ void    ft_signal(t_list *exec_data, t_process_type process_flag)
 {
     t_signal_data   *data;
 
-    data = (t_signal_data *)malloc(sizeof(t_signal_data));
-    data->exec_data_head = exec_data;
-    data->exit_status = 0;
+    data = NULL;    
     if (process_flag == PARENT)
-        parent_signal_handlers(data);
+        parent_signal_handlers();
     else if (process_flag == CHILD)
+    {
+        data = (t_signal_data *)malloc(sizeof(t_signal_data));
+        data->exec_data_head = exec_data;
+        data->exit_status = 0;
         setup_signal_handlers_for_child(data);
+    }
 }

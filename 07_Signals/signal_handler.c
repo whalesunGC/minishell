@@ -20,10 +20,14 @@
  * 
  * @return: void function
  */
-void	handle_child_sigint(int signum)
+void	handle_child_sigint(int signum, siginfo_t *info, void *content)
 {
+	t_list	*data;
+
 	(void)signum;
+	data = (t_list *)info->si_value.sival_ptr;
 	ft_printf("\n");
+	ft_lstclear(&data, ft_free_signal);
 	exit(EXIT_SUCCESS);
 }
 
@@ -55,7 +59,7 @@ void	handle_parent_sigint(int signum)
  * 
  * @return: void function
  */
-void	parent_signal_handlers(t_signal_data *data)
+void	parent_signal_handlers(void)
 {
 	struct sigaction	signal_int;
 	struct sigaction	signal_quit;
@@ -120,13 +124,18 @@ void	ignore_parent_signals(void)
  * @return: void function
  */
 
-void	setup_signal_handlers_for_child(void)
+void	setup_signal_handlers_for_child(t_list *data)
 {
 	struct sigaction	signal_child;
+	struct sigevent		sev;
 
 	ft_memset(&signal_child, 0, sizeof(signal_child));
-	signal_child.sa_handler = handle_child_sigint;
+	signal_child.sa_sigaction = handle_child_sigint;
+	signal_child.sa_flags = SA_SIGINFO;
 	sigemptyset(&signal_child.sa_mask);
+	sev.sigev_notify = SIGEV_SIGNAL;
+	sev.sigev_signo = SIGINT;
+	sev.sigev_value.sival_ptr = data;
 	if (sigaction(SIGINT, &signal_child, NULL) == -1)
 	{
 		perror("Sigaction failed for SIGINT ");
