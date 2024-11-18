@@ -13,6 +13,8 @@
 #include "../includes/minishell.h"
 #include <signal.h>
 
+static t_signal_data	*child_data; 
+
 /**
  * @function: handle_child_sigint
  * @brief: handle ctrl + c in child process
@@ -21,14 +23,11 @@
  * 
  * @return: void function
  */
-void	handle_child_sigint(int signum, siginfo_t *info, void *content)
+void	handle_child_sigint(int signum)
 {
-	t_list	*data;
-
 	(void)signum;
-	data = (t_list *)info->si_value.sival_ptr;
 	ft_printf("\n");
-	ft_lstclear(&data, ft_free_signal);
+	ft_free_signal(child_data);
 	exit(EXIT_SUCCESS);
 }
 
@@ -125,18 +124,14 @@ void	ignore_parent_signals(void)
  * @return: void function
  */
 
-void	setup_signal_handlers_for_child(t_list *data)
+void	setup_signal_handlers_for_child(t_signal_data *data)
 {
 	struct sigaction	signal_child;
-	struct sigevent		sev;
 
+	child_data = data;
 	ft_memset(&signal_child, 0, sizeof(signal_child));
-	signal_child.sa_sigaction = handle_child_sigint;
-	signal_child.sa_flags = SA_SIGINFO;
+	signal_child.sa_handler = handle_child_sigint;
 	sigemptyset(&signal_child.sa_mask);
-	sev.sigev_notify = SIGEV_SIGNAL;
-	sev.sigev_signo = SIGINT;
-	sev.sigev_value.sival_ptr = data;
 	if (sigaction(SIGINT, &signal_child, NULL) == -1)
 	{
 		perror("Sigaction failed for SIGINT ");

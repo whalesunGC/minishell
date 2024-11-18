@@ -12,6 +12,8 @@
 #ifndef SIGNAL_HANDLER_H
 # define SIGNAL_HANDLER_H
 
+# include "execution.h"
+
 extern int	g_exit_status;
 
 typedef enum e_process_type
@@ -24,17 +26,23 @@ typedef struct s_signal_data
 {
     t_list  *exec_data_head;
     int     exit_status;
+    char   **env;
+    char   *input;
+    int    **pipes;
+    int    pipe_count;
+
 }       t_signal_data;
 
 // signal.c
-void    ft_signal(t_list *exec_data, t_process_type process_flag);
+void    ft_signal(t_redirect_single_command_params *params, char **env, char *input,
+        t_process_type process_flag);
 void    ft_free_signal(t_signal_data *data);
 
 // handling ctrl + c and ctrl + / //
-void	handle_child_sigint(int signum, siginfo_t *info, void *content);
+void	handle_child_sigint(int signum);
 void	handle_parent_sigint(int signum);
 void	parent_signal_handlers(void);
 void	ignore_parent_signals(void);
-void	setup_signal_handlers_for_child(t_list *data);
+void	setup_signal_handlers_for_child(t_signal_data *data);
 
 #endif 

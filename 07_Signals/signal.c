@@ -24,6 +24,9 @@ void    ft_free_signal(t_signal_data *data)
     if (data)
     {
         ft_lstclear(&data->exec_data_head, ft_free_exec_data);
+        free(data->input);
+        free_dup_envp(data->env);
+        free_pipes(data->pipes, data->pipe_count);
         free(data);
     }
 }
@@ -36,7 +39,8 @@ void    ft_free_signal(t_signal_data *data)
  * @param process_flag : the process type, either PARENT or CHILD
  * @return: void function
  */
-void    ft_signal(t_list *exec_data, t_process_type process_flag)
+void    ft_signal(t_redirect_single_command_params *params, char **env, char *input,
+        t_process_type process_flag)
 {
     t_signal_data   *data;
 
@@ -46,8 +50,12 @@ void    ft_signal(t_list *exec_data, t_process_type process_flag)
     else if (process_flag == CHILD)
     {
         data = (t_signal_data *)malloc(sizeof(t_signal_data));
-        data->exec_data_head = exec_data;
+        data->exec_data_head = params->exec_data_head;
         data->exit_status = 0;
+        data->env = env;
+        data->input = input;
+        data->pipes = params->pipes;
+        data->pipe_count = params->pipe_count;
         setup_signal_handlers_for_child(data);
     }
 }
