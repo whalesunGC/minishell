@@ -98,8 +98,8 @@ void	execute_child_process_for_redirections(t_redirect_single_command_params
 *params, char ***env, char *input)
 
 {
-	handle_redirections_file_opening(params);
-	handle_dup_and_closing_fd(params);
+	handle_redirections_file_opening(params, env, input);
+	handle_dup_and_closing_fd(params, env, input);
 	handle_execve_for_redirections(params, env, input);
 }
 

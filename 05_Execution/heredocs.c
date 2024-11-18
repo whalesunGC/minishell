@@ -69,7 +69,8 @@ void	handling_next_redirect(t_redirect_single_command_params *params)
 {	
 	ft_printf("Entering here to change current redirect array %s\n",
 		params->result->redirect[params->x]);
-	params->result->redirect[params->x] = "a";
+	free(params->result->redirect[params->x]);
+	params->result->redirect[params->x] = ft_strdup("a");
 	ft_printf("After changing redirect array %s\n",
 		params->result->redirect[params->x]);
 	params->x++;
@@ -96,7 +97,8 @@ int	handling_last_redirect(t_redirect_single_command_params *params,
 {
 	ft_printf("Entering here to change current redirect array %s\n",
 		params->result->redirect[params->x]);
-	params->result->redirect[params->x] = "a";
+	free(params->result->redirect[params->x]);
+	params->result->redirect[params->x] = ft_strdup("a");
 	ft_printf("After changing redirect array %s\n",
 		params->result->redirect[params->x]);
 	if (params->result->cmd[0] != NULL)
