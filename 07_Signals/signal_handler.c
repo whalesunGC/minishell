@@ -20,9 +20,7 @@
  * 
  * @return: void function
  */
-
 void	handle_child_sigint(int signum)
-
 {
 	(void)signum;
 	ft_printf("\n");
@@ -39,7 +37,6 @@ void	handle_child_sigint(int signum)
  */
 
 void	handle_parent_sigint(int signum)
-
 {
 	(void)signum;
 	rl_on_new_line();
@@ -58,9 +55,7 @@ void	handle_parent_sigint(int signum)
  * 
  * @return: void function
  */
-
-void	parent_signal_handlers(void)
-
+void	parent_signal_handlers(t_signal_data *data)
 {
 	struct sigaction	signal_int;
 	struct sigaction	signal_quit;
@@ -94,7 +89,6 @@ void	parent_signal_handlers(void)
  */
 
 void	ignore_parent_signals(void)
-
 {
 	struct sigaction	signal_int;
 	struct sigaction	signal_quit;
@@ -127,7 +121,6 @@ void	ignore_parent_signals(void)
  */
 
 void	setup_signal_handlers_for_child(void)
-
 {
 	struct sigaction	signal_child;
 

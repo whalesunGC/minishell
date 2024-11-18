@@ -14,16 +14,26 @@
 
 extern int	g_exit_status;
 
+typedef enum e_process_type
+{
+    PARENT,
+    CHILD,
+}       t_process_type;
+
 typedef struct s_signal_data
 {
     t_list  *exec_data_head;
     int     exit_status;
 }       t_signal_data;
 
+// signal.c
+void    ft_signal(t_list *exec_data, t_process_type process_flag);
+void    ft_free_signal(t_signal_data *data);
+
 // handling ctrl + c and ctrl + / //
 void	handle_child_sigint(int signum);
 void	handle_parent_sigint(int signum);
-void	parent_signal_handlers(void);
+void	parent_signal_handlers(t_signal_data *exec_data);
 void	ignore_parent_signals(void);
 void	setup_signal_handlers_for_child(void);
 
