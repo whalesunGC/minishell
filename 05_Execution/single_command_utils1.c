@@ -24,7 +24,7 @@
  */
 
 void	handle_redirections_file_opening(
-			t_redirect_single_command_params *params)
+			t_redirect_single_command_params *params, char ***env, char *input)
 
 {
 	while (params->k < params->i)
@@ -47,6 +47,7 @@ void	handle_redirections_file_opening(
 		{
 			ft_printf("%s: ", params->result->rd_arg[params->rd_arg_counter]);
 			perror("Error opening file");
+			clean_up_function(params, env, input);
 			exit(EXIT_FAILURE);
 		}
 		params->rd_arg_counter++;
@@ -64,7 +65,7 @@ void	handle_redirections_file_opening(
  * @return: void function
  */
 
-void	handle_dup_and_closing_fd(t_redirect_single_command_params *params)
+void	handle_dup_and_closing_fd(t_redirect_single_command_params *params, char ***env, char *input)
 
 {
 	if (params->input_fd > 0)
@@ -72,6 +73,7 @@ void	handle_dup_and_closing_fd(t_redirect_single_command_params *params)
 		if (dup2(params->input_fd, STDIN_FILENO) == -1)
 		{
 			perror("Dup2 failed for child for input_fd");
+			clean_up_function(params, env, input);
 			exit(EXIT_FAILURE);
 		}
 		close(params->input_fd);
@@ -81,6 +83,7 @@ void	handle_dup_and_closing_fd(t_redirect_single_command_params *params)
 		if (dup2(params->output_fd, STDOUT_FILENO) == -1)
 		{
 			perror("Dup2 failed for child for input_fd");
+			clean_up_function(params, env, input);
 			exit(EXIT_FAILURE);
 		}
 		close(params->output_fd);
@@ -111,6 +114,7 @@ void	executing_execve_redirections(t_redirect_single_command_params
 		if (dup2(params->pipes[params->pipe_count - 1][0], STDIN_FILENO) == -1)
 		{
 			perror("dup2 failed");
+			clean_up_function(params, env, input);
 			exit(EXIT_FAILURE);
 		}
 	}

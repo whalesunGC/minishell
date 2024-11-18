@@ -80,10 +80,8 @@ char	*ft_string_trim_ends(char **string)
 t_list	*ft_expansion_tokens(t_list **token_data, char **env)
 {
 	t_lex_data	*data;
-	t_list		*node;
 
 	data = (t_lex_data *)(*token_data)->content;
-	node = NULL;
 	if (data->type == TOKEN_COMMAND || data->type == TOKEN_INQUOTE
 		|| data->type == TOKEN_VARIABLE || data->type == TOKEN_RD_FD
 		|| data->type == TOKEN_STRING)
