@@ -13,6 +13,38 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: check_for_pipes
+ * @brief: checks if there are pipes in the command
+ 	proceeds if there are pipes in the command
+ 	return to main function if no pipes found
+ * 
+ * @param t_list *node : structure of linked list
+ 	 where it points to void content
+ * 
+ * @return: return 0 if pipes found, -1 if no pipes found
+ */
+
+int	check_for_pipes(t_list *node)
+
+{
+	t_list		*traverse;
+	t_exec_node	*result;
+
+	traverse = node;
+	while (traverse)
+	{
+		result = (t_exec_node *)traverse->content;
+		if (result->type == AST_PIPE)
+		{
+			ft_printf("Pipes detected. Continuing with function\n");
+			return (0);
+		}
+		traverse = traverse->next;
+	}
+	return (-1);
+}
+
+/**
  * @function: check_total_commands
  * @brief: check for total commands so that
  	we can know how many pipes is required
@@ -42,38 +74,6 @@ int	check_total_commands(t_list *node)
 	command_count++;
 	ft_printf("Total number of commands: %d\n", command_count);
 	return (command_count);
-}
-
-/**
- * @function: check_for_pipes
- * @brief: checks if there are pipes in the command
- 	proceeds if there are pipes in the command
- 	return to main function if no pipes found
- * 
- * @param t_list *node : structure of linked list
- 	 where it points to void content
- * 
- * @return: return 0 if pipes found, -1 if no pipes found
- */
-
-int	check_for_pipes(t_list *node)
-
-{
-	t_list		*traverse;
-	t_exec_node	*result;
-
-	traverse = node;
-	while (traverse)
-	{
-		result = (t_exec_node *)traverse->content;
-		if (result->type == AST_PIPE)
-		{
-			ft_printf("Pipes detected. Returning\n");
-			return (0);
-		}
-		traverse = traverse->next;
-	}
-	return (-1);
 }
 
 /**
@@ -140,4 +140,47 @@ int	setting_up_pipes(t_piping_multiple_command_params *params)
 		params->i++;
 	}
 	return (0);
+}
+
+/**
+ * @function: searching_for_heredocs
+ * @brief: records the count for the presence of heredocs in the command
+ * 
+ * @param t_piping_multiple_command_params *params : structure of
+ 	multiple command parameters
+ 	t_list *node : linked list structure where it points to void content
+ * 
+ * @return: void function
+ */
+
+void	searching_for_heredocs(t_piping_multiple_command_params *params,
+t_list *node)
+
+{
+	params->traverse = node;
+	while (params->traverse)
+	{
+		params->result = (t_exec_node *)params->traverse->content;
+		if (params->result->type == AST_PIPE)
+		{
+			params->traverse = params->traverse->next;
+			continue ;
+		}
+		if (params->result->type == AST_COMMAND)
+		{
+			if (params->result->redirect != NULL)
+			{
+				params->x = 0;
+				while (params->result->redirect[params->x] != NULL)
+				{
+					if (ft_strcmp(params->result->redirect
+							[params->x], "<<") == 0)
+						params->heredocs_count++;
+					params->x++;
+				}
+			}
+		}
+		params->traverse = params->traverse->next;
+	}
+	ft_printf("Total Number of heredocs: %d\n", params->heredocs_count);
 }

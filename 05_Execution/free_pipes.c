@@ -38,3 +38,19 @@ void	free_pipes(int **pipes, int num_pipes)
 	}
 	free(pipes);
 }
+
+void	free_heredocs_pipes(int **heredocs_pipes, int heredocs_count)
+
+{
+	int	i;
+
+	i = 0;
+	if (heredocs_pipes == NULL)
+		return ;
+	while (i < heredocs_count)
+	{
+		free(heredocs_pipes[i]);
+		i++;
+	}
+	free(heredocs_pipes);
+}
