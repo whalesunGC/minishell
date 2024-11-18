@@ -40,7 +40,10 @@ int	handling_forking_process(t_redirect_single_command_params *params,
 		return (-1);
 	}
 	if (params->pid == 0)
+	{
+		ft_signal(params->exec_data_head, CHILD);
 		handle_heredoc_child_process(params, env, input);
+	}
 	else
 		wait(NULL);
 	params->delimiter_counter++;

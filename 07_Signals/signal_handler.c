@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include <signal.h>
 
 /**
  * @function: handle_child_sigint
