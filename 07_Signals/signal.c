@@ -47,7 +47,7 @@ static void	handle_s_command_init(t_redirect_single_command_params *params_s,
 	data->pipes = params_s->pipes;
 	data->pipe_count = params_s->pipe_count;
 	data->command_path = params_s->command_path;
-    data->input1 = params_s->input1;
+	data->input1 = params_s->input1;
 	signal_cleanup(data);
 	setup_signal_handlers_for_child();
 }
@@ -71,7 +71,7 @@ static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
 	data->command_path = params_m->command_path;
 	data->heredocs_pipes = params_m->heredocs_pipes;
 	data->heredocs_count = params_m->heredocs_count;
-    data->input1 = params_m->input1;
+	data->input1 = params_m->input1;
 	signal_cleanup(data);
 	setup_signal_handlers_for_child();
 }
@@ -97,8 +97,8 @@ void	ft_free_signal(t_signal_data *data)
 			free(data->command_path);
 		if (data->heredocs_pipes && data->heredocs_count)
 			free_heredocs_pipes(data->heredocs_pipes, data->heredocs_count);
-        if (data->input1)
-            free(data->input1);
+		if (data->input1)
+			free(data->input1);
 		free(data);
 	}
 }
