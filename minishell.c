@@ -14,6 +14,17 @@
 
 int	g_exit_status = 0;
 
+static int	ft_is_blank(char *string)
+{
+	while (*string) 
+	{
+		if (*string != '\n' && !ft_iswhitespace(*string))
+			return (0);
+		string++;
+	}
+    return (1);
+}
+
 /**
  * @function: ft_free
  * @brief:	function to free all created structs at exit.
@@ -37,7 +48,6 @@ void	ft_free(t_list **token_data, t_ast_node **ast_root)
  * @param: None
  * @return: returns int at exit. 0 for failure, 1 for success,
  */
-
 int	main(int ac, char **av, char **envp)
 {
 	char		**env;
@@ -68,7 +78,8 @@ int	main(int ac, char **av, char **envp)
 			ft_printf("Exiting minishell\n");
 			break ;
 		}
-		add_history(input);
+		if (!ft_is_blank(input))
+			add_history(input);
 		input = input_clean(input);
 		if (input == NULL)
 			continue ;
