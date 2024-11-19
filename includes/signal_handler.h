@@ -30,11 +30,14 @@ typedef struct s_signal_data
     char   *input;
     int    **pipes;
     int    pipe_count;
-
+    char   *command_path;
+    int	   **heredocs_pipes;
+    int    heredocs_count;
 }       t_signal_data;
 
 // signal.c
-void    ft_signal(t_redirect_single_command_params *params, char **env, char *input,
+void    ft_signal(t_redirect_single_command_params *params_s,
+        t_piping_multiple_command_params *params_m, char **env,
         t_process_type process_flag);
 void    ft_free_signal(t_signal_data *data);
 
