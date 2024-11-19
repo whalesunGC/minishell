@@ -46,6 +46,13 @@ void	execution(t_list *node, char ***env)
 			return ;
 		if (handling_heredocs(&params, env, node) == -1)
 			return ;
+		params.z = 0;
+		while (params.z < params.pipe_count)
+		{
+			close(params.pipes[params.z][0]);
+			close(params.pipes[params.z][1]);
+			params.z++;
+		}
 		free_pipes(params.pipes, params.pipe_count);
 	}
 }
