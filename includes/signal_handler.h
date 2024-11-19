@@ -33,6 +33,7 @@ typedef struct s_signal_data
 	char	*command_path;
 	int		**heredocs_pipes;
 	int		heredocs_count;
+	char	*input1;
 }		t_signal_data;
 
 // signal.c
