@@ -50,14 +50,14 @@ void	handle_counters_pipe_closing_and_redirects_array(
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	handle_redirect_array_for_heredocs(t_piping_multiple_command_params
-*params, char ***env, char *input)
+*params, char ***env)
 
 {
 	params->x = 0;
@@ -76,7 +76,7 @@ void	handle_redirect_array_for_heredocs(t_piping_multiple_command_params
 				return ;
 			}
 			if (params->pid == 0)
-				handle_heredocs_readline_multiple_commands(params, env, input);
+				handle_heredocs_readline_multiple_commands(params, env);
 			else
 				wait(NULL);
 			handle_counters_pipe_closing_and_redirects_array(params);
@@ -92,14 +92,14 @@ void	handle_redirect_array_for_heredocs(t_piping_multiple_command_params
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
  	t_list *node : linked list structure where it points to void content
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	handle_heredocs_multiple_commands(t_piping_multiple_command_params
-*params, t_list *node, char ***env, char *input)
+*params, t_list *node, char ***env)
 
 {
 	params->heredocs_pipe_number = 0;
@@ -115,7 +115,7 @@ void	handle_heredocs_multiple_commands(t_piping_multiple_command_params
 		if (params->result->type == AST_COMMAND)
 		{
 			if (params->result->redirect != NULL)
-				handle_redirect_array_for_heredocs(params, env, input);
+				handle_redirect_array_for_heredocs(params, env);
 		}
 		params->traverse = params->traverse->next;
 	}

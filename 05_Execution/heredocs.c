@@ -18,16 +18,15 @@
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
- 	char ***env: *** is called in the calling function
+ 	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
- 	char *input: readline from main function
- 	to free if child process exits
  * 
  * @return: -1 if failure, 0 if success
  */
 
-int	handling_forking_process(t_redirect_single_command_params *params,
-		char ***env, char *input)
+int	handling_forking_process(t_redirect_single_command_params
+*params, char ***env)
+
 {
 	ft_printf("Welcome to heredocs <<\n");
 	ft_printf("delimiter for heredocs: %s\n",
@@ -41,7 +40,7 @@ int	handling_forking_process(t_redirect_single_command_params *params,
 	if (params->pid == 0)
 	{
 		ft_signal(params, NULL, *env, CHILD);
-		handle_heredoc_child_process(params, env, input);
+		handle_heredoc_child_process(params, env);
 	}
 	else
 	{	
@@ -88,17 +87,14 @@ void	handling_next_redirect(t_redirect_single_command_params *params)
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
- 	char ***env: *** is called in the calling function
+ 	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
- 	char *input: readline from main function
- 	to free if child process exits
-	
  * 
  * @return: void function
  */
 
-int	handling_last_redirect(t_redirect_single_command_params *params,
-		char ***env, char *input)
+int	handling_last_redirect(t_redirect_single_command_params
+*params, char ***env)
 
 {
 	ft_printf("Entering here to change current redirect array %s\n",
@@ -109,7 +105,7 @@ int	handling_last_redirect(t_redirect_single_command_params *params,
 		params->result->redirect[params->x]);
 	if (params->result->cmd[0] != NULL)
 	{
-		if (handle_child_execution(params, env, input) == -1)
+		if (handle_child_execution(params, env) == -1)
 			return (-1);
 	}
 	return (0);
@@ -142,22 +138,20 @@ void	waiting_for_child_to_execute(t_redirect_single_command_params *params)
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
- 	char ***env: *** is called in the calling function
+ 	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
- 	char *input: readline from main function
- 	to free if child process exits
  * 
  * @return: -1 if failure, 0 if success
  */
 
-int	heredocs(t_redirect_single_command_params *params, char ***env, char *input)
+int	heredocs(t_redirect_single_command_params *params, char ***env)
 
 {
 	while (params->result->redirect[params->x] != NULL)
 	{
 		if ((ft_strcmp(params->result->redirect[params->x], "<<") == 0))
 		{
-			if (handling_forking_process(params, env, input) == -1)
+			if (handling_forking_process(params, env) == -1)
 				return (-1);
 			if (params->result->redirect[params->x + 1] != NULL)
 			{
@@ -166,7 +160,7 @@ int	heredocs(t_redirect_single_command_params *params, char ***env, char *input)
 			}
 			else if (params->result->redirect[params->x + 1] == NULL)
 			{
-				if (handling_last_redirect(params, env, input) == -1)
+				if (handling_last_redirect(params, env) == -1)
 					return (-1);
 			}
 			waiting_for_child_to_execute(params);

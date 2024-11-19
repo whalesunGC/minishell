@@ -18,17 +18,16 @@
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
-	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	clean_up_function_multiple_commands(t_piping_multiple_command_params
-*params, char ***env, char *input)
+*params, char ***env)
 
 {
-	free(input);
 	free_pipes(params->pipes, params->total - 1);
 	free_heredocs_pipes(params->heredocs_pipes, params->heredocs_count);
 	free_dup_envp(*env);
@@ -41,18 +40,18 @@ void	clean_up_function_multiple_commands(t_piping_multiple_command_params
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	handle_multiple_commands_null_heredocs_input(
-		t_piping_multiple_command_params *params, char ***env, char *input)
+		t_piping_multiple_command_params *params, char ***env)
 
 {
 	write(2, "ERROR in multiple pipe heredocs, please use DELIMITER\n", 54);
-	clean_up_function_multiple_commands(params, env, input);
+	clean_up_function_multiple_commands(params, env);
 	exit(EXIT_FAILURE);
 }
 
@@ -62,14 +61,14 @@ void	handle_multiple_commands_null_heredocs_input(
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	handle_multiple_commands_heredocs_delimiter(
-		t_piping_multiple_command_params *params, char ***env, char *input)
+		t_piping_multiple_command_params *params, char ***env)
 
 {
 	write(2, "Delimiter spotted in multiple pipes heredocs\n", 45);
@@ -81,7 +80,7 @@ void	handle_multiple_commands_heredocs_delimiter(
 		params->heredocs_pipe_number++;
 	}
 	free(params->input1);
-	clean_up_function_multiple_commands(params, env, input);
+	clean_up_function_multiple_commands(params, env);
 	exit(EXIT_SUCCESS);
 }
 
@@ -112,14 +111,14 @@ void	handle_multiple_commands_heredocs_input(t_piping_multiple_command_params
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	handle_heredocs_readline_multiple_commands(
-		t_piping_multiple_command_params *params, char ***env, char *input)
+		t_piping_multiple_command_params *params, char ***env)
 
 {
 	ft_printf("Writing into pipe number [%d]\n", params->heredocs_pipe_number);
@@ -127,10 +126,10 @@ void	handle_heredocs_readline_multiple_commands(
 	{
 		params->input1 = readline("heredocs> ");
 		if (params->input1 == NULL)
-			handle_multiple_commands_null_heredocs_input(params, env, input);
+			handle_multiple_commands_null_heredocs_input(params, env);
 		else if (ft_strcmp(params->input1, params->result->delimiter
 				[params->delimiter_counter]) == 0)
-			handle_multiple_commands_heredocs_delimiter(params, env, input);
+			handle_multiple_commands_heredocs_delimiter(params, env);
 		else if (params->input1 != NULL)
 			handle_multiple_commands_heredocs_input(params);
 	}

@@ -18,12 +18,14 @@
  * 
  * @param t_list *node : structure of linked list
  	where it points to void content
- 	char **env : duplicated env from envp in the main function
+ 	***env: needed *** here in the event of
+ 	environment needing to be changed
+ 	** will be used for freeing purposes
  * 
  * @return: void function
  */
 
-void	execution_with_pipes(t_list *node, char ***env, char *input)
+void	execution_with_pipes(t_list *node, char ***env)
 {
 	t_piping_multiple_command_params	params;
 
@@ -42,11 +44,10 @@ void	execution_with_pipes(t_list *node, char ***env, char *input)
 		if (params.heredocs_pipes == NULL || setting_up_heredocs_pipes
 			(&params) == -1)
 			return ;
-		handle_heredocs_multiple_commands(&params, node, env, input);
+		handle_heredocs_multiple_commands(&params, node, env);
 	}
-	params.i = 0;
 	params.traverse = node;
-	if (handle_arguments(&params, env, input) == -1)
+	if (handle_arguments(&params, env) == -1)
 		return ;
 	handle_pipe_and_waiting_for_child(&params);
 	free_pipes(params.pipes, params.total - 1);
