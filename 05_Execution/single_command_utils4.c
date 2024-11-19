@@ -76,6 +76,13 @@ void	handling_exit_conditions_other_cases(t_redirect_single_command_params
 	if (params->result->cmd[0] == NULL)
 	{
 		ft_printf("No commands found, so we just exit\n");
+		params->z = 0;
+		while (params->z < params->pipe_count)
+		{
+			close(params->pipes[params->z][0]);
+			close(params->pipes[params->z][1]);
+			params->z++;
+		}
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
 	}

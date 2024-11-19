@@ -28,6 +28,7 @@ void	clean_up_function(t_redirect_single_command_params *params,
 			char ***env)
 {
 	free_pipes(params->pipes, params->pipe_count);
+	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	free_dup_envp(*env);
 	rl_clear_history();
 }

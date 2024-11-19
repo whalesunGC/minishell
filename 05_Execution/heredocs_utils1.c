@@ -29,6 +29,13 @@ void	handle_null_heredocs_input(t_redirect_single_command_params
 
 {
 	write(0, "ERROR, please use delimiter\n", 28);
+	params->z = 0;
+	while (params->z < params->pipe_count)
+	{
+		close(params->pipes[params->z][0]);
+		close(params->pipes[params->z][1]);
+		params->z++;
+	}
 	clean_up_function(params, env);
 	exit(EXIT_FAILURE);
 }
