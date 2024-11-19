@@ -41,6 +41,7 @@ typedef struct s_piping_multiple_command_params
 {
 	t_list		*traverse;
 	t_exec_node	*result;
+	t_list		*exec_data_head;
 	char		*command_path;
 	char		*input1;
 	int			**pipes;

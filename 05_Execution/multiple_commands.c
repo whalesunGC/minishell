@@ -24,13 +24,13 @@
  */
 
 void	execution_with_pipes(t_list *node, char ***env, char *input)
-
 {
 	t_piping_multiple_command_params	params;
 
 	if (check_for_pipes(node) == -1)
 		return ;
 	ft_memset(&params, 0, sizeof(t_piping_multiple_command_params));
+	params.exec_data_head = node;
 	params.total = check_total_commands(node);
 	params.pipes = creating_new_pipes(params.total - 1);
 	if (params.pipes == NULL || setting_up_pipes(&params) == -1)

@@ -50,7 +50,7 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	if (envp[0] == NULL)
 		ft_printf("envp not initialised\n");
-	parent_signal_handlers();
+	ft_signal(NULL, NULL, NULL, PARENT);
 	env = copy_envp(envp);
 	if (env == NULL)
 	{

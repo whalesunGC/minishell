@@ -40,9 +40,15 @@ int	handling_forking_process(t_redirect_single_command_params *params,
 		return (-1);
 	}
 	if (params->pid == 0)
+	{
+		ft_signal(params, *env, input, CHILD);
 		handle_heredoc_child_process(params, env, input);
+	}
 	else
+	{	
+		ignore_parent_signals();
 		wait(NULL);
+	}
 	params->delimiter_counter++;
 	params->z++;
 	if (params->y < params->pipe_count)
