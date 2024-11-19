@@ -13,8 +13,6 @@
 #include "../includes/minishell.h"
 #include <signal.h>
 
-static t_signal_data	*child_data; 
-
 /**
  * @function: handle_child_sigint
  * @brief: handle ctrl + c in child process
@@ -27,7 +25,7 @@ void	handle_child_sigint(int signum)
 {
 	(void)signum;
 	ft_printf("\n");
-	ft_free_signal(child_data);
+	signal_cleanup(NULL);
 	exit(EXIT_SUCCESS);
 }
 
@@ -124,11 +122,10 @@ void	ignore_parent_signals(void)
  * @return: void function
  */
 
-void	setup_signal_handlers_for_child(t_signal_data *data)
+void	setup_signal_handlers_for_child(void)
 {
 	struct sigaction	signal_child;
 
-	child_data = data;
 	ft_memset(&signal_child, 0, sizeof(signal_child));
 	signal_child.sa_handler = handle_child_sigint;
 	sigemptyset(&signal_child.sa_mask);
