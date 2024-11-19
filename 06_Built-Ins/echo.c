@@ -13,6 +13,24 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_only_n
+ * @brief: checks if string has only n
+ * 
+ * @param string: Input string
+ * 
+ * @return: void function
+ */
+static int	ft_only_n(char *string)
+{
+	while (*string)
+		if (*string == 'n')
+			string++;
+		else
+			return (0);
+	return (1);
+}
+
+/**
  * @function: print_with_n_option
  * @brief: prints no newline if -n option is used.
  * 
@@ -21,7 +39,6 @@
  * 
  * @return: void function
  */
-
 static void	print_with_n_option(int ac, char **av)
 
 {
@@ -74,24 +91,17 @@ static void	print_without_n_option(int ac, char **av)
  */
 
 void	echo_command(int ac, char **av)
-
 {
 	if (ac > 0 && ft_strncmp(av[0], "echo", 4) == 0)
 	{
 		if (ac == 1)
 			ft_printf("\n");
 		else if (ac > 1 && ft_strncmp(av[1], "-n", 2) == 0
-			&& ft_strlen(av[1]) == 2)
+			&& ft_only_n(av[1]))
 		{
 			rl_on_new_line();
 			rl_replace_line("", 0);
 			print_with_n_option(ac, av);
-		}
-		else if (ac == 2 && ft_strncmp(av[1], "$?", 2) == 0
-			&& ft_strlen(av[1]) == 2)
-		{
-			ft_printf("%d\n", g_exit_status);
-			g_exit_status = 0;
 		}
 		else
 		{
