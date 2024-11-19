@@ -28,7 +28,6 @@
 
 int	handling_forking_process(t_redirect_single_command_params *params,
 		char ***env, char *input)
-
 {
 	ft_printf("Welcome to heredocs <<\n");
 	ft_printf("delimiter for heredocs: %s\n",
@@ -41,7 +40,7 @@ int	handling_forking_process(t_redirect_single_command_params *params,
 	}
 	if (params->pid == 0)
 	{
-		ft_signal(params, *env, input, CHILD);
+		ft_signal(params, NULL, *env, CHILD);
 		handle_heredoc_child_process(params, env, input);
 	}
 	else
@@ -49,6 +48,7 @@ int	handling_forking_process(t_redirect_single_command_params *params,
 		ignore_parent_signals();
 		wait(NULL);
 	}
+	ft_signal(NULL, NULL, NULL, PARENT);
 	params->delimiter_counter++;
 	params->z++;
 	if (params->y < params->pipe_count)
