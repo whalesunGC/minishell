@@ -13,6 +13,24 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: signal_cleanup
+ * @brief: create static data for cleanup
+ * 
+ * @param data: signal_data for cleanup
+ */
+void    signal_cleanup(t_signal_data *data)
+{
+    static t_signal_data *temp_data;
+
+    if (data)
+        temp_data = data;
+    else
+        temp_data = NULL;
+    if (!temp_data)
+        ft_free_signal(temp_data);
+}
+
+/**
  * @function: handle_s_command_init
  * @brief: function to handle init of signal data for single command
  * 
@@ -29,7 +47,8 @@ static void handle_s_command_init(t_redirect_single_command_params *params_s,
     data->pipes = params_s->pipes;
     data->pipe_count = params_s->pipe_count;
     data->command_path = params_s->command_path;
-    setup_signal_handlers_for_child(data);
+    signal_cleanup(data);
+    setup_signal_handlers_for_child();
 }
 
 /**
@@ -51,7 +70,8 @@ static void handle_m_command_init(t_piping_multiple_command_params *params_m,
     data->command_path = params_m->command_path;
     data->heredocs_pipes = params_m->heredocs_pipes;
     data->heredocs_count = params_m->heredocs_count;
-    setup_signal_handlers_for_child(data);
+    signal_cleanup(data);
+    setup_signal_handlers_for_child();
 }
 
 /**
