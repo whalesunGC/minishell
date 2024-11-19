@@ -30,6 +30,11 @@ void	handle_file_opening_errors(t_piping_multiple_command_params *params)
 		ft_printf("%s: ", params->result->rd_arg[params->rd_arg_counter]);
 		perror("Error opening file");
 	}
+	if (params->input_fd < 0 && params->traverse->next == NULL)
+	{
+		write(2, "Does it come in here\n", 21);
+		params->flag = 1;
+	}
 }
 
 /**
@@ -114,14 +119,17 @@ void	handle_heredocs_pipe_number_multiple_commands(
  * 
  * @param t_piping_multiple_command_params *params : structure for
  	multiple commands parameters
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: -1 if fork fails. 0 if everything is successful.
  */
 
 int	handle_arguments(t_piping_multiple_command_params *params,
-	char ***env, char *input)
+	char ***env)
 
 {
+	params->i = 0;
 	params->heredocs_pipe_number = 0;
 	while (params->traverse)
 	{
@@ -140,7 +148,7 @@ int	handle_arguments(t_piping_multiple_command_params *params,
 			return (-1);
 		}
 		if (params->pid == 0)
-			handle_child_process(params, env, input);
+			handle_child_process(params, env);
 		params->traverse = params->traverse->next;
 		params->i++;
 	}

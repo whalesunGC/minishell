@@ -13,154 +13,183 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: handle_redirections_file_opening
- * @brief: handling opening of files when redirections are called
- 	and handling errors if files are not valid
+ * @function: checking_if_pipes_exist
+ * @brief: checks through the nodes if pipe commands exist
+ 	return to calling function if pipe commands are found
+ 	as current function only handles single commands
  * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
+ * @param t_list *node: structure of the linked list
+ 	where it points to void content
+ * 
+ * @return: -1 if pipes are found in the linked list structure
+ 	    0  if no pipes are found
+ */
+
+int	checking_if_pipes_exist(t_list *node)
+{
+	t_list		*traverse;
+	t_exec_node	*result;
+
+	traverse = node;
+	while (traverse)
+	{
+		result = (t_exec_node *)traverse->content;
+		if (result->type == AST_PIPE)
+		{
+			ft_printf("Pipes detected. Proceeding to function with pipes\n");
+			return (-1);
+		}
+		traverse = traverse->next;
+	}
+	return (0);
+}
+
+/**
+ * @function: finding_heredocs
+ * @brief: finding if there is any heredocs in the command.
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ 	t_list *node: structure of the linked list
+ 	where it points to void content
  * 
  * @return: void function
  */
 
-void	handle_redirections_file_opening(
-			t_redirect_single_command_params *params, char ***env, char *input)
-
-{
-	while (params->k < params->i)
+void	finding_heredocs(t_redirect_single_command_params *params, t_list *node)
+{	
+	params->traverse = node;
+	while (params->traverse)
 	{
-		if (ft_strcmp(params->result->redirect[params->k], "a") == 0)
+		ft_printf("checking for heredocs\n");
+		params->result = (t_exec_node *)params->traverse->content;
+		if (params->result->type == AST_COMMAND)
 		{
-			params->k++;
-			continue ;
+			if (params->result->redirect != NULL)
+			{
+				while (params->result->redirect[params->count] != NULL)
+				{
+					if (ft_strcmp(params->result
+							->redirect[params->count], "<<") == 0)
+						params->pipe_count++;
+					params->count++;
+				}
+			}
 		}
-		else if (ft_strcmp(params->result->redirect[params->k], "<") == 0)
-			params->input_fd = open(params->result
-					->rd_arg[params->rd_arg_counter], O_RDONLY);
-		else if (ft_strcmp(params->result->redirect[params->k], ">") == 0)
-			params->output_fd = open(params->result->rd_arg
-				[params->rd_arg_counter], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (ft_strcmp(params->result->redirect[params->k], ">>") == 0)
-			params->output_fd = open(params->result->rd_arg
-				[params->rd_arg_counter], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (params->input_fd < 0 || params->output_fd < 0)
-		{
-			ft_printf("%s: ", params->result->rd_arg[params->rd_arg_counter]);
-			perror("Error opening file");
-			clean_up_function(params, env, input);
-			exit(EXIT_FAILURE);
-		}
-		params->rd_arg_counter++;
-		params->k++;
+		params->traverse = params->traverse->next;
 	}
 }
 
 /**
- * @function: handle_dup_and_closing_fd
- * @brief: handling dup function calls for both input and output fd
+ * @function: handling_no_heredocs
+ * @brief: here we handle the situation where no heredocs is found
  * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
+ 	t_list *node: structure of the linked list
+ 	where it points to void content
  * 
- * @return: void function
+ * @return: -1 if there is an error, 0 if success
  */
-
-void	handle_dup_and_closing_fd(t_redirect_single_command_params *params, char ***env, char *input)
-
-{
-	if (params->input_fd > 0)
+int	handling_no_heredocs(t_redirect_single_command_params
+*params, char ***env, t_list *node)
+{	
+	ft_printf("handling no heredocs\n");
+	params->traverse = node;
+	while (params->traverse)
 	{
-		if (dup2(params->input_fd, STDIN_FILENO) == -1)
+		params->result = (t_exec_node *)params->traverse->content;
+		if (params->result->type == AST_COMMAND)
 		{
-			perror("Dup2 failed for child for input_fd");
-			clean_up_function(params, env, input);
-			exit(EXIT_FAILURE);
+			if (params->result->redirect != NULL)
+			{
+				write(2, "handling redirects first\n", 25);
+				if (handle_redirects(params, env) == -1)
+					return (-1);
+				write(2, "handling other cases\n", 21);
+				if (handle_other_cases(params, env) == -1)
+					return (-1);
+			}
+			else if (handle_other_cases(params, env) == -1)
+				return (-1);
 		}
-		close(params->input_fd);
+		params->traverse = params->traverse->next;
 	}
-	if (params->output_fd > 0)
-	{
-		if (dup2(params->output_fd, STDOUT_FILENO) == -1)
-		{
-			perror("Dup2 failed for child for input_fd");
-			clean_up_function(params, env, input);
-			exit(EXIT_FAILURE);
-		}
-		close(params->output_fd);
-	}
+	return (0);
 }
 
 /**
- * @function: executing_execve_redirections
- * @brief: executing execve function if redirections are called
+ * @function: creating_pipes
+ * @brief: creating space for pipes and
+ 	initialising pipe using pipe function
  * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	char ***env: *** is declared in main. needed **
- 	to be freed in case of error
- 	char *input: readline to be freed in main function in case of error
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
  * 
- * @return: void function
+ * @return: -1 if there is an error, 0 if success
  */
 
-void	executing_execve_redirections(t_redirect_single_command_params
-*params, char ***env, char *input)
-
+int	creating_pipes(t_redirect_single_command_params *params)
 {
-	write(2, "Entering the redirect loop\n", 27);
-	if (params->input_fd == 0)
+	ft_printf("Total heredocs found: %d\n", params->pipe_count);
+	params->pipes = creating_new_pipes(params->pipe_count);
+	if (params->pipes == NULL)
 	{
-		write(2, "I should not come here\n", 23);
-		if (dup2(params->pipes[params->pipe_count - 1][0], STDIN_FILENO) == -1)
+		perror("pipes failed");
+		return (-1);
+	}
+	params->count = 0;
+	while (params->count < params->pipe_count)
+	{
+		if (pipe(params->pipes[params->count]) == -1)
 		{
-			perror("dup2 failed");
-			clean_up_function(params, env, input);
-			exit(EXIT_FAILURE);
+			perror("pipe failed");
+			return (-1);
 		}
+		params->count++;
 	}
-	write(2, "I should come here\n", 19);
-	if (access(params->result->cmd[0], F_OK) == 0)
-		params->command_path = params->result->cmd[0];
-	else
-		params->command_path = find_command
-			(&params->result->cmd[0], 0, *env);
-	if (execve(params->command_path, params->result->cmd, *env) == -1)
-	{
-		if (params->command_path != params->result->cmd[0])
-			free(params->command_path);
-		clean_up_function(params, env, input);
-		exit(EXIT_FAILURE);
-	}
+	return (0);
 }
 
 /**
- * @function: handle_execve_for_redirections
- * @brief: handling execve conditions when there is redirections
+ * @function: handling_heredocs
+ * @brief: handling situations if heredocs are found
  * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	char ***env : *** is called in calling function
- 		only needed ** for freeing in child process
- 	char *input : initial readline from main function
- 		used for freeing purposes if program fails
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
+ 	t_list *node: structure of the linked list
+ 	where it points to void content
  * 
- * @return: void function
+ * @return: -1 if there is an error, 0 if success
  */
 
-void	handle_execve_for_redirections(t_redirect_single_command_params *params,
-	char ***env, char *input)
-
-{
-	write(2, "Entering the redirect loop\n", 27);
-	if (params->result->cmd[0] == NULL)
+int	handling_heredocs(t_redirect_single_command_params
+*params, char ***env, t_list *node)
+{	
+	params->traverse = node;
+	while (params->traverse)
 	{
-		write(2, "No commands found, so we just exit\n", 35);
-		clean_up_function(params, env, input);
-		exit(EXIT_SUCCESS);
+		ft_printf("Entering here for first loop\n");
+		params->result = (t_exec_node *)params->traverse->content;
+		if (params->result->type == AST_COMMAND)
+		{
+			if (params->result->redirect != NULL)
+			{
+				ft_printf("coming here\n");
+				if (heredocs(params, env) == -1)
+					return (-1);
+				if (handle_redirects(params, env) == -1)
+					return (-1);
+				if (handle_single_commands_no_heredocs
+					(params, env) == -1)
+					return (-1);
+			}
+		}
+		params->traverse = params->traverse->next;
 	}
-	if (params->pipe_count > 0)
-		exiting_conditions_nonzero_pipecount(params, env, input);
-	else
-		exiting_conditions_zero_pipecount(params, env, input);
-	executing_execve_redirections(params, env, input);
+	return (0);
 }

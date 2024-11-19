@@ -19,16 +19,14 @@
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
- 	char ***env: *** is called in the calling function
+ 	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
- 	char *input: readline from main function
- 	to free if child process exits
  * 
  * @return: void function
  */
 
 void	handle_exit_conditions_for_heredocs(t_redirect_single_command_params
-*params, char ***env, char *input)
+*params, char ***env)
 
 {
 	if ((ft_strcmp(params->result->cmd[0], "echo") == 0)
@@ -40,7 +38,7 @@ void	handle_exit_conditions_for_heredocs(t_redirect_single_command_params
 		|| (ft_strcmp(params->result->cmd[0], "exit") == 0))
 	{
 		write(0, "Exiting heredocs\n", 17);
-		clean_up_function(params, env, input);
+		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
 	}
 }
@@ -51,17 +49,15 @@ void	handle_exit_conditions_for_heredocs(t_redirect_single_command_params
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
- 	char ***env: *** is called in the calling function
+ 	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
- 	char *input: readline from main function
- 	to free if child process exits
  * 
  * @return: -1 if failure, 0 if success,
  	0 will never be reached if execve is successful.
  */
 
-int	handle_execve_for_heredocs(t_redirect_single_command_params *params,
-		char ***env, char *input)
+int	handle_execve_for_heredocs(t_redirect_single_command_params
+*params, char ***env)
 
 {
 	if (dup2(params->pipes[params->pipe_count - 1][0], STDIN_FILENO) == -1)
@@ -83,7 +79,6 @@ int	handle_execve_for_heredocs(t_redirect_single_command_params *params,
 			close(params->pipes[params->z][1]);
 			params->z++;
 		}
-		free(input);
 		free_dup_envp(*env);
 		exit(EXIT_FAILURE);
 	}
@@ -97,16 +92,14 @@ int	handle_execve_for_heredocs(t_redirect_single_command_params *params,
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
- 	char ***env: *** is called in the calling function
+ 	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
- 	char *input: readline from main function
- 	to free if child process exits
  * 
  * @return: -1 if failure, 0 if success
  */
 
 int	handle_child_execution(t_redirect_single_command_params
-*params, char ***env, char *input)
+*params, char ***env)
 
 {
 	write(0, "Entering the heredocs loop\n", 27);
@@ -118,8 +111,8 @@ int	handle_child_execution(t_redirect_single_command_params
 	}
 	if (params->pid == 0)
 	{
-		handle_exit_conditions_for_heredocs(params, env, input);
-		if (handle_execve_for_heredocs(params, env, input) == -1)
+		handle_exit_conditions_for_heredocs(params, env);
+		if (handle_execve_for_heredocs(params, env) == -1)
 			return (-1);
 	}
 	return (0);

@@ -39,6 +39,17 @@ void	free_pipes(int **pipes, int num_pipes)
 	free(pipes);
 }
 
+/**
+ * @function: free_heredocs_pipes
+ * @brief: freeing heredoc pipes after the usage of the functions
+ * 
+ * @param **heredocs_pipes: 2d array of pipes to keep track of
+ 	which heredoc pipe you are working with
+ 	heredocs_count: number of heredoc pipes in total
+ * 
+ * @return: void function
+ */
+
 void	free_heredocs_pipes(int **heredocs_pipes, int heredocs_count)
 
 {
