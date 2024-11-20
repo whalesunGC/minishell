@@ -99,6 +99,8 @@ int	main(int ac, char **av, char **envp)
 		ft_free(&token_data, &ast_root);
 		execution(exec_data, &env);
 		execution_with_pipes(exec_data, &env);
+		execution(exec_data, &env);
+		execution_with_pipes(exec_data, &env);
 		ft_lstclear(&exec_data, ft_free_exec_data);
 	}
 	free_dup_envp(env);
