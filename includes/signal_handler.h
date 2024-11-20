@@ -12,9 +12,9 @@
 #ifndef SIGNAL_HANDLER_H
 # define SIGNAL_HANDLER_H
 
-extern int	g_exit_status;
-
 # include "execution.h"
+
+extern int	g_exit_status;
 
 typedef enum e_process_type
 {
@@ -23,17 +23,17 @@ typedef enum e_process_type
 }			t_process_type;
 
 // signal.c
-void	ft_signal(t_redirect_single_command_params *params_s,
-			t_piping_multiple_command_params *params_m, char **env,
-			t_process_type process_flag);
-void	ft_free_signal(t_sig_data *data);
-void	signal_cleanup(t_sig_data *data);
+void		ft_signal(t_redirect_single_command_params *params_s,
+				t_piping_multiple_command_params *params_m, char **env,
+				t_process_type process_flag);
+void		ft_free_signal(t_sig_data *data);
+void		signal_cleanup(t_sig_data *data);
 
 // handling ctrl + c and ctrl + / //
-void	handle_child_sigint(int signum);
-void	handle_parent_sigint(int signum);
-void	parent_signal_handlers(void);
-void	ignore_parent_signals(void);
-void	setup_signal_handlers_for_child(void);
+void		handle_child_sigint(int signum);
+void		handle_parent_sigint(int signum);
+void		parent_signal_handlers(void);
+void		ignore_parent_signals(void);
+void		setup_signal_handlers_for_child(void);
 
-#endif 
+#endif
