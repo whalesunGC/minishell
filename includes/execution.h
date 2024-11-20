@@ -12,11 +12,26 @@
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
+typedef struct s_sig_data
+{
+	t_list	*exec_data_head;
+	int		exit_status;
+	char	**env;
+	char	*input;
+	int		**pipes;
+	int		pipe_count;
+	char	*command_path;
+	int		**heredocs_pipes;
+	int		heredocs_count;
+	char	*input1;
+}		t_sig_data;
+
 typedef struct s_redirect_single_command_params
 {
 	char		**av;
 	int			**pipes;
 	t_list		*exec_data_head;
+	t_sig_data	*signal_data;
 	t_list		*traverse;
 	t_exec_node	*result;
 	char		*command_path;
@@ -44,6 +59,7 @@ typedef struct s_piping_multiple_command_params
 	t_list		*traverse;
 	t_exec_node	*result;
 	t_list		*exec_data_head;
+	t_sig_data	*signal_data;
 	char		*command_path;
 	char		*input1;
 	pid_t		pid;
