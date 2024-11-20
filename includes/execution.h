@@ -66,7 +66,7 @@ typedef struct s_piping_multiple_command_params
 }	t_piping_multiple_command_params;
 
 // multiple_command.c //
-void	execution_with_pipes(t_list *node, char ***env);
+void	execution_with_pipes(t_list *node, char ***env, int *exist_status);
 
 // multiple_commands_utils1 //
 int		check_for_pipes(t_list *node);
@@ -163,7 +163,7 @@ void	free_pipes(int **pipes, int num_pipes);
 void	free_heredocs_pipes(int **heredocs_pipes, int heredocs_count);
 
 // single_command.c //
-void	execution(t_list *node, char ***env);
+void	execution(t_list *node, char ***env, int *exit_status);
 
 // single_commands_utils1 //
 int		checking_if_pipes_exist(t_list *node);

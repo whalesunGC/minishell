@@ -14,8 +14,6 @@
 
 # include "execution.h"
 
-extern int	g_exit_status;
-
 typedef enum e_process_type
 {
 	PARENT,

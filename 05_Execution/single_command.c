@@ -24,7 +24,7 @@
  * @return: -1 if error, 0 if success
  */
 
-void	execution(t_list *node, char ***env)
+void	execution(t_list *node, char ***env, int *exit_status)
 {
 	t_redirect_single_command_params	params;
 

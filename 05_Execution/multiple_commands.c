@@ -25,7 +25,7 @@
  * @return: void function
  */
 
-void	execution_with_pipes(t_list *node, char ***env)
+void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 {
 	t_piping_multiple_command_params	params;
 
