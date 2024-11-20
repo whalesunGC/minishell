@@ -18,23 +18,23 @@
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	handle_input_output_heredocs_multiple_commands(
-		t_piping_multiple_command_params *params, char ***env, char *input)
+		t_piping_multiple_command_params *params, char ***env)
 
 {
 	write(2, "entering this loop\n", 19);
 	params->b = 0;
 	while (params->result->redirect[params->b] != NULL)
 		params->b++;
-	setting_up_input_redirections_multiple_commands(params, env, input);
-	setting_up_output_redirections_multiple_commands(params, env, input);
-	setting_up_heredocs_multiple_commands(params, env, input);
+	setting_up_input_redirections_multiple_commands(params, env);
+	setting_up_output_redirections_multiple_commands(params, env);
+	setting_up_heredocs_multiple_commands(params, env);
 }
 
 /**
@@ -43,14 +43,14 @@ void	handle_input_output_heredocs_multiple_commands(
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	setup_pipe_redirection_and_closing(t_piping_multiple_command_params
-*params, char ***env, char *input)
+*params, char ***env)
 
 {
 	if (params->i < params->total - 1)
@@ -58,19 +58,19 @@ void	setup_pipe_redirection_and_closing(t_piping_multiple_command_params
 		write(2, "entering 1st command onwards\n", 29);
 		if (params->result->redirect != NULL)
 		{
-			handle_input_output_heredocs_multiple_commands(params, env, input);
-			setting_up_pipes_to_redirect_output(params, env, input);
+			handle_input_output_heredocs_multiple_commands(params, env);
+			setting_up_pipes_to_redirect_output(params, env);
 		}
 		else
-			setting_up_pipes_to_redirect_output(params, env, input);
+			setting_up_pipes_to_redirect_output(params, env);
 	}
 	if (params->i > 0)
 	{	
 		write(2, "entering 2nd command onwards\n", 29);
 		if (params->result->redirect != NULL)
-			handle_input_output_heredocs_multiple_commands(params, env, input);
+			handle_input_output_heredocs_multiple_commands(params, env);
 		else
-			read_from_pipe_without_redirections(params, env, input);
+			read_from_pipe_without_redirections(params, env);
 	}
 	params->j = 0;
 	while (params->j < params->total - 1)
@@ -87,20 +87,20 @@ void	setup_pipe_redirection_and_closing(t_piping_multiple_command_params
  * 
  * @param t_piping_multiple_command_params *params : structure for
  	multiple commands parameters
- 	char **env : env which was copied from env
- 	this is required for execve to be executed
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	handle_child_process(t_piping_multiple_command_params
-*params, char ***env, char *input)
+*params, char ***env)
 
 {
-	setup_pipe_redirection_and_closing(params, env, input);
-	if (params->input_fd < 0)
+	setup_pipe_redirection_and_closing(params, env);
+	if (params->flag == 1)
 	{
-		clean_up_function_multiple_commands(params, env, input);
+		clean_up_function_multiple_commands(params, env);
 		exit(EXIT_FAILURE);
 	}
 	if (access(params->result->cmd[0], F_OK) == 0)
@@ -110,7 +110,9 @@ void	handle_child_process(t_piping_multiple_command_params
 	if (execve(params->command_path, params->result->cmd, *env) == -1)
 	{
 		perror("execve process failed");
-		clean_up_function_multiple_commands(params, env, input);
+		if (params->command_path != params->result->cmd[0])
+			free(params->command_path);
+		clean_up_function_multiple_commands(params, env);
 		exit(EXIT_FAILURE);
 	}
 }

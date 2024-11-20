@@ -18,20 +18,25 @@
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
- 	char ***env: *** is called in the calling function
+ 	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
- 	char *input: readline from main function
- 	to free if child process exits
  * 
  * @return: void function
  */
 
-void	handle_null_heredocs_input(t_redirect_single_command_params *params,
-		char ***env, char *input)
+void	handle_null_heredocs_input(t_redirect_single_command_params
+*params, char ***env)
 
 {
 	write(0, "ERROR, please use delimiter\n", 28);
-	clean_up_function(params, env, input);
+	params->z = 0;
+	while (params->z < params->pipe_count)
+	{
+		close(params->pipes[params->z][0]);
+		close(params->pipes[params->z][1]);
+		params->z++;
+	}
+	clean_up_function(params, env);
 	exit(EXIT_FAILURE);
 }
 
@@ -41,16 +46,14 @@ void	handle_null_heredocs_input(t_redirect_single_command_params *params,
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
- 	char ***env: *** is called in the calling function
+ 	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
- 	char *input: readline from main function
- 	to free if child process exits
  * 
  * @return: void function
  */
 
-void	handle_heredocs_delimiter(t_redirect_single_command_params *params,
-		char ***env, char *input)
+void	handle_heredocs_delimiter(t_redirect_single_command_params
+*params, char ***env)
 
 {
 	params->z = 0;
@@ -62,7 +65,7 @@ void	handle_heredocs_delimiter(t_redirect_single_command_params *params,
 		params->z++;
 	}
 	free(params->input1);
-	clean_up_function(params, env, input);
+	clean_up_function(params, env);
 	exit(EXIT_SUCCESS);
 }
 
@@ -73,10 +76,6 @@ void	handle_heredocs_delimiter(t_redirect_single_command_params *params,
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
- 	char ***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- 	char *input: readline from main function
- 	to free if child process exits
  * 
  * @return: void function
  */
@@ -96,16 +95,14 @@ void	handle_heredocs_input(t_redirect_single_command_params *params)
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
- 	char ***env: *** is called in the calling function
+ 	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
- 	char *input: readline from main function
- 	to free if child process exits
  * 
  * @return: void function
  */
 
 void	handle_heredoc_child_process(t_redirect_single_command_params
-*params, char ***env, char *input)
+*params, char ***env)
 
 {
 	ft_printf("Writing into pipe number [%d]\n", params->z);
@@ -113,10 +110,10 @@ void	handle_heredoc_child_process(t_redirect_single_command_params
 	{
 		params->input1 = readline("heredocs> ");
 		if (params->input1 == NULL)
-			handle_null_heredocs_input(params, env, input);
+			handle_null_heredocs_input(params, env);
 		else if (ft_strcmp(params->input1,
 				params->result->delimiter[params->delimiter_counter]) == 0)
-			handle_heredocs_delimiter(params, env, input);
+			handle_heredocs_delimiter(params, env);
 		else if (params->input1 != NULL)
 			handle_heredocs_input(params);
 	}

@@ -18,14 +18,14 @@
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	setting_up_input_redirections_multiple_commands(
-		t_piping_multiple_command_params *params, char ***env, char *input)
+		t_piping_multiple_command_params *params, char ***env)
 
 {
 	if (ft_strcmp(params->result->redirect[params->b - 1], "<") == 0)
@@ -33,7 +33,7 @@ void	setting_up_input_redirections_multiple_commands(
 		if (dup2(params->input_fd, STDIN_FILENO) == -1)
 		{
 			perror("dup2 to stdin failed input");
-			clean_up_function_multiple_commands(params, env, input);
+			clean_up_function_multiple_commands(params, env);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -45,14 +45,14 @@ void	setting_up_input_redirections_multiple_commands(
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	setting_up_output_redirections_multiple_commands(
-		t_piping_multiple_command_params *params, char ***env, char *input)
+		t_piping_multiple_command_params *params, char ***env)
 
 {
 	if (ft_strcmp(params->result->redirect[params->b - 1], ">") == 0)
@@ -60,7 +60,7 @@ void	setting_up_output_redirections_multiple_commands(
 		if (dup2(params->output_fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 to stdin failed output");
-			clean_up_function_multiple_commands(params, env, input);
+			clean_up_function_multiple_commands(params, env);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -69,7 +69,7 @@ void	setting_up_output_redirections_multiple_commands(
 		if (dup2(params->output_fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 to stdin failed append");
-			clean_up_function_multiple_commands(params, env, input);
+			clean_up_function_multiple_commands(params, env);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -81,14 +81,14 @@ void	setting_up_output_redirections_multiple_commands(
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	setting_up_heredocs_multiple_commands(t_piping_multiple_command_params
-*params, char ***env, char *input)
+*params, char ***env)
 
 {
 	if (ft_strcmp(params->result->redirect[params->b - 1], "a") == 0)
@@ -98,7 +98,7 @@ void	setting_up_heredocs_multiple_commands(t_piping_multiple_command_params
 			STDIN_FILENO) == -1)
 		{
 			perror("dup2 to stdin failed heredocs pipe");
-			clean_up_function_multiple_commands(params, env, input);
+			clean_up_function_multiple_commands(params, env);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -110,21 +110,21 @@ void	setting_up_heredocs_multiple_commands(t_piping_multiple_command_params
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	setting_up_pipes_to_redirect_output(t_piping_multiple_command_params
-*params, char ***env, char *input)
+*params, char ***env)
 
 {
 	write(2, "deliver output to next pipe\n", 28);
 	if (dup2(params->pipes[params->i][1], STDOUT_FILENO) == -1)
 	{
 		perror("dup2 to stdout failed main pipe");
-		clean_up_function_multiple_commands(params, env, input);
+		clean_up_function_multiple_commands(params, env);
 		exit(EXIT_FAILURE);
 	}
 }
@@ -136,21 +136,21 @@ void	setting_up_pipes_to_redirect_output(t_piping_multiple_command_params
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
  	t_list *node : linked list structure where it points to void content
- 	***env : *** used in calling function needed to use ** to free data
-	*input : this is readline input from main function
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
 void	read_from_pipe_without_redirections(t_piping_multiple_command_params
-*params, char ***env, char *input)
+*params, char ***env)
 
 {
 	write(2, "reading from previous pipes\n", 28);
 	if (dup2(params->pipes[params->i - 1][0], STDIN_FILENO) == -1)
 	{	
 		perror("dup2 to stdin failed");
-		clean_up_function_multiple_commands(params, env, input);
+		clean_up_function_multiple_commands(params, env);
 		exit(EXIT_FAILURE);
 	}
 }

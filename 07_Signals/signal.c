@@ -100,11 +100,11 @@ void	ft_free_signal(t_sig_data *data)
 			ft_lstclear(&data->exec_data_head, ft_free_exec_data);
 		if (data->env)
 			free_dup_envp(data->env);
-		if (data->pipes && data->pipe_count)
+		if (data->pipes)
 			free_pipes(data->pipes, data->pipe_count);
 		if (data->command_path)
 			free(data->command_path);
-		if (data->heredocs_pipes && data->heredocs_count)
+		if (data->heredocs_pipes)
 			free_heredocs_pipes(data->heredocs_pipes, data->heredocs_count);
 		if (data->input1)
 			free(data->input1);
