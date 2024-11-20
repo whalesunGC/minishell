@@ -13,22 +13,6 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: signal_cleanup
- * @brief: create static data for cleanup
- *
- * @param data: signal_data for cleanup
- */
-void	signal_cleanup(t_sig_data *data)
-{
-	static t_sig_data	*temp_data;
-
-	if (data)
-		temp_data = data;
-	if (!data)
-		ft_free_signal(temp_data);
-}
-
-/**
  * @function: handle_s_command_init
  * @brief: function to handle init of signal data for single command
  *
@@ -41,12 +25,13 @@ static void	handle_s_command_init(t_redirect_single_command_params *params_s,
 	ft_memset(data, 0, sizeof(t_sig_data));
 	params_s->signal_data = data;
 	data->exec_data_head = params_s->exec_data_head;
-	data->exit_status = 0;
 	data->env = env;
 	data->pipes = params_s->pipes;
 	data->pipe_count = params_s->pipe_count;
 	data->command_path = params_s->command_path;
 	data->input1 = params_s->input1;
+	data->exit_status = params_s->exit_status;
+	data->z = 0;
 	signal_cleanup(data);
 	setup_signal_handlers_for_child();
 }
@@ -64,7 +49,6 @@ static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
 	ft_memset(data, 0, sizeof(t_sig_data));
 	params_m->signal_data = data;
 	data->exec_data_head = params_m->exec_data_head;
-	data->exit_status = 0;
 	data->env = env;
 	data->pipes = params_m->pipes;
 	data->pipe_count = params_m->total - 1;
@@ -72,6 +56,8 @@ static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
 	data->heredocs_pipes = params_m->heredocs_pipes;
 	data->heredocs_count = params_m->heredocs_count;
 	data->input1 = params_m->input1;
+	data->exit_status = params_m->exit_status;
+	data->z = 0;
 	signal_cleanup(data);
 	setup_signal_handlers_for_child();
 }
@@ -85,16 +71,13 @@ static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
  */
 void	ft_free_signal(t_sig_data *data)
 {
-	int	z;
-
-	z = 0;
 	if (data)
 	{
-		while (z < data->pipe_count)
+		while (data->z < data->pipe_count)
 		{
-			close(data->pipes[z][0]);
-			close(data->pipes[z][1]);
-			z++;
+			close(data->pipes[data->z][0]);
+			close(data->pipes[data->z][1]);
+			data->z++;
 		}
 		if (data->exec_data_head)
 			ft_lstclear(&data->exec_data_head, ft_free_exec_data);
@@ -108,6 +91,8 @@ void	ft_free_signal(t_sig_data *data)
 			free_heredocs_pipes(data->heredocs_pipes, data->heredocs_count);
 		if (data->input1)
 			free(data->input1);
+		if (data->exit_status)
+			free(data->exit_status);
 		free(data);
 	}
 }

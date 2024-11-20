@@ -34,6 +34,7 @@ void	execution(t_list *node, char ***env, int *exit_status)
 	ft_printf("Entering process of single command execution\n");
 	finding_heredocs(&params, node);
 	params.exec_data_head = node;
+	params.exit_status = exit_status;
 	if (params.pipe_count == 0)
 	{
 		write(2, "Entering no pipe count\n", 23);

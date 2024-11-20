@@ -126,7 +126,7 @@ char	*expansion_string(char *input, int ignore_quote, char **env,
 		else
 			i++;
 	}
-	return (input);
+	return (free(status), input);
 }
 
 /**

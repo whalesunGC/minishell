@@ -155,9 +155,17 @@ int	handle_fork_plus_executing_child(t_redirect_single_command_params
 		return (-1);
 	}
 	if (params->pid == 0)
+	{
+		ft_signal(params, NULL, *env, CHILD);
 		child_process_other_cases(params, env);
+	}
 	else
-		wait(NULL);
+	{	
+		ignore_parent_signals();
+		waitpid(params->pid, params->exit_status, 0);
+		*params->exit_status = WEXITSTATUS(*params->exit_status);
+	}
+	ft_signal(NULL, NULL, NULL, PARENT);
 	return (0);
 }
 

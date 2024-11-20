@@ -31,6 +31,8 @@ static void	exit_is_the_only_argument(t_redirect_single_command_params *params,
 	rl_clear_history();
 	ft_printf("exit\n");
 	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
+	if (params->exit_status)
+		free(params->exit_status);
 	exit(EXIT_SUCCESS);
 }
 
@@ -60,6 +62,8 @@ static void	exit_with_one_other_argument(
 	ft_printf("exit\n");
 	exit_status = (exit_status % 256 + 256) % 256;
 	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
+	if (params->exit_status)
+		free(params->exit_status);
 	exit(exit_status);
 }
 

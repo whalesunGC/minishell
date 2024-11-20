@@ -23,10 +23,9 @@
  */
 void	handle_child_sigint(int signum)
 {
-	(void)signum;
 	ft_printf("\n");
 	signal_cleanup(NULL);
-	exit(EXIT_SUCCESS);
+	exit(128 + signum);
 }
 
 /**
@@ -37,14 +36,13 @@ void	handle_child_sigint(int signum)
  * 
  * @return: void function
  */
-
 void	handle_parent_sigint(int signum)
 {
 	(void)signum;
+	signal_parent(NULL);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	ft_printf("\n");
-	g_exit_status = 130;
 	rl_redisplay();
 }
 
@@ -89,7 +87,6 @@ void	parent_signal_handlers(void)
  * 
  * @return: void function
  */
-
 void	ignore_parent_signals(void)
 {
 	struct sigaction	signal_int;
@@ -121,10 +118,10 @@ void	ignore_parent_signals(void)
  * 
  * @return: void function
  */
-
 void	setup_signal_handlers_for_child(void)
 {
 	struct sigaction	signal_child;
+	struct sigaction	signal_quit;
 
 	ft_memset(&signal_child, 0, sizeof(signal_child));
 	signal_child.sa_handler = handle_child_sigint;
@@ -132,6 +129,14 @@ void	setup_signal_handlers_for_child(void)
 	if (sigaction(SIGINT, &signal_child, NULL) == -1)
 	{
 		perror("Sigaction failed for SIGINT ");
+		exit(EXIT_FAILURE);
+	}
+	ft_memset(&signal_quit, 0, sizeof(signal_quit));
+	signal_quit.sa_handler = handle_child_sigint;
+	sigemptyset(&signal_quit.sa_mask);
+	if (sigaction(SIGQUIT, &signal_quit, NULL) == -1)
+	{
+		perror("Sigaction failed for SIGQUIT ");
 		exit(EXIT_FAILURE);
 	}
 }

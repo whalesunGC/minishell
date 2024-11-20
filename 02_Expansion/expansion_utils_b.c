@@ -6,7 +6,7 @@
 /*   By: wichee <wichee@student.42singapore.sg      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 14:34:50 by wichee            #+#    #+#             */
-/*   Updated: 2024/10/19 18:20:08 by wichee           ###   ########.fr       */
+/*   Updated: 2024/11/20 21:54:48 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ char	*ft_string_trim_ends(char **string)
  * a node on the token linked_list.
  * @return: a pointer to the next token.
  */
-t_list	*ft_expansion_tokens(t_list **token_data, char **env, int *exit_status)
+t_list	*ft_expansion_tokens(t_list **token_data, char **env,
+	int *exit_status)
 {
 	t_lex_data	*data;
 
@@ -86,7 +87,8 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env, int *exit_status)
 		|| data->type == TOKEN_VARIABLE || data->type == TOKEN_RD_FD
 		|| data->type == TOKEN_STRING)
 	{
-		data->raw_string = expansion_string(data->raw_string, 0, env, exit_status);
+		data->raw_string = expansion_string(data->raw_string, 0,
+				env, exit_status);
 		token_data = handle_word_split(data->raw_string, token_data);
 		data = (t_lex_data *)(*token_data)->content;
 		data->type = lexer_token_type_a(data->raw_string, data->is_first_token);

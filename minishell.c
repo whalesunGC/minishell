@@ -66,7 +66,6 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	if (envp[0] == NULL)
 		ft_printf("envp not initialised\n");
-	ft_signal(NULL, NULL, NULL, PARENT);
 	env = copy_envp(envp);
 	if (env == NULL)
 	{
@@ -76,7 +75,12 @@ int	main(int ac, char **av, char **envp)
 	token_data = NULL;
 	ast_root = NULL;
 	exec_data = NULL;
+	exit_status = (int *)malloc(sizeof(int));
+	if (!exit_status)
+		return (0);
 	*exit_status = 0;
+	ft_signal(NULL, NULL, NULL, PARENT);
+	signal_parent(exit_status);
 	while (1)
 	{
 		input = readline("minishell>> ");
@@ -112,5 +116,6 @@ int	main(int ac, char **av, char **envp)
 	rl_clear_history();
 	free(input);
 	ft_free(&token_data, &ast_root);
-	return (ft_lstclear(&exec_data, ft_free_exec_data), 1);
+	ft_lstclear(&exec_data, ft_free_exec_data);
+	return (free(exit_status), 0);
 }

@@ -33,6 +33,7 @@ void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 		return ;
 	ft_memset(&params, 0, sizeof(t_piping_multiple_command_params));
 	params.exec_data_head = node;
+	params.exit_status = exit_status;
 	params.total = check_total_commands(node);
 	params.pipes = creating_new_pipes(params.total - 1);
 	if (params.pipes == NULL || setting_up_pipes(&params) == -1)
