@@ -12,8 +12,13 @@
 
 #include "includes/minishell.h"
 
-int	g_exit_status = 0;
-
+/**
+ * @function: ft_is_blank
+ * @brief:	check if string contains only '\n' ' ' '\t'
+ * 
+ * @param string: input string
+ * @return: int 1 or 0
+ */
 static int	ft_is_blank(char *string)
 {
 	while (*string) 
@@ -55,12 +60,12 @@ int	main(int ac, char **av, char **envp)
 	t_list		*token_data;
 	t_ast_node	*ast_root;
 	t_list		*exec_data;
+	int			*exit_status;
 
 	(void)ac;
 	(void)av;
 	if (envp[0] == NULL)
 		ft_printf("envp not initialised\n");
-	ft_signal(NULL, NULL, NULL, PARENT);
 	env = copy_envp(envp);
 	if (env == NULL)
 	{
@@ -70,6 +75,12 @@ int	main(int ac, char **av, char **envp)
 	token_data = NULL;
 	ast_root = NULL;
 	exec_data = NULL;
+	exit_status = (int *)malloc(sizeof(int));
+	if (!exit_status)
+		return (0);
+	*exit_status = 0;
+	ft_signal(NULL, NULL, NULL, PARENT);
+	signal_parent(exit_status);
 	while (1)
 	{
 		input = readline("minishell>> ");
@@ -86,7 +97,7 @@ int	main(int ac, char **av, char **envp)
 		token_data = lexer(input);
 		if (!token_data)
 			continue;
-		token_data = expansion(token_data, env);
+		token_data = expansion(token_data, env, exit_status);
 		ast_root = parser(token_data);
 		exec_data = ft_ast_to_linkedlist(ast_root);
 		if (!exec_data)
@@ -97,15 +108,14 @@ int	main(int ac, char **av, char **envp)
 		}
 		free(input);
 		ft_free(&token_data, &ast_root);
-		execution(exec_data, &env);
-		execution_with_pipes(exec_data, &env);
-		execution(exec_data, &env);
-		execution_with_pipes(exec_data, &env);
+		execution(exec_data, &env, exit_status);
+		execution_with_pipes(exec_data, &env, exit_status);
 		ft_lstclear(&exec_data, ft_free_exec_data);
 	}
 	free_dup_envp(env);
 	rl_clear_history();
 	free(input);
 	ft_free(&token_data, &ast_root);
-	return (ft_lstclear(&exec_data, ft_free_exec_data), 1);
+	ft_lstclear(&exec_data, ft_free_exec_data);
+	return (free(exit_status), 0);
 }

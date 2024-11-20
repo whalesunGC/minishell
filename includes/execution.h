@@ -15,7 +15,6 @@
 typedef struct s_sig_data
 {
 	t_list	*exec_data_head;
-	int		exit_status;
 	char	**env;
 	char	*input;
 	int		**pipes;
@@ -24,6 +23,8 @@ typedef struct s_sig_data
 	int		**heredocs_pipes;
 	int		heredocs_count;
 	char	*input1;
+	int		*exit_status;
+	int		z;
 }		t_sig_data;
 
 typedef struct s_redirect_single_command_params
@@ -32,6 +33,7 @@ typedef struct s_redirect_single_command_params
 	int			**pipes;
 	t_list		*exec_data_head;
 	t_sig_data	*signal_data;
+	int			*exit_status;
 	t_list		*traverse;
 	t_exec_node	*result;
 	char		*command_path;
@@ -60,6 +62,7 @@ typedef struct s_piping_multiple_command_params
 	t_exec_node	*result;
 	t_list		*exec_data_head;
 	t_sig_data	*signal_data;
+	int			*exit_status;
 	char		*command_path;
 	char		*input1;
 	pid_t		pid;
@@ -82,7 +85,7 @@ typedef struct s_piping_multiple_command_params
 }	t_piping_multiple_command_params;
 
 // multiple_command.c //
-void	execution_with_pipes(t_list *node, char ***env);
+void	execution_with_pipes(t_list *node, char ***env, int *exist_status);
 
 // multiple_commands_utils1 //
 int		check_for_pipes(t_list *node);
@@ -179,7 +182,7 @@ void	free_pipes(int **pipes, int num_pipes);
 void	free_heredocs_pipes(int **heredocs_pipes, int heredocs_count);
 
 // single_command.c //
-void	execution(t_list *node, char ***env);
+void	execution(t_list *node, char ***env, int *exit_status);
 
 // single_commands_utils1 //
 int		checking_if_pipes_exist(t_list *node);

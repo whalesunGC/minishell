@@ -26,7 +26,6 @@
 
 int	handling_forking_process(t_redirect_single_command_params
 *params, char ***env)
-
 {
 	ft_printf("Welcome to heredocs <<\n");
 	ft_printf("delimiter for heredocs: %s\n",
@@ -45,7 +44,8 @@ int	handling_forking_process(t_redirect_single_command_params
 	else
 	{	
 		ignore_parent_signals();
-		wait(NULL);
+		waitpid(params->pid, params->exit_status, 0);
+		*params->exit_status = WEXITSTATUS(*params->exit_status);
 	}
 	ft_signal(NULL, NULL, NULL, PARENT);
 	params->delimiter_counter++;

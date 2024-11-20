@@ -101,13 +101,16 @@ static void	handle_env_variable(char **input, int *i, char **env)
  *
  * @return: returns expanded string or NULL if expansion fails.
  */
-char	*expansion_string(char *input, int ignore_quote, char **env)
+char	*expansion_string(char *input, int ignore_quote, char **env,
+	int *exit_status)
 {
-	int	in_single_quote;
-	int	i;
+	int		in_single_quote;
+	int		i;
+	char	*status;
 
 	in_single_quote = 0;
 	i = 0;
+	status = ft_itoa(*exit_status);
 	while (input[i])
 	{
 		if (input[i] == '\'')
@@ -116,14 +119,14 @@ char	*expansion_string(char *input, int ignore_quote, char **env)
 			i++;
 		}
 		else if ((input[i] == '$' && input[i + 1] == '?'))
-			input = ft_str_replace(input, i, ft_itoa(g_exit_status));
+			input = ft_str_replace(input, i, status);
 		else if ((input[i] == '$' && ft_is_env(input[i + 1]))
 			&& (!in_single_quote || ignore_quote))
 			handle_env_variable(&input, &i, env);
 		else
 			i++;
 	}
-	return (input);
+	return (free(status), input);
 }
 
 /**
@@ -134,7 +137,7 @@ char	*expansion_string(char *input, int ignore_quote, char **env)
  * @param token_data: linked-list of lexed token_data
  * @return: linked-list of token_data with expansion
  */
-t_list	*expansion(t_list *token_data, char **env)
+t_list	*expansion(t_list *token_data, char **env, int *exit_status)
 {
 	t_list	*head;
 
@@ -143,7 +146,7 @@ t_list	*expansion(t_list *token_data, char **env)
 		return (NULL);
 	else
 		while (token_data != NULL)
-			token_data = ft_expansion_tokens(&token_data, env);
+			token_data = ft_expansion_tokens(&token_data, env, exit_status);
 	ft_print_tokens(head);
 	return (head);
 }
