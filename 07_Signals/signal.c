@@ -18,15 +18,13 @@
  *
  * @param data: signal_data for cleanup
  */
-void	signal_cleanup(t_signal_data *data)
+void	signal_cleanup(t_sig_data *data)
 {
-	static t_signal_data	*temp_data;
+	static t_sig_data	*temp_data;
 
 	if (data)
 		temp_data = data;
-	else
-		temp_data = NULL;
-	if (!temp_data)
+	if (!data)
 		ft_free_signal(temp_data);
 }
 
@@ -37,10 +35,11 @@ void	signal_cleanup(t_signal_data *data)
  * @param
  */
 static void	handle_s_command_init(t_redirect_single_command_params *params_s,
-		t_signal_data *data, char **env)
+		t_sig_data *data, char **env)
 {
-	data = (t_signal_data *)malloc(sizeof(t_signal_data));
-	ft_memset(data, '0', sizeof(t_signal_data));
+	data = (t_sig_data *)malloc(sizeof(t_sig_data));
+	ft_memset(data, 0, sizeof(t_sig_data));
+	params_s->signal_data = data;
 	data->exec_data_head = params_s->exec_data_head;
 	data->exit_status = 0;
 	data->env = env;
@@ -59,10 +58,11 @@ static void	handle_s_command_init(t_redirect_single_command_params *params_s,
  * @param
  */
 static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
-		t_signal_data *data, char **env)
+		t_sig_data *data, char **env)
 {
-	data = (t_signal_data *)malloc(sizeof(t_signal_data));
-	ft_memset(data, '0', sizeof(t_signal_data));
+	data = (t_sig_data *)malloc(sizeof(t_sig_data));
+	ft_memset(data, 0, sizeof(t_sig_data));
+	params_m->signal_data = data;
 	data->exec_data_head = params_m->exec_data_head;
 	data->exit_status = 0;
 	data->env = env;
@@ -83,10 +83,19 @@ static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
  * @param data: struct that contains exec_data and exit_status
  * @return: void
  */
-void	ft_free_signal(t_signal_data *data)
+void	ft_free_signal(t_sig_data *data)
 {
+	int	z;
+
+	z = 0;
 	if (data)
 	{
+		while (z < data->pipe_count)
+		{
+			close(data->pipes[z][0]);
+			close(data->pipes[z][1]);
+			z++;
+		}
 		if (data->exec_data_head)
 			ft_lstclear(&data->exec_data_head, ft_free_exec_data);
 		if (data->env)
@@ -115,7 +124,7 @@ void	ft_signal(t_redirect_single_command_params *params_s,
 		t_piping_multiple_command_params *params_m, char **env,
 		t_process_type process_flag)
 {
-	t_signal_data	*data;
+	t_sig_data	*data;
 
 	data = NULL;
 	if (process_flag == PARENT)

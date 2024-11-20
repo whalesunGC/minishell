@@ -6,7 +6,7 @@
 /*   By: apoh <apoh@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:13:18 by apoh              #+#    #+#             */
-/*   Updated: 2024/09/18 16:13:21 by apoh             ###   ########.fr       */
+/*   Updated: 2024/11/20 14:33:43 by wichee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,30 @@
 /**
  * @function: ft_only_n
  * @brief: checks if string has only n
- * 
+ *
  * @param string: Input string
- * 
+ *
  * @return: void function
  */
 static int	ft_only_n(char *string)
 {
 	while (*string)
+	{
 		if (*string == 'n')
 			string++;
 		else
 			return (0);
+	}
 	return (1);
 }
 
 /**
  * @function: print_with_n_option
  * @brief: prints no newline if -n option is used.
- * 
+ *
  * @param ac: Total number of arguments
- 	**av: The arguments inside your commands.
- * 
+ **av: The arguments inside your commands.
+ *
  * @return: void function
  */
 static void	print_with_n_option(int ac, char **av)
@@ -57,10 +59,10 @@ static void	print_with_n_option(int ac, char **av)
 /**
  * @function: print_without_n_option
  * @brief: prints a newline if -n option is not used.
- * 
+ *
  * @param ac: Total number of arguments
- 	**av: The arguments inside your commands.
- * 
+ **av: The arguments inside your commands.
+ *
  * @return: void function
  */
 
@@ -83,10 +85,10 @@ static void	print_without_n_option(int ac, char **av)
 /**
  * @function: echo_command
  * @brief: illustrates what happens if echo command is used.
- * 
+ *
  * @param ac: Total number of arguments
- 	**av: The arguments inside your commands.
- * 
+ **av: The arguments inside your commands.
+ *
  * @return: void function
  */
 
@@ -96,8 +98,7 @@ void	echo_command(int ac, char **av)
 	{
 		if (ac == 1)
 			ft_printf("\n");
-		else if (ac > 1 && ft_strncmp(av[1], "-n", 2) == 0
-			&& ft_only_n(av[1]))
+		else if (ac > 1 && ft_strncmp(av[1], "-n", 2) == 0 && ft_only_n(av[1]))
 		{
 			rl_on_new_line();
 			rl_replace_line("", 0);
