@@ -71,8 +71,17 @@ static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
  */
 void	ft_free_signal(t_sig_data *data)
 {
+	int	y;
+	
+	y = 0;
 	if (data)
 	{
+		while (y < data->heredocs_count)
+		{
+			close(data->heredocs_pipes[y][0]);
+			close(data->heredocs_pipes[y][1]);
+			y++;
+		}
 		while (data->z < data->pipe_count)
 		{
 			close(data->pipes[data->z][0]);
