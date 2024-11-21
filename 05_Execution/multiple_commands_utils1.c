@@ -25,7 +25,6 @@
  */
 
 int	check_for_pipes(t_list *node)
-
 {
 	t_list		*traverse;
 	t_exec_node	*result;
@@ -36,7 +35,7 @@ int	check_for_pipes(t_list *node)
 		result = (t_exec_node *)traverse->content;
 		if (result->type == AST_PIPE)
 		{
-			ft_printf("Pipes detected. Continuing with function\n");
+			ft_dprintf(2, "Debugging pipes detected. Continuing with function\n");
 			return (0);
 		}
 		traverse = traverse->next;
@@ -56,7 +55,6 @@ int	check_for_pipes(t_list *node)
  */
 
 int	check_total_commands(t_list *node)
-
 {
 	t_list		*traverse;
 	t_exec_node	*result;
@@ -72,7 +70,7 @@ int	check_total_commands(t_list *node)
 		traverse = traverse->next;
 	}
 	command_count++;
-	ft_printf("Total number of commands: %d\n", command_count);
+	ft_dprintf(2, "Total number of commands: %d\n", command_count);
 	return (command_count);
 }
 
@@ -88,7 +86,6 @@ int	check_total_commands(t_list *node)
  */
 
 int	**creating_new_pipes(int num_pipes)
-
 {
 	int	i;
 	int	**pipes;
@@ -127,7 +124,6 @@ int	**creating_new_pipes(int num_pipes)
  */
 
 int	setting_up_pipes(t_piping_multiple_command_params *params)
-
 {
 	params->i = 0;
 	while (params->i < params->total - 1)
@@ -153,9 +149,8 @@ int	setting_up_pipes(t_piping_multiple_command_params *params)
  * @return: void function
  */
 
-void	searching_for_heredocs(t_piping_multiple_command_params *params,
-t_list *node)
-
+void	searching_for_heredocs(
+			t_piping_multiple_command_params *params, t_list *node)
 {
 	params->traverse = node;
 	while (params->traverse)
@@ -182,5 +177,5 @@ t_list *node)
 		}
 		params->traverse = params->traverse->next;
 	}
-	ft_printf("Total Number of heredocs: %d\n", params->heredocs_count);
+	ft_dprintf(2, "Total Number of heredocs: %d\n", params->heredocs_count);
 }

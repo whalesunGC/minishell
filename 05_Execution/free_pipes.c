@@ -24,7 +24,6 @@
  */
 
 void	free_pipes(int **pipes, int num_pipes)
-
 {
 	int	i;
 
@@ -51,7 +50,6 @@ void	free_pipes(int **pipes, int num_pipes)
  */
 
 void	free_heredocs_pipes(int **heredocs_pipes, int heredocs_count)
-
 {
 	int	i;
 

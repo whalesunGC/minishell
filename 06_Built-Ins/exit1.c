@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   exit1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apoh <apoh@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/24 21:39:14 by apoh              #+#    #+#             */
-/*   Updated: 2024/09/24 21:39:20 by apoh             ###   ########.fr       */
+/*   Created: 2024/11/20 17:54:25 by apoh              #+#    #+#             */
+/*   Updated: 2024/11/20 17:54:54 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  * @return: void function
  */
 
-static void	exit_is_the_only_argument(t_redirect_single_command_params *params,
+static void	exit_is_the_only_argument(t_piping_multiple_command_params *params,
 		char **env)
 
 {
@@ -48,8 +48,7 @@ static void	exit_is_the_only_argument(t_redirect_single_command_params *params,
  * @return: void function
  */
 
-static void	exit_with_one_other_argument(
-		t_redirect_single_command_params *params,
+static void	exit_with_one_other_argument(t_piping_multiple_command_params *params,
 		char **env)
 
 {
@@ -96,9 +95,9 @@ static int	is_argument_numeric(const char *arg)
 }
 
 /**
- * @function: exit_command
+ * @function: exit_command_multiple
  * @brief: illustrates what happens when i type
- 	the exit command in my program
+ 	the exit command in my program for multiple piping
  * 
  * @param ac: the total number of arguments
  	**av: the strings belonging to each argument.
@@ -108,7 +107,7 @@ static int	is_argument_numeric(const char *arg)
  * @return: void function
  */
 
-void	exit_command(t_redirect_single_command_params *params,
+void	exit_command_multiple(t_piping_multiple_command_params *params, 
 		char **env)
 {
 	if (params->ac > 0 && ft_strncmp(params->av[0], "exit", 4) == 0)

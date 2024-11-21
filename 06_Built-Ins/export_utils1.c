@@ -31,7 +31,7 @@ void	only_export_command(t_export_params *params, char ***env)
 {
 	while ((*env)[params->i] != NULL)
 	{
-		ft_printf("%s\n", (*env)[params->i]);
+		ft_dprintf(2, "%s\n", (*env)[params->i]);
 		params->i++;
 	}
 }

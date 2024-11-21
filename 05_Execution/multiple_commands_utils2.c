@@ -27,7 +27,6 @@
  */
 
 int	**creating_heredocs_pipes(int heredocs_count)
-
 {	
 	int	**heredocs_pipes;
 	int	i;
@@ -66,7 +65,6 @@ int	**creating_heredocs_pipes(int heredocs_count)
  */
 
 int	setting_up_heredocs_pipes(t_piping_multiple_command_params *params)
-
 {
 	params->heredocs_pipe_number = 0;
 	while (params->heredocs_pipe_number < params->heredocs_count)
