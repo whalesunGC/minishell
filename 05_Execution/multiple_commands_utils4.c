@@ -26,22 +26,16 @@
  */
 
 void	handle_counters_pipe_closing_and_redirects_array(
-		t_piping_multiple_command_params *params)
-
+			t_piping_multiple_command_params *params)
 {
-	params->delimiter_counter++;
-	params->heredocs_pipe_number++;
-	if (params->y < params->heredocs_count)
-	{
-		close(params->heredocs_pipes[params->y][1]);
-		params->y++;
-	}
-	ft_printf("Changing current redirect array for multiple commands %s\n",
+	ft_dprintf(2, "Debugging Changing current redirect array for multiple commands %s\n",
 		params->result->redirect[params->x]);
 	free(params->result->redirect[params->x]);
 	params->result->redirect[params->x] = ft_strdup("a");
-	ft_printf("After changing current redirect array for multiple commands %s\n",
+	ft_dprintf(2, "Debugging After changing current redirect array for multiple commands %s\n",
 		params->result->redirect[params->x]);
+	params->heredocs_pipe_number++;
+	params->delimiter_counter++;
 }
 
 /**
@@ -56,9 +50,8 @@ void	handle_counters_pipe_closing_and_redirects_array(
  * @return: void function
  */
 
-void	handle_redirect_array_for_heredocs(t_piping_multiple_command_params
-*params, char ***env)
-
+void	handle_redirect_array_for_heredocs(
+			t_piping_multiple_command_params *params, char ***env)
 {
 	params->x = 0;
 	params->delimiter_counter = 0;
@@ -66,8 +59,7 @@ void	handle_redirect_array_for_heredocs(t_piping_multiple_command_params
 	{
 		if (ft_strcmp(params->result->redirect[params->x], "<<") == 0)
 		{
-			ft_printf("Welcome to multiple pipes heredocs <<\n");
-			ft_printf("Delimiter for multiple pipes heredocs: %s\n",
+			ft_dprintf(2, "Debugging Delimiter for multiple pipes heredocs: %s\n",
 				params->result->delimiter[params->delimiter_counter]);
 			params->pid = fork();
 			if (params->pid < 0)
@@ -76,9 +68,16 @@ void	handle_redirect_array_for_heredocs(t_piping_multiple_command_params
 				return ;
 			}
 			if (params->pid == 0)
+			{
+				ft_signal(NULL, params, *env, CHILD);
 				handle_heredocs_readline_multiple_commands(params, env);
+			}
 			else
+			{
+				ignore_parent_signals();
 				wait(NULL);
+			}
+			ft_signal(NULL, NULL, NULL, PARENT);
 			handle_counters_pipe_closing_and_redirects_array(params);
 		}
 		params->x++;
@@ -98,9 +97,8 @@ void	handle_redirect_array_for_heredocs(t_piping_multiple_command_params
  * @return: void function
  */
 
-void	handle_heredocs_multiple_commands(t_piping_multiple_command_params
-*params, t_list *node, char ***env)
-
+void	handle_heredocs_multiple_commands(
+			t_piping_multiple_command_params *params, t_list *node, char ***env)
 {
 	params->heredocs_pipe_number = 0;
 	params->traverse = node;
@@ -115,7 +113,10 @@ void	handle_heredocs_multiple_commands(t_piping_multiple_command_params
 		if (params->result->type == AST_COMMAND)
 		{
 			if (params->result->redirect != NULL)
+			{
+				ft_dprintf(2, "Debugging handle redirect array for heredocs\n");
 				handle_redirect_array_for_heredocs(params, env);
+			}
 		}
 		params->traverse = params->traverse->next;
 	}

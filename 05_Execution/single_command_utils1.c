@@ -36,7 +36,7 @@ int	checking_if_pipes_exist(t_list *node)
 		result = (t_exec_node *)traverse->content;
 		if (result->type == AST_PIPE)
 		{
-			ft_printf("Pipes detected. Proceeding to function with pipes\n");
+			ft_dprintf(2, "Pipes detected. Proceeding to function with pipes\n");
 			return (-1);
 		}
 		traverse = traverse->next;
@@ -61,7 +61,7 @@ void	finding_heredocs(t_redirect_single_command_params *params, t_list *node)
 	params->traverse = node;
 	while (params->traverse)
 	{
-		ft_printf("checking for heredocs\n");
+		ft_dprintf(2, "checking for heredocs\n");
 		params->result = (t_exec_node *)params->traverse->content;
 		if (params->result->type == AST_COMMAND)
 		{
@@ -93,10 +93,10 @@ void	finding_heredocs(t_redirect_single_command_params *params, t_list *node)
  * 
  * @return: -1 if there is an error, 0 if success
  */
-int	handling_no_heredocs(t_redirect_single_command_params
-*params, char ***env, t_list *node)
+int	handling_no_heredocs(
+			t_redirect_single_command_params *params, char ***env, t_list *node)
 {	
-	ft_printf("handling no heredocs\n");
+	ft_dprintf(2, "handling no heredocs\n");
 	params->traverse = node;
 	while (params->traverse)
 	{
@@ -105,15 +105,19 @@ int	handling_no_heredocs(t_redirect_single_command_params
 		{
 			if (params->result->redirect != NULL)
 			{
-				write(2, "handling redirects first\n", 25);
+				ft_dprintf(2, "handling redirects first\n");
 				if (handle_redirects(params, env) == -1)
 					return (-1);
-				write(2, "handling other cases\n", 21);
+				ft_dprintf(2, "handling other cases\n");
 				if (handle_other_cases(params, env) == -1)
 					return (-1);
 			}
-			else if (handle_other_cases(params, env) == -1)
-				return (-1);
+			else
+			{
+				ft_dprintf(2, "handling no redirects at all\n");
+				if (handle_other_cases(params, env) == -1)
+					return (-1);
+			}
 		}
 		params->traverse = params->traverse->next;
 	}
@@ -133,7 +137,7 @@ int	handling_no_heredocs(t_redirect_single_command_params
 
 int	creating_pipes(t_redirect_single_command_params *params)
 {
-	ft_printf("Total heredocs found: %d\n", params->pipe_count);
+	ft_dprintf(2, "Total heredocs found: %d\n", params->pipe_count);
 	params->pipes = creating_new_pipes(params->pipe_count);
 	if (params->pipes == NULL)
 	{
@@ -167,25 +171,26 @@ int	creating_pipes(t_redirect_single_command_params *params)
  * @return: -1 if there is an error, 0 if success
  */
 
-int	handling_heredocs(t_redirect_single_command_params
-*params, char ***env, t_list *node)
+int	handling_heredocs(
+			t_redirect_single_command_params *params, char ***env, t_list *node)
 {	
 	params->traverse = node;
 	while (params->traverse)
 	{
-		ft_printf("Entering here for first loop\n");
+		ft_dprintf(2, "Debugging traversing node handling heredocs\n");
 		params->result = (t_exec_node *)params->traverse->content;
 		if (params->result->type == AST_COMMAND)
 		{
 			if (params->result->redirect != NULL)
 			{
-				ft_printf("coming here\n");
+				ft_dprintf(2, "Debugging entering heredocs function\n");
 				if (heredocs(params, env) == -1)
 					return (-1);
+				ft_dprintf(2, "Debugging entering handle_redirects function\n");
 				if (handle_redirects(params, env) == -1)
 					return (-1);
-				if (handle_single_commands_no_heredocs
-					(params, env) == -1)
+				ft_dprintf(2, "Debugging entering handle_other_cases function\n");
+				if (handle_other_cases(params, env) == -1)
 					return (-1);
 			}
 		}

@@ -13,6 +13,26 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: execute_child_process_for_redirections
+ * @brief: further summarising into a cleaner structure to read
+ * 
+ * @param t_redirect_single_command_params *params : structure to
+ 	store parameters for handling redirects / no redirects
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
+ * 
+ * @return: void function
+ */
+
+void	execute_child_process_for_redirections(
+			t_redirect_single_command_params *params, char ***env)
+{
+	handle_redirections_file_opening(params, env);
+	handle_dup_and_closing_fd(params, env);
+	handle_execve_for_redirections(params, env);
+}
+
+/**
  * @function: handle_redirects
  * @brief: handling redirections if command consists of redirects
  	execute_child_process is in single_command_utils1.c
@@ -25,9 +45,10 @@
  * @return: -1 if forking fails, 0 if all commands is executed
  */
 
-int	handle_redirects(t_redirect_single_command_params *params,
-	char ***env)
+int	handle_redirects(
+			t_redirect_single_command_params *params, char ***env)
 {
+	ft_dprintf(2, "Debugging handle redirects\n");
 	while (params->result->redirect[params->i] != NULL)
 		params->i++;
 	params->pid = fork();
@@ -44,8 +65,30 @@ int	handle_redirects(t_redirect_single_command_params *params,
 }
 
 /**
- * @function: execute_child_process_for_redirections
- * @brief: further summarising into a cleaner structure to read
+ * @function: freeing_heredoc_pipes
+ * @brief: freeing pipes which are being set up during the heredoc process
+ * 
+ * @param t_redirect_single_command_params *params : structure to
+ 	store parameters for handling redirects / no redirects
+ * 
+ * @return: void function
+ */
+
+void	freeing_heredoc_pipes(t_redirect_single_command_params *params)
+{
+	ft_dprintf(2, "Debugging freeing heredoc pipes single commands\n");
+	params->z = 0;
+	while (params->z < params->pipe_count)
+	{
+		close(params->pipes[params->z][0]);
+		close(params->pipes[params->z][1]);
+		params->z++;
+	}
+}
+
+/**
+ * @function: clean_up_function
+ * @brief: freeing up resources when child process exits
  * 
  * @param t_redirect_single_command_params *params : structure to
  	store parameters for handling redirects / no redirects
@@ -55,32 +98,17 @@ int	handle_redirects(t_redirect_single_command_params *params,
  * @return: void function
  */
 
-void	execute_child_process_for_redirections(t_redirect_single_command_params
-*params, char ***env)
+void	clean_up_function(
+			t_redirect_single_command_params *params, char ***env)
 {
-	handle_redirections_file_opening(params, env);
-	handle_dup_and_closing_fd(params, env);
-	handle_execve_for_redirections(params, env);
-}
-
-/**
- * @function: handle_single_commands_no_heredocs
- * @brief: handling forking process if no heredocs is found
- * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: -1 if failure, 0 if success
- */
-
-int	handle_single_commands_no_heredocs(t_redirect_single_command_params *params,
-	char ***env)
-{	
-	if (handle_fork_plus_executing_child(params, env) == -1)
-		return (-1);
-	return (0);
+	ft_dprintf(2, "Debugging clean up function single commands\n");
+	freeing_heredoc_pipes(params);
+	free_pipes(params->pipes, params->pipe_count);
+	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
+	free(params->signal_data);
+	free(params->exit_status);
+	free_dup_envp(*env);
+	rl_clear_history();
 }
 
 /**
@@ -97,11 +125,20 @@ int	handle_single_commands_no_heredocs(t_redirect_single_command_params *params,
 
 int	handle_other_cases(t_redirect_single_command_params *params, char ***env)
 {
-	params->av = params->result->cmd;
-	params->ac = 0;
-	while (params->av[params->ac] != NULL)
-		params->ac++;
-	if (handle_single_commands(params, env) == -1)
-		return (-1);
+	ft_dprintf(2, "Debugging handle other cases\n");
+	if (params->result->cmd[0] == NULL)
+	{
+		if (handle_single_commands(params, env) == -1)
+			return (-1);
+	}
+	else
+	{
+		params->av = params->result->cmd;
+		params->ac = 0;
+		while (params->av[params->ac] != NULL)
+			params->ac++;
+		if (handle_single_commands(params, env) == -1)
+			return (-1);
+	}
 	return (0);
 }

@@ -31,29 +31,23 @@ void	execution(t_list *node, char ***env, int *exit_status)
 	if (checking_if_pipes_exist(node) == -1)
 		return ;
 	ft_memset(&params, 0, sizeof(t_redirect_single_command_params));
-	ft_printf("Entering process of single command execution\n");
+	ft_dprintf(2, "Entering process of single command execution\n");
 	finding_heredocs(&params, node);
 	params.exec_data_head = node;
 	params.exit_status = exit_status;
 	if (params.pipe_count == 0)
 	{
-		write(2, "Entering no pipe count\n", 23);
+		ft_dprintf(2, "Debugging Entering no pipe count\n");
 		handling_no_heredocs(&params, env, node);
 	}
 	else
 	{
-		write(2, "Entering pipe count\n", 20);
+		ft_dprintf(2, "Entering pipe count\n");
 		if (creating_pipes(&params) == -1)
 			return ;
 		if (handling_heredocs(&params, env, node) == -1)
 			return ;
-		params.z = 0;
-		while (params.z < params.pipe_count)
-		{
-			close(params.pipes[params.z][0]);
-			close(params.pipes[params.z][1]);
-			params.z++;
-		}
+		freeing_heredoc_pipes(&params);
 		free_pipes(params.pipes, params.pipe_count);
 	}
 }

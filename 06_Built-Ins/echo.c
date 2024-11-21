@@ -49,9 +49,9 @@ static void	print_with_n_option(int ac, char **av)
 	i = 2;
 	while (i < ac)
 	{
-		ft_printf("%s", av[i]);
+		ft_dprintf(2, "%s", av[i]);
 		if (i < (ac - 1))
-			ft_printf(" ");
+			ft_dprintf(2, " ");
 		i++;
 	}
 }
@@ -74,12 +74,12 @@ static void	print_without_n_option(int ac, char **av)
 	i = 1;
 	while (i < ac)
 	{
-		ft_printf("%s", av[i]);
+		ft_dprintf(2, "%s", av[i]);
 		if (i < (ac - 1))
-			ft_printf(" ");
+			ft_dprintf(2, " ");
 		i++;
 	}
-	ft_printf("\n");
+	ft_dprintf(2, "\n");
 }
 
 /**
@@ -97,7 +97,7 @@ void	echo_command(int ac, char **av)
 	if (ac > 0 && ft_strncmp(av[0], "echo", 4) == 0)
 	{
 		if (ac == 1)
-			ft_printf("\n");
+			ft_dprintf(2, "\n");
 		else if (ac > 1 && ft_strncmp(av[1], "-n", 2) == 0 && ft_only_n(av[1]))
 		{
 			rl_on_new_line();

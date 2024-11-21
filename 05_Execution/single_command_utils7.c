@@ -1,16 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredocs.c                                         :+:      :+:    :+:   */
+/*   single_commands_utils7.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apoh <apoh@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/08 22:53:48 by apoh              #+#    #+#             */
-/*   Updated: 2024/11/08 22:53:50 by apoh             ###   ########.fr       */
+/*   Created: 2024/11/21 12:27:11 by apoh              #+#    #+#             */
+/*   Updated: 2024/11/21 12:27:12 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+/**
+ * @function: closing_current_pipe_after_writing_data
+ * @brief: closes the current heredocs pipe after writing data to it
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ * 
+ * @return: -1 if failure, 0 if success
+ */
+
+void	closing_current_pipe_after_writing_data(
+			t_redirect_single_command_params *params)
+{
+	if (params->y < params->pipe_count)
+	{
+		close(params->pipes[params->y][1]);
+		params->y++;
+	}
+}
 
 /**
  * @function: handling_forking_process
@@ -24,11 +44,11 @@
  * @return: -1 if failure, 0 if success
  */
 
-int	handling_forking_process(t_redirect_single_command_params
-*params, char ***env)
+int	handling_forking_process(
+			t_redirect_single_command_params *params, char ***env)
 {
-	ft_printf("Welcome to heredocs <<\n");
-	ft_printf("delimiter for heredocs: %s\n",
+	ft_dprintf(2, "Welcome to heredocs <<\n");
+	ft_dprintf(2, "delimiter for heredocs: %s\n",
 		params->result->delimiter[params->delimiter_counter]);
 	params->pid = fork();
 	if (params->pid < 0)
@@ -50,11 +70,7 @@ int	handling_forking_process(t_redirect_single_command_params
 	ft_signal(NULL, NULL, NULL, PARENT);
 	params->delimiter_counter++;
 	params->z++;
-	if (params->y < params->pipe_count)
-	{
-		close(params->pipes[params->y][1]);
-		params->y++;
-	}
+	closing_current_pipe_after_writing_data(params);
 	return (0);
 }
 
@@ -70,13 +86,12 @@ int	handling_forking_process(t_redirect_single_command_params
  */
 
 void	handling_next_redirect(t_redirect_single_command_params *params)
-
 {	
-	ft_printf("Entering here to change current redirect array %s\n",
+	ft_dprintf(2, "Entering here to change current redirect array %s\n",
 		params->result->redirect[params->x]);
 	free(params->result->redirect[params->x]);
 	params->result->redirect[params->x] = ft_strdup("a");
-	ft_printf("After changing redirect array %s\n",
+	ft_dprintf(2, "After changing redirect array %s\n",
 		params->result->redirect[params->x]);
 	params->x++;
 }
@@ -93,15 +108,14 @@ void	handling_next_redirect(t_redirect_single_command_params *params)
  * @return: void function
  */
 
-int	handling_last_redirect(t_redirect_single_command_params
-*params, char ***env)
-
+int	handling_last_redirect(
+			t_redirect_single_command_params *params, char ***env)
 {
-	ft_printf("Entering here to change current redirect array %s\n",
+	ft_dprintf(2, "Entering here to change current redirect array %s\n",
 		params->result->redirect[params->x]);
 	free(params->result->redirect[params->x]);
 	params->result->redirect[params->x] = ft_strdup("a");
-	ft_printf("After changing redirect array %s\n",
+	ft_dprintf(2, "After changing redirect array %s\n",
 		params->result->redirect[params->x]);
 	if (params->result->cmd[0] != NULL)
 	{
@@ -122,50 +136,12 @@ int	handling_last_redirect(t_redirect_single_command_params
  */
 
 void	waiting_for_child_to_execute(t_redirect_single_command_params *params)
-
 {
+	ft_dprintf(2, "Debugging waiting for child process to finish\n");
 	params->y = 0;
 	while (params->y < params->pipe_count)
 	{
 		wait(NULL);
 		params->y++;
 	}
-}
-
-/**
- * @function: heredocs
- * @brief: handling the presence of heredocs
- * 
- * @param t_redirect_single_command_params *params: structure for
- 	single_command parameters
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: -1 if failure, 0 if success
- */
-
-int	heredocs(t_redirect_single_command_params *params, char ***env)
-
-{
-	while (params->result->redirect[params->x] != NULL)
-	{
-		if ((ft_strcmp(params->result->redirect[params->x], "<<") == 0))
-		{
-			if (handling_forking_process(params, env) == -1)
-				return (-1);
-			if (params->result->redirect[params->x + 1] != NULL)
-			{
-				handling_next_redirect(params);
-				continue ;
-			}
-			else if (params->result->redirect[params->x + 1] == NULL)
-			{
-				if (handling_last_redirect(params, env) == -1)
-					return (-1);
-			}
-			waiting_for_child_to_execute(params);
-		}
-		params->x++;
-	}
-	return (0);
 }

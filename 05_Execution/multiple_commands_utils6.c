@@ -26,9 +26,8 @@
 
 void	handle_input_output_heredocs_multiple_commands(
 		t_piping_multiple_command_params *params, char ***env)
-
 {
-	write(2, "entering this loop\n", 19);
+	ft_dprintf(2, "Debugging handling input, output, heredocs redirections\n");
 	params->b = 0;
 	while (params->result->redirect[params->b] != NULL)
 		params->b++;
@@ -49,13 +48,12 @@ void	handle_input_output_heredocs_multiple_commands(
  * @return: void function
  */
 
-void	setup_pipe_redirection_and_closing(t_piping_multiple_command_params
-*params, char ***env)
-
+void	setup_pipe_redirection_and_closing(
+			t_piping_multiple_command_params *params, char ***env)
 {
 	if (params->i < params->total - 1)
 	{
-		write(2, "entering 1st command onwards\n", 29);
+		ft_dprintf(2, "debugging for redirections if i < total - 1\n");
 		if (params->result->redirect != NULL)
 		{
 			handle_input_output_heredocs_multiple_commands(params, env);
@@ -66,7 +64,7 @@ void	setup_pipe_redirection_and_closing(t_piping_multiple_command_params
 	}
 	if (params->i > 0)
 	{	
-		write(2, "entering 2nd command onwards\n", 29);
+		ft_dprintf(2, "debugging for redirections if i > 0\n");
 		if (params->result->redirect != NULL)
 			handle_input_output_heredocs_multiple_commands(params, env);
 		else
@@ -82,6 +80,72 @@ void	setup_pipe_redirection_and_closing(t_piping_multiple_command_params
 }
 
 /**
+ * @function: handle_built_in_multiple_piping_commands
+ * @brief: to execute build in commands
+ 	if command array consists of built in commands
+ * 
+ * @param t_piping_multiple_command_params *params : structure of
+ 	multiple command parameters
+ * 
+ * @return: void function
+ */
+
+void	handle_built_in_multiple_piping_commands(
+			t_piping_multiple_command_params *params, char ***env)
+{
+	ft_dprintf(2, "debugging handle built in multiple piping commands\n");
+	params->av = params->result->cmd;
+	params->ac = 0;
+	while (params->av[params->ac] != NULL)
+		params->ac++;
+	if (ft_strcmp(params->av[0], "echo") == 0)
+		echo_command(params->ac, params->av);
+	else if (ft_strcmp(params->av[0], "cd") == 0)
+		cd_command(params->ac, params->av, env);
+	else if (ft_strcmp(params->av[0], "pwd") == 0)
+		pwd_command(params->ac, params->av);
+	else if (ft_strcmp(params->av[0], "export") == 0)
+		export_command(params->ac, params->av, env);
+	else if (ft_strcmp(params->av[0], "unset") == 0)
+		unset_command(params->ac, params->av, *env);
+	else if (ft_strcmp(params->av[0], "env") == 0)
+		env_command(params->ac, params->av, *env);
+	else if (ft_strcmp(params->av[0], "exit") == 0)
+		exit_command_multiple(params, *env);
+}
+
+/**
+ * @function: handle_exit_conditions_if_built_in
+ * @brief: to handle built in commands
+ 	if cmd array consists of built-in commands
+ * 
+ * @param t_piping_multiple_command_params *params : structure of
+ 	multiple command parameters
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
+ * 
+ * @return: void function
+ */
+
+void	handle_exit_conditions_if_built_in(
+			t_piping_multiple_command_params *params, char ***env)
+{
+	ft_dprintf(2, "debugging handle exit conditions if built in\n");
+	if ((ft_strcmp(params->result->cmd[0], "echo") == 0)
+		|| (ft_strcmp(params->result->cmd[0], "cd") == 0)
+		|| (ft_strcmp(params->result->cmd[0], "pwd") == 0)
+		|| (ft_strcmp(params->result->cmd[0], "export") == 0)
+		|| (ft_strcmp(params->result->cmd[0], "unset") == 0)
+		|| (ft_strcmp(params->result->cmd[0], "env") == 0)
+		|| (ft_strcmp(params->result->cmd[0], "exit") == 0))
+	{
+		handle_built_in_multiple_piping_commands(params, env);
+		clean_up_function_multiple_commands(params, env);
+		exit(EXIT_SUCCESS);
+	}	
+}
+
+/**
  * @function: handle_child_process
  * @brief: handling the process a child process does after forking
  * 
@@ -93,9 +157,8 @@ void	setup_pipe_redirection_and_closing(t_piping_multiple_command_params
  * @return: void function
  */
 
-void	handle_child_process(t_piping_multiple_command_params
-*params, char ***env)
-
+void	handle_child_process(
+			t_piping_multiple_command_params *params, char ***env)
 {
 	setup_pipe_redirection_and_closing(params, env);
 	if (params->flag == 1)
@@ -103,6 +166,7 @@ void	handle_child_process(t_piping_multiple_command_params
 		clean_up_function_multiple_commands(params, env);
 		exit(EXIT_FAILURE);
 	}
+	handle_exit_conditions_if_built_in(params, env);
 	if (access(params->result->cmd[0], F_OK) == 0)
 		params->command_path = params->result->cmd[0];
 	else

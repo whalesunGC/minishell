@@ -23,16 +23,17 @@
  */
 
 void	handle_file_opening_errors(t_piping_multiple_command_params *params)
-
 {
+	ft_dprintf(2, "Debugging file opening failure\n");
 	if (params->input_fd < 0 || params->output_fd < 0)
 	{
+		ft_dprintf(2, "debugging if file opening failure\n");
 		ft_printf("%s: ", params->result->rd_arg[params->rd_arg_counter]);
 		perror("Error opening file");
 	}
 	if (params->input_fd < 0 && params->traverse->next == NULL)
 	{
-		write(2, "Does it come in here\n", 21);
+		ft_dprintf(2, "setting flag to 1 to indicate failure for last command");
 		params->flag = 1;
 	}
 }
@@ -48,10 +49,10 @@ void	handle_file_opening_errors(t_piping_multiple_command_params *params)
  * @return: void function
  */
 
-void	handle_file_opening_multiple_commands(t_piping_multiple_command_params
-*params)
-
+void	handle_file_opening_multiple_commands(
+			t_piping_multiple_command_params *params)
 {
+	ft_dprintf(2, "Debugging file opening\n");
 	params->b = 0;
 	while (params->result->redirect[params->b] != NULL)
 		params->b++;
@@ -59,6 +60,7 @@ void	handle_file_opening_multiple_commands(t_piping_multiple_command_params
 	params->rd_arg_counter = 0;
 	while (params->a < params->b)
 	{
+		ft_dprintf(2, "Looping through each redirection commands\n");
 		if (ft_strcmp(params->result->redirect[params->a], "a") == 0)
 		{
 			params->a++;
@@ -92,14 +94,15 @@ void	handle_file_opening_multiple_commands(t_piping_multiple_command_params
 
 void	handle_heredocs_pipe_number_multiple_commands(
 		t_piping_multiple_command_params *params)
-
 {
 	if (params->result->redirect != NULL)
 	{
+		ft_dprintf(2, "Debugging heredocs\n");
 		handle_file_opening_multiple_commands(params);
 		params->b = 0;
 		while (params->result->redirect[params->b] != NULL)
 		{
+			ft_dprintf(2, "Debugging counting heredocs count total\n");
 			if (ft_strcmp(params->result->redirect[params->b], "a") == 0)
 				params->heredocs_pipe_number++;
 			params->b++;
@@ -125,14 +128,14 @@ void	handle_heredocs_pipe_number_multiple_commands(
  * @return: -1 if fork fails. 0 if everything is successful.
  */
 
-int	handle_arguments(t_piping_multiple_command_params *params,
-	char ***env)
-
+int	handle_arguments(
+			t_piping_multiple_command_params *params, char ***env)
 {
 	params->i = 0;
 	params->heredocs_pipe_number = 0;
 	while (params->traverse)
 	{
+		ft_dprintf(2, "Debugging traversing through the node handle_arguments\n");
 		params->result = (t_exec_node *)params->traverse->content;
 		if (params->result->type == AST_PIPE)
 		{
@@ -148,7 +151,10 @@ int	handle_arguments(t_piping_multiple_command_params *params,
 			return (-1);
 		}
 		if (params->pid == 0)
+		{
+			ft_dprintf(2, "Debugging child process\n");
 			handle_child_process(params, env);
+		}
 		params->traverse = params->traverse->next;
 		params->i++;
 	}
@@ -165,10 +171,10 @@ int	handle_arguments(t_piping_multiple_command_params *params,
  * @return: void function
  */
 
-void	handle_pipe_and_waiting_for_child(t_piping_multiple_command_params
-*params)
-
+void	handle_pipe_and_waiting_for_child(
+			t_piping_multiple_command_params *params)
 {
+	ft_dprintf(2, "Debugging closing pipes and waiting for child process to finish\n");
 	params->j = 0;
 	while (params->j < params->total - 1)
 	{

@@ -13,6 +13,98 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_file_opening_errors
+ * @brief: printing error message and perform cleanup before exiting
+ * 
+ * @param t_redirect_single_command_params *params : structure to
+ 	store parameters for handling redirects / no redirects
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits
+ * 
+ * @return: void function
+ */
+
+void	handle_file_opening_errors_redirection(
+			t_redirect_single_command_params *params, char ***env)
+{
+	if (params->input_fd < 0 || params->output_fd < 0)
+	{
+		ft_dprintf(2, "%s: ", params->result->rd_arg[params->rd_arg_counter]);
+		perror("Error opening file");
+		clean_up_function(params, env);
+		exit(EXIT_FAILURE);
+	}
+}
+
+/**
+ * @function: handle_file_closing_input_redirection
+ * @brief: making sure the correct fd is closed
+ 	when looking through the redirect array
+ * 
+ * @param t_redirect_single_command_params *params : structure to
+ 	store parameters for handling redirects / no redirects
+ * 
+ * @return: void function
+ */
+
+void	handle_file_closing_input_redirection(
+			t_redirect_single_command_params *params)
+{
+	if (params->input_fd > 0)
+	{
+		if (params->result->redirect[params->k + 1] != NULL)
+		{
+			params->b = params->k;
+			while (params->result->redirect[params->b] != NULL)
+			{
+				if (params->result->redirect[params->b + 1] != NULL)
+				{
+					if (ft_strcmp(params->result->redirect
+							[params->b + 1], "<") == 0)
+						close(params->input_fd);
+				}
+				params->b++;
+			}
+		}
+	}
+}
+
+/**
+ * @function: handle_file_closing_output_redirection
+ * @brief: making sure the correct fd is closed
+ 	when looking through the redirect array
+ * 
+ * @param t_redirect_single_command_params *params : structure to
+ 	store parameters for handling redirects / no redirects
+ * 
+ * @return: void function
+ */
+
+void	handle_file_closing_output_redirection(
+			t_redirect_single_command_params *params)
+{
+	if (params->output_fd > 0)
+	{
+		if (params->result->redirect[params->k + 1] != NULL)
+		{
+			params->b = params->k;
+			while (params->result->redirect[params->b] != NULL)
+			{
+				if (params->result->redirect[params->b + 1] != NULL)
+				{
+					if ((ft_strcmp(params->result->redirect
+								[params->b + 1], ">") == 0)
+						|| (ft_strcmp(params->result->redirect
+								[params->b + 1], ">>") == 0))
+						close(params->output_fd);
+				}
+				params->b++;
+			}
+		}
+	}
+}
+
+/**
  * @function: handle_redirections_file_opening
  * @brief: handling opening of files when redirections are called
  	and handling errors if files are not valid
@@ -28,6 +120,7 @@
 void	handle_redirections_file_opening(
 			t_redirect_single_command_params *params, char ***env)
 {
+	ft_dprintf(2, "Debugging handle redirections file opening\n");
 	while (params->k < params->i)
 	{
 		if (ft_strcmp(params->result->redirect[params->k], "a") == 0)
@@ -44,13 +137,9 @@ void	handle_redirections_file_opening(
 		else if (ft_strcmp(params->result->redirect[params->k], ">>") == 0)
 			params->output_fd = open(params->result->rd_arg
 				[params->rd_arg_counter], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (params->input_fd < 0 || params->output_fd < 0)
-		{
-			ft_printf("%s: ", params->result->rd_arg[params->rd_arg_counter]);
-			perror("Error opening file");
-			clean_up_function(params, env);
-			exit(EXIT_FAILURE);
-		}
+		handle_file_opening_errors_redirection(params, env);
+		handle_file_closing_input_redirection(params);
+		handle_file_closing_output_redirection(params);
 		params->rd_arg_counter++;
 		params->k++;
 	}
@@ -68,10 +157,12 @@ void	handle_redirections_file_opening(
  * @return: void function
  */
 
-void	handle_dup_and_closing_fd(t_redirect_single_command_params
-*params, char ***env)
+void	handle_dup_and_closing_fd(
+			t_redirect_single_command_params *params, char ***env)
 {
-	if (params->input_fd > 0)
+	ft_dprintf(2, "Debugging handle_dup_and_closing_fd\n");
+	if (ft_strcmp(params->result->redirect[params->k - 1], "<") == 0
+		&& params->input_fd > 0)
 	{
 		if (dup2(params->input_fd, STDIN_FILENO) == -1)
 		{
@@ -81,91 +172,16 @@ void	handle_dup_and_closing_fd(t_redirect_single_command_params
 		}
 		close(params->input_fd);
 	}
-	if (params->output_fd > 0)
+	else if (((ft_strcmp(params->result->redirect[params->k - 1], ">") == 0)
+			|| (ft_strcmp(params->result->redirect[params->k - 1], ">>") == 0))
+		&& (params->output_fd > 0))
 	{
 		if (dup2(params->output_fd, STDOUT_FILENO) == -1)
 		{
-			perror("Dup2 failed for child for input_fd");
+			perror("Dup2 failed for child for output_fd");
 			clean_up_function(params, env);
 			exit(EXIT_FAILURE);
 		}
 		close(params->output_fd);
 	}
-}
-
-/**
- * @function: executing_execve_redirections
- * @brief: executing execve function if redirections are called
- * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: void function
- */
-
-void	executing_execve_redirections(t_redirect_single_command_params
-*params, char ***env)
-{
-	write(2, "Entering the redirect loop\n", 27);
-	if (params->input_fd == 0)
-	{
-		write(2, "I should not come here\n", 23);
-		if (dup2(params->pipes[params->pipe_count - 1][0], STDIN_FILENO) == -1)
-		{
-			perror("dup2 failed");
-			clean_up_function(params, env);
-			exit(EXIT_FAILURE);
-		}
-	}
-	write(2, "I should come here\n", 19);
-	if (access(params->result->cmd[0], F_OK) == 0)
-		params->command_path = params->result->cmd[0];
-	else
-		params->command_path = find_command
-			(&params->result->cmd[0], 0, *env);
-	if (execve(params->command_path, params->result->cmd, *env) == -1)
-	{
-		if (params->command_path != params->result->cmd[0])
-			free(params->command_path);
-		clean_up_function(params, env);
-		exit(EXIT_FAILURE);
-	}
-}
-
-/**
- * @function: handle_execve_for_redirections
- * @brief: handling execve conditions when there is redirections
- * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: void function
- */
-
-void	handle_execve_for_redirections(t_redirect_single_command_params *params,
-	char ***env)
-{
-	write(2, "Entering the redirect loop\n", 27);
-	if (params->result->cmd[0] == NULL)
-	{
-		write(2, "No commands found, so we just exit\n", 35);
-		params->z = 0;
-		while (params->z < params->pipe_count)
-		{
-			close(params->pipes[params->z][0]);
-			close(params->pipes[params->z][1]);
-			params->z++;
-		}
-		clean_up_function(params, env);
-		exit(EXIT_SUCCESS);
-	}
-	if (params->pipe_count > 0)
-		exiting_conditions_nonzero_pipecount(params, env);
-	else
-		exiting_conditions_zero_pipecount(params, env);
-	executing_execve_redirections(params, env);
 }

@@ -26,8 +26,8 @@
 
 void	setting_up_input_redirections_multiple_commands(
 		t_piping_multiple_command_params *params, char ***env)
-
 {
+	ft_dprintf(2, "debugging input redirections\n");
 	if (ft_strcmp(params->result->redirect[params->b - 1], "<") == 0)
 	{
 		if (dup2(params->input_fd, STDIN_FILENO) == -1)
@@ -53,8 +53,8 @@ void	setting_up_input_redirections_multiple_commands(
 
 void	setting_up_output_redirections_multiple_commands(
 		t_piping_multiple_command_params *params, char ***env)
-
 {
+	ft_dprintf(2, "debugging output redirections\n");
 	if (ft_strcmp(params->result->redirect[params->b - 1], ">") == 0)
 	{
 		if (dup2(params->output_fd, STDOUT_FILENO) == -1)
@@ -87,13 +87,12 @@ void	setting_up_output_redirections_multiple_commands(
  * @return: void function
  */
 
-void	setting_up_heredocs_multiple_commands(t_piping_multiple_command_params
-*params, char ***env)
-
+void	setting_up_heredocs_multiple_commands(
+			t_piping_multiple_command_params *params, char ***env)
 {
 	if (ft_strcmp(params->result->redirect[params->b - 1], "a") == 0)
 	{
-		write(2, "entering this loop heredocs\n", 28);
+		ft_dprintf(2, "debugging this loop heredocs\n");
 		if (dup2(params->heredocs_pipes[params->heredocs_pipe_index][0],
 			STDIN_FILENO) == -1)
 		{
@@ -116,11 +115,10 @@ void	setting_up_heredocs_multiple_commands(t_piping_multiple_command_params
  * @return: void function
  */
 
-void	setting_up_pipes_to_redirect_output(t_piping_multiple_command_params
-*params, char ***env)
-
+void	setting_up_pipes_to_redirect_output(
+			t_piping_multiple_command_params *params, char ***env)
 {
-	write(2, "deliver output to next pipe\n", 28);
+	ft_dprintf(2, "debugging deliver output to next pipe\n");
 	if (dup2(params->pipes[params->i][1], STDOUT_FILENO) == -1)
 	{
 		perror("dup2 to stdout failed main pipe");
@@ -135,18 +133,16 @@ void	setting_up_pipes_to_redirect_output(t_piping_multiple_command_params
  * 
  * @param t_piping_multiple_command_params *params : structure of
  	multiple command parameters
- 	t_list *node : linked list structure where it points to void content
  	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
-void	read_from_pipe_without_redirections(t_piping_multiple_command_params
-*params, char ***env)
-
+void	read_from_pipe_without_redirections(
+			t_piping_multiple_command_params *params, char ***env)
 {
-	write(2, "reading from previous pipes\n", 28);
+	ft_dprintf(2, "debugging reading from previous pipes\n");
 	if (dup2(params->pipes[params->i - 1][0], STDIN_FILENO) == -1)
 	{	
 		perror("dup2 to stdin failed");

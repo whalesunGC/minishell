@@ -1,16 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredocs_utils1.c                                  :+:      :+:    :+:   */
+/*   single_commands_utils8.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apoh <apoh@student.42singapore.sg>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 22:12:00 by apoh              #+#    #+#             */
-/*   Updated: 2024/11/12 22:12:02 by apoh             ###   ########.fr       */
+/*   Created: 2024/11/21 12:27:15 by apoh              #+#    #+#             */
+/*   Updated: 2024/11/21 12:27:16 by apoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+/**
+ * @function: closing_current_pipes_heredocs_single_command
+ * @brief: handle the closure of current pipe in parnet process
+ 	after heredocs has been performed
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ * 
+ * @return: void function
+ */
+
+void	closing_current_pipes_heredocs_single_command(
+			t_redirect_single_command_params *params)
+{
+	ft_dprintf(2, "Debugging closing current pipe\n");
+	if (params->a < params->pipe_count)
+	{
+		close(params->pipes[params->a][0]);
+		close(params->pipes[params->a][1]);
+		params->a++;
+	}
+}
 
 /**
  * @function: handle_null_heredocs
@@ -24,18 +47,11 @@
  * @return: void function
  */
 
-void	handle_null_heredocs_input(t_redirect_single_command_params
-*params, char ***env)
-
+void	handle_null_heredocs_input(
+			t_redirect_single_command_params *params, char ***env)
 {
-	write(0, "ERROR, please use delimiter\n", 28);
-	params->z = 0;
-	while (params->z < params->pipe_count)
-	{
-		close(params->pipes[params->z][0]);
-		close(params->pipes[params->z][1]);
-		params->z++;
-	}
+	ft_dprintf(2, "Debugging ERROR, please use delimiter\n");
+	freeing_heredoc_pipes(params);
 	clean_up_function(params, env);
 	exit(EXIT_FAILURE);
 }
@@ -52,20 +68,13 @@ void	handle_null_heredocs_input(t_redirect_single_command_params
  * @return: void function
  */
 
-void	handle_heredocs_delimiter(t_redirect_single_command_params
-*params, char ***env)
-
+void	handle_heredocs_delimiter(
+			t_redirect_single_command_params *params, char ***env)
 {
-	params->z = 0;
-	write(0, "Delimiter spotted\n", 18);
-	while (params->z < params->pipe_count)
-	{
-		close(params->pipes[params->z][0]);
-		close(params->pipes[params->z][1]);
-		params->z++;
-	}
-	free(params->input1);
+	ft_dprintf(2, "Debugging Delimiter spotted\n");
+	freeing_heredoc_pipes(params);
 	clean_up_function(params, env);
+	free(params->input1);
 	exit(EXIT_SUCCESS);
 }
 
@@ -81,8 +90,8 @@ void	handle_heredocs_delimiter(t_redirect_single_command_params
  */
 
 void	handle_heredocs_input(t_redirect_single_command_params *params)
-
 {
+	ft_dprintf(2, "Debugging handling heredocs input\n");
 	write(params->pipes[params->z][1], params->input1,
 		ft_strlen(params->input1));
 	write(params->pipes[params->z][1], "\n", 1);
@@ -101,13 +110,13 @@ void	handle_heredocs_input(t_redirect_single_command_params *params)
  * @return: void function
  */
 
-void	handle_heredoc_child_process(t_redirect_single_command_params
-*params, char ***env)
-
+void	handle_heredoc_child_process(
+			t_redirect_single_command_params *params, char ***env)
 {
-	ft_printf("Writing into pipe number [%d]\n", params->z);
+	ft_dprintf(2, "Writing into pipe number [%d]\n", params->z);
 	while (1)
 	{
+		ft_dprintf(2, "Debugging readline heredocs\n");
 		params->input1 = readline("heredocs> ");
 		if (params->input1 == NULL)
 			handle_null_heredocs_input(params, env);
