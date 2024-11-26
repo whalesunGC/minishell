@@ -23,9 +23,11 @@
  */
 void	handle_child_sigint(int signum)
 {
-	ft_printf("\n");
+	ft_dprintf(2, "\nchild_sigint\n");
 	signal_cleanup(NULL);
-	exit(128 + signum);
+	signal(SIGINT, SIG_DFL);
+	(void)signum;
+	kill(getpid(), SIGINT);
 }
 
 /**

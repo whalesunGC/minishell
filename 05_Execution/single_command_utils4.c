@@ -146,7 +146,10 @@ int	handle_fork_plus_executing_child(
 	{
 		ignore_parent_signals();
 		waitpid(params->pid, params->exit_status, 0);
+		if (WIFEXITED(*params->exit_status))
+			ft_dprintf(1, "Child exited with %d, with exit code %d\n", params->pid, WEXITSTATUS(*params->exit_status));
 		*params->exit_status = WEXITSTATUS(*params->exit_status);
+		ft_dprintf(1, "new exit status is %d\n", *params->exit_status);
 	}
 	ft_signal(NULL, NULL, NULL, PARENT);
 	return (0);

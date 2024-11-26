@@ -76,6 +76,34 @@ t_token_type	lexer_token_type_b(char *input, int in_quote,
 }
 
 /**
+ * @function: lexer_token_type_c
+ * @brief: to match the input string to the correct token type
+ *
+ * @param input: input token that will be a string
+ * @param in_quote: flag to indicate if token is in_quotes
+ * @param is_hd_delimiter: flag to indicate if token is a delimiter for
+ * heredoc
+ * @param is_fd: flag to indicate if a token is a file descriptor that follows
+ * a redirection
+ * @return: the correct token type
+ */
+t_token_type	lexer_token_type_c(char *input, int in_quote,
+		int is_hd_delimiter, int is_fd)
+{
+	(void)*input;
+	if (is_hd_delimiter && in_quote)
+		return (TOKEN_HD_DELIMITER_Q);
+	else if (is_hd_delimiter && !in_quote)
+		return (TOKEN_HD_DELIMITER_NQ);
+	else if (is_fd)
+		return (TOKEN_RD_FD);
+	else if (in_quote)
+		return (TOKEN_INQUOTE);
+	else
+		return (TOKEN_STRING);
+}
+
+/**
  * @function: tokenize
  * @brief: takes input string and splits the words into tokens
 	 without any classification.

@@ -225,7 +225,6 @@ int		handle_other_cases(
 // single_command_utils6 //
 int		heredocs(t_redirect_single_command_params *params, char ***env);
 
-
 // single_command_utils7 //
 void	closing_current_pipe_after_writing_data(
 			t_redirect_single_command_params *params);
@@ -251,7 +250,7 @@ void	handle_heredoc_child_process(
 void	handle_exit_conditions_for_heredocs(
 			t_redirect_single_command_params *params, char ***env);
 void	handle_exit_file_opening_heredocs(
-			t_redirect_single_command_params *params , char ***env);
+			t_redirect_single_command_params *params, char ***env);
 void	checking_if_entire_command_has_errors(
 			t_redirect_single_command_params *params, char ***env);
 int		handle_execve_for_heredocs(

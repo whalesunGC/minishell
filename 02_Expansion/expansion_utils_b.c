@@ -93,13 +93,14 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 		data = (t_lex_data *)(*token_data)->content;
 		data->type = lexer_token_type_a(data->raw_string, data->is_first_token);
 		if (data->type == 42)
-			data->type = lexer_token_type_b(data->raw_string, data->in_quote,
+			data->type = lexer_token_type_c(data->raw_string, data->in_quote,
 					data->is_hd_delimiter, data->is_fd);
 	}
 	if ((data->type == TOKEN_COMMAND && data->in_quote)
 		|| (data->type == TOKEN_INQUOTE && data->in_quote))
 		data->raw_string = ft_string_trim_ends(&data->raw_string);
-	if (data->type == TOKEN_STRING && ft_has_quote(data->raw_string))
+	if ((data->type == TOKEN_STRING || data->type == TOKEN_COMMAND)
+		&& ft_has_quote(data->raw_string))
 		data->raw_string = ft_remove_quote(data->raw_string);
 	*token_data = (*token_data)->next;
 	return (*token_data);
