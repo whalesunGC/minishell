@@ -13,6 +13,58 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_env_len
+ * @brief: Calculates the length of an environment variable name
+ *
+ * @param input: The input string starting with the variable name
+ * @return: The length of the environment variable name
+ */
+int	ft_env_len(const char *input)
+{
+	int	len;
+
+	len = 0;
+	if (ft_strncmp(input, "$?", 2) == 0)
+		len = 2;
+	else if (input[len] == '$')
+	{
+		len++;
+		while (input[len] && (ft_isalnum(input[len]) || input[len] == '_'))
+			len++;
+	}
+	else
+		len = 1;
+	return (len);
+}
+
+/**
+ * @function: ft_var_exp
+ * @brief: takes an input that starts with a '$',
+	finds the env variable and replaces inplace.
+ *
+ * @param input: the address to the pointer of the input string.
+ * @param start_index: an int which represents the starting
+	index that points to a '$'
+ *
+ * @return: returns a string with the '$VAR' replaced with
+	its corresponding env variable if found, else it returns
+	a string with '$VAR' replaced with a NULL
+ */
+
+char	*ft_var_exp(char **input, int start_index, char **env)
+{
+	int		env_len;
+	char	*var;
+	char	*env_var;
+
+	env_len = ft_env_len(*input + start_index);
+	var = ft_substr(*input + start_index, 0, env_len);
+	ft_printf("variable found: %s\n", var);
+	env_var = ft_env_search(var, env);
+	return (free(var), env_var);
+}
+
+/**
  * @function: ft_getenv
  * @brief: takes a string and searches the env array for a corresponding
  * string after the = sign
@@ -44,32 +96,6 @@ char	*ft_getenv(char *string, char **env)
 }
 
 /**
- * @function: ft_string_trim_ends
- * @brief: takes a string, trims both ends and returns the
- * resulting new string. 
- * 
- * @param string: pointer to the address of the input string 
- * (passed by reference)
- * @return: new_string freeing the previous string
- */
-char	*ft_string_trim_ends(char **string)
-{
-	int		len;
-	char	*new_string;
-	char	*og_string;
-
-	if (!*string)
-		return (NULL);
-	og_string = *string;
-	len = ft_strlen(*string);
-	new_string = (char *)malloc((len - 1) * sizeof(char));
-	if (!new_string)
-		return (NULL);
-	ft_strlcpy(new_string, *string + 1, len - 1);
-	return (free(og_string), new_string);
-}
-
-/**
  * @function: ft_expansion_tokens
  * @brief: this handles the expansion post tokenization
  * 
@@ -96,11 +122,8 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 			data->type = lexer_token_type_c(data->raw_string, data->in_quote,
 					data->is_hd_delimiter, data->is_fd);
 	}
-	if ((data->type == TOKEN_COMMAND && data->in_quote)
-		|| (data->type == TOKEN_INQUOTE && data->in_quote))
-		data->raw_string = ft_string_trim_ends(&data->raw_string);
-	if ((data->type == TOKEN_STRING || data->type == TOKEN_COMMAND)
-		&& ft_has_quote(data->raw_string))
+	if ((data->type == TOKEN_STRING || data->type == TOKEN_COMMAND
+			|| data->type == TOKEN_INQUOTE) && ft_has_quote(data->raw_string))
 		data->raw_string = ft_remove_quote(data->raw_string);
 	*token_data = (*token_data)->next;
 	return (*token_data);

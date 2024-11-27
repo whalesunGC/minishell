@@ -96,13 +96,21 @@ int	ft_has_whitespace(char *string)
 char	*ft_remove_quote(char *string)
 {
 	int	i;
+	int	in_s_q;
+	int	in_d_q;
 
 	if (!string)
 		return (NULL);
 	i = 0;
+	in_d_q = 0;
+	in_s_q = 0;
 	while (string[i])
 	{
-		if (string[i] == '\'' || string[i] == '\"')
+		if (string[i] == '\'')
+			in_s_q = !in_s_q;
+		if (string[i] == '\"')
+			in_d_q = !in_d_q;
+		if ((string[i] == '\'' || string[i] == '\"') && (!in_s_q || !in_d_q))
 			string = ft_str_replace(string, i, "");
 		else
 			i++;
