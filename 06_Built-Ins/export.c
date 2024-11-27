@@ -62,7 +62,6 @@ static void	free_var_structures(t_export_params *params)
  */
 
 char	**export_command(int ac, char **av, char ***env)
-
 {
 	t_export_params	params;
 

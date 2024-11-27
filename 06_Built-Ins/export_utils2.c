@@ -66,7 +66,7 @@ static int	splitting_arguments_by_delimiter(t_export_params *params)
 	params->split_result = ft_split_export(params->av[params->i], '=');
 	if (params->split_result == NULL)
 	{
-		perror("splitting arguments failed");
+		ft_dprintf(2, "splitting arguments failed\n");
 		return (-1);
 	}
 	return (0);
@@ -134,29 +134,28 @@ static int	extracting_var_values(t_export_params *params)
  * @param t_export_params *params: created a structure
  	to store variables required for the export function
  * 
- * @return: void function
+ * @return: return success or failure
  */
 
-void	parse_export_arguments(t_export_params *params)
+int	parse_export_arguments(t_export_params *params)
 {
 	params->i = 0;
 	params->j = 0;
 	while (params->av[params->i] != NULL)
 	{
 		if (splitting_arguments_by_delimiter(params) == -1)
-			return ;
-		else if (params->split_result[0] == NULL)
+			return (-1);
+		else if (params->split_result == NULL)
 		{
-			free_split_result(params);
 			params->i++;
 			continue ;
 		}
 		else
 		{
 			if (extracting_var_names(params) == -1)
-				return ;
+				return (-1);
 			if (extracting_var_values(params) == -1)
-				return ;
+				return (-1);
 			params->j++;
 		}
 		free_split_result(params);
@@ -164,4 +163,5 @@ void	parse_export_arguments(t_export_params *params)
 	}
 	params->var_value[params->j] = NULL;
 	params->var_name[params->j] = NULL;
+	return (1);
 }
