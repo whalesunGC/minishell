@@ -79,6 +79,7 @@ typedef struct s_piping_multiple_command_params
 	int			z;
 	int			a;
 	int			b;
+	int			c;
 	int			rd_arg_counter;
 	int			delimiter_counter;
 	int			heredocs_pipe_number;
@@ -150,12 +151,23 @@ void	handle_child_process(
 
 // multiple_commands_utils7 //
 void	handle_file_opening_errors(t_piping_multiple_command_params *params);
+void	handling_file_opening_for_redirects(t_piping_multiple_command_params *params);
 void	handle_file_opening_multiple_commands(
 			t_piping_multiple_command_params *params);
 void	handle_heredocs_pipe_number_multiple_commands(
 			t_piping_multiple_command_params *params);
+
+// multiple_commands_utils8 //
+void	setting_up_counters_and_initialise_node(t_piping_multiple_command_params *params);
+void	increment_counters_and_traverse_next_node(t_piping_multiple_command_params *params);
+int	handle_forking_process_and_executing_child(
+			t_piping_multiple_command_params *params, char ***env);
 int		handle_arguments(
 			t_piping_multiple_command_params *params, char ***env);
+
+// multiple_commands_utils9 //
+void	closing_heredocs_pipes(t_piping_multiple_command_params *params);
+void	closing_main_pipes(t_piping_multiple_command_params *params);
 void	handle_pipe_and_waiting_for_child(
 			t_piping_multiple_command_params *params);
 

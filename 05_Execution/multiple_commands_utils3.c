@@ -32,6 +32,7 @@ void	clean_up_function_multiple_commands(
 	free_heredocs_pipes(params->heredocs_pipes, params->heredocs_count);
 	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	free(params->signal_data);
+	free(params->exit_status);
 	free_dup_envp(*env);
 	rl_clear_history();
 }

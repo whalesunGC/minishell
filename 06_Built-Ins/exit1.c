@@ -50,8 +50,8 @@ static void	ft_free_all_pipes(t_piping_multiple_command_params *params)
  * 
  * @return: void function
  */
-static void	exit_is_the_only_argument(t_piping_multiple_command_params *params,
-		char **env)
+static void	exit_is_the_only_argument(
+			t_piping_multiple_command_params *params, char **env)
 {
 	free_dup_envp(env);
 	rl_clear_history();
@@ -75,7 +75,7 @@ static void	exit_is_the_only_argument(t_piping_multiple_command_params *params,
  * @return: void function
  */
 static void	exit_with_one_other_argument(
-		t_piping_multiple_command_params *params, char **env)
+			t_piping_multiple_command_params *params, char **env)
 {
 	int	exit_status;
 
@@ -104,7 +104,6 @@ static void	exit_with_one_other_argument(
  */
 
 static int	is_argument_numeric(const char *arg)
-
 {
 	int	i;
 
@@ -133,8 +132,8 @@ static int	is_argument_numeric(const char *arg)
  * @return: void function
  */
 
-void	exit_command_multiple(t_piping_multiple_command_params *params,
-		char **env)
+void	exit_command_multiple(
+			t_piping_multiple_command_params *params, char **env)
 {
 	if (params->ac > 0 && ft_strncmp(params->av[0], "exit", 4) == 0)
 	{

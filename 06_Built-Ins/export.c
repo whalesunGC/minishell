@@ -26,7 +26,6 @@
  */
 
 static void	setting_up_ac_av(t_export_params *params, int ac, char **av)
-
 {
 	params->av = av;
 	params->ac = ac;
@@ -44,7 +43,6 @@ static void	setting_up_ac_av(t_export_params *params, int ac, char **av)
  */
 
 static void	free_var_structures(t_export_params *params)
-
 {
 	free_var_name(params);
 	free_var_value(params);
