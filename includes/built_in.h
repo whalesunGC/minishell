@@ -59,7 +59,7 @@ int		valid_export_arguments_first_parse(t_export_params *params,
 void	processing_for_valid_counts(t_export_params *params, char ***env);
 
 // export utils2 //
-void	parse_export_arguments(t_export_params *params);
+int		parse_export_arguments(t_export_params *params);
 
 // export utils3 //
 void	checking_for_duplicates_in_var_name(t_export_params *params);
@@ -69,6 +69,7 @@ void	variable_name_character_checks(t_export_params *params);
 
 // export utils4 //
 void	first_parsing(t_export_params *params);
+int		ft_isvalidvariable(int c);
 
 // export utils5 //
 char	**has_equal_sign(t_export_params *params);

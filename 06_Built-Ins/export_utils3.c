@@ -98,7 +98,7 @@ void	variable_value_check(t_export_params *params)
 	while (params->var_value[params->i][params->j] != '\0')
 	{
 		params->current_char = params->var_value[params->i][params->j];
-		if (ft_isprint(params->current_char) == 0)
+		if (ft_isvalidvariable(params->current_char) == 0)
 		{
 			params->is_valid = 0;
 			ft_dprintf(2, "%s%s: not an identifier2\n",

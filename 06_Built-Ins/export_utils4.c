@@ -13,6 +13,19 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_isvalidvariable
+ * @brief: checks if character is a valid variable input
+ * 
+ * @param c: input char
+ * 
+ * @return: 1 or 0
+ */
+int	ft_isvalidvariable(int c)
+{
+	return ((c >= 32 && c <= 126) || c == '\t');
+}
+
+/**
  * @function: variable_name_first_character_check_fail
  * @brief: to support first_parsing function below
  	prints error message and removes invalid identifier

@@ -23,18 +23,23 @@
  */
 
 void	free_var_name(t_export_params *params)
-
 {
 	int	i;
 
 	i = 0;
-	while (params->var_name[i] != NULL)
+	if (params->var_name)
 	{
-		free(params->var_name[i]);
-		i++;
+		if (params->var_name[i])
+		{
+			while (params->var_name[i] != NULL)
+			{
+				free(params->var_name[i]);
+				i++;
+			}
+		}
+		free(params->var_name);
+		params->var_name = NULL;
 	}
-	free(params->var_name);
-	params->var_name = NULL;
 }
 
 /**
@@ -48,18 +53,23 @@ void	free_var_name(t_export_params *params)
  */
 
 void	free_var_value(t_export_params *params)
-
 {
 	int	i;
 
 	i = 0;
-	while (params->var_value[i] != NULL)
+	if (params->var_value)
 	{
-		free(params->var_value[i]);
-		i++;
+		if (params->var_value[i])
+		{
+			while (params->var_value[i] != NULL)
+			{
+				free(params->var_value[i]);
+				i++;
+			}
+		}
+		free(params->var_value);
+		params->var_value = NULL;
 	}
-	free(params->var_value);
-	params->var_value = NULL;
 }
 
 /**

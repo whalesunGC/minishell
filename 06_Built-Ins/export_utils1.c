@@ -78,15 +78,17 @@ void	setting_up_of_av_structure(t_export_params *params)
 int	initialise_var_name_var_value(t_export_params *params)
 
 {
-	params->var_name = malloc(sizeof(char *) * (params->ac + 1));
+	params->var_name = (char **)malloc(sizeof(char *) * (params->ac + 1));
 	if (params->var_name == NULL)
 		return (-1);
-	params->var_value = malloc(sizeof(char *) * (params->ac + 1));
+	ft_memset(params->var_name, 0, sizeof(char *) * (params->ac + 1));
+	params->var_value = (char **)malloc(sizeof(char *) * (params->ac + 1));
 	if (params->var_value == NULL)
 	{
 		free_var_name(params);
 		return (-1);
 	}
+	ft_memset(params->var_value, 0, sizeof(char *) * (params->ac + 1));
 	return (0);
 }
 
