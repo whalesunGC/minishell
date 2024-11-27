@@ -13,6 +13,44 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_split_export()
+ * @brief: static function split string on instance of input char
+ * 
+ * @param string: export argument
+ * @param c: char to split on
+ * @return: NULL if ft_split_export fails and prints error. char** 
+ * if successfull.
+ */
+static char	**ft_split_export(char *string, char c)
+{
+	char	**result;
+	char	*index;
+
+	index = NULL;
+	result = NULL;
+	if (!string)
+		return (NULL);
+	index = ft_strchr(string, c);
+	if (index)
+	{
+		result = (char **)malloc(3 * sizeof(char *));
+		if (!result)
+			return (NULL);
+		result[0] = (char *)malloc(((index - string) + 1) * sizeof(char));
+		if (!result[0])
+			return (free(result), NULL);
+		result[1] = (char *)malloc((ft_strlen(string) - (index - string))
+				* sizeof(char));
+		if (!result[1])
+			return (free(result), NULL);
+		ft_strlcpy(result[0], string, (index - string) + 1);
+		ft_strlcpy(result[1], index + 1, ft_strlen(string) - (index - string));
+		result[2] = NULL;
+	}
+	return (result);
+}
+
+/**
  * @function: splitting_arguments_by_delimiter
  * @brief: static function to support parse_export_arguments
  	function right below
@@ -23,11 +61,9 @@
  * 
  * @return: -1 if ft_split fails and prints error. 0 if success.
  */
-
 static int	splitting_arguments_by_delimiter(t_export_params *params)
-
 {
-	params->split_result = ft_split(params->av[params->i], '=');
+	params->split_result = ft_split_export(params->av[params->i], '=');
 	if (params->split_result == NULL)
 	{
 		perror("splitting arguments failed");
@@ -50,7 +86,6 @@ static int	splitting_arguments_by_delimiter(t_export_params *params)
  */
 
 static int	extracting_var_names(t_export_params *params)
-
 {
 	params->var_name[params->j] = ft_strdup(params->split_result[0]);
 	if (params->var_name[params->j] == NULL)
@@ -76,7 +111,6 @@ static int	extracting_var_names(t_export_params *params)
  */
 
 static int	extracting_var_values(t_export_params *params)
-
 {
 	if (params->split_result[1] != NULL)
 		params->var_value[params->j] = ft_strdup(params->split_result[1]);
@@ -104,7 +138,6 @@ static int	extracting_var_values(t_export_params *params)
  */
 
 void	parse_export_arguments(t_export_params *params)
-
 {
 	params->i = 0;
 	params->j = 0;

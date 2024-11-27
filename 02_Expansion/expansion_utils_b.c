@@ -89,7 +89,7 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 	{
 		data->raw_string = expansion_string(data->raw_string, 0,
 				env, exit_status);
-		token_data = handle_word_split(data->raw_string, token_data);
+		token_data = handle_word_split(ft_strdup(data->raw_string), token_data);
 		data = (t_lex_data *)(*token_data)->content;
 		data->type = lexer_token_type_a(data->raw_string, data->is_first_token);
 		if (data->type == 42)

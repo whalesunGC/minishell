@@ -69,6 +69,7 @@ void	variable_name_character_checks(t_export_params *params);
 
 // export utils4 //
 void	first_parsing(t_export_params *params);
+int		ft_isvalidvariable(int c);
 
 // export utils5 //
 char	**has_equal_sign(t_export_params *params);
