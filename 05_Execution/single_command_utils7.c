@@ -47,6 +47,8 @@ void	closing_current_pipe_after_writing_data(
 int	handling_forking_process(
 			t_redirect_single_command_params *params, char ***env)
 {
+	int	status;
+
 	ft_dprintf(2, "Welcome to heredocs <<\n");
 	ft_dprintf(2, "delimiter for heredocs: %s\n",
 		params->result->delimiter[params->delimiter_counter]);
@@ -64,8 +66,18 @@ int	handling_forking_process(
 	else
 	{	
 		ignore_parent_signals();
-		waitpid(params->pid, params->exit_status, 0);
-		*params->exit_status = WEXITSTATUS(*params->exit_status);
+		waitpid(params->pid, &status, 0);
+		if (WIFEXITED(status))
+		{
+			ft_dprintf(1, "Child %d exited normally, with exit code %d\n", params->pid, WEXITSTATUS(status));
+			*params->exit_status = WEXITSTATUS(status);
+		}
+		else if (WIFSIGNALED(status))
+		{
+			ft_dprintf(1, "Child %d exited with signals, with exit code %d\n", params->pid, WTERMSIG(status));
+			*params->exit_status = WTERMSIG(status) + 128;
+			ft_dprintf(1, "Current exit status %d\n", *params->exit_status);
+		}
 	}
 	ft_signal(NULL, NULL, NULL, PARENT);
 	params->delimiter_counter++;

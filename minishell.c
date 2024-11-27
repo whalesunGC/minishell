@@ -96,7 +96,11 @@ int	main(int ac, char **av, char **envp)
 			continue ;
 		token_data = lexer(input);
 		if (!token_data)
+		{
+			if (input)
+				free(input);
 			continue;
+		}
 		token_data = expansion(token_data, env, exit_status);
 		ast_root = parser(token_data);
 		exec_data = ft_ast_to_linkedlist(ast_root);

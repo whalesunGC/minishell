@@ -25,7 +25,6 @@
 
 static void	exit_is_the_only_argument(t_piping_multiple_command_params *params,
 		char **env)
-
 {
 	free_dup_envp(env);
 	rl_clear_history();
@@ -33,6 +32,24 @@ static void	exit_is_the_only_argument(t_piping_multiple_command_params *params,
 	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	if (params->exit_status)
 		free(params->exit_status);
+	params->j = 0;
+	while (params->j < params->total - 1)
+	{
+		close(params->pipes[params->j][0]);
+		close(params->pipes[params->j][1]);
+		params->j++;
+	}
+	if (params->pipes && params->total - 1)
+		free_pipes(params->pipes, params->total - 1);
+	params->j = 0;
+	while (params->j < params->heredocs_count)
+	{
+		close(params->heredocs_pipes[params->j][0]);
+		close(params->heredocs_pipes[params->j][1]);
+		params->j++;
+	}
+	if (params->heredocs_pipes && params->heredocs_count)
+		free_heredocs_pipes(params->heredocs_pipes, params->heredocs_count);
 	exit(EXIT_SUCCESS);
 }
 
@@ -50,7 +67,6 @@ static void	exit_is_the_only_argument(t_piping_multiple_command_params *params,
 
 static void	exit_with_one_other_argument(t_piping_multiple_command_params *params,
 		char **env)
-
 {
 	int	exit_status;
 
@@ -63,6 +79,24 @@ static void	exit_with_one_other_argument(t_piping_multiple_command_params *param
 	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	if (params->exit_status)
 		free(params->exit_status);
+	params->j = 0;
+	while (params->j < params->total - 1)
+	{
+		close(params->pipes[params->j][0]);
+		close(params->pipes[params->j][1]);
+		params->j++;
+	}
+	if (params->pipes && params->total - 1)
+		free_pipes(params->pipes, params->total - 1);
+	params->j = 0;
+	while (params->j < params->heredocs_count)
+	{
+		close(params->heredocs_pipes[params->j][0]);
+		close(params->heredocs_pipes[params->j][1]);
+		params->j++;
+	}
+	if (params->heredocs_pipes && params->heredocs_count)
+		free_heredocs_pipes(params->heredocs_pipes, params->heredocs_count);
 	exit(exit_status);
 }
 
@@ -107,7 +141,7 @@ static int	is_argument_numeric(const char *arg)
  * @return: void function
  */
 
-void	exit_command_multiple(t_piping_multiple_command_params *params, 
+void	exit_command_multiple(t_piping_multiple_command_params *params,
 		char **env)
 {
 	if (params->ac > 0 && ft_strncmp(params->av[0], "exit", 4) == 0)

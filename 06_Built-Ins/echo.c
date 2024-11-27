@@ -14,7 +14,7 @@
 
 /**
  * @function: ft_only_n
- * @brief: checks if string has only n
+ * @brief: checks if echo's argument to string has only n
  *
  * @param string: Input string
  *
@@ -22,6 +22,7 @@
  */
 static int	ft_only_n(char *string)
 {
+	string++;
 	while (*string)
 	{
 		if (*string == 'n')
