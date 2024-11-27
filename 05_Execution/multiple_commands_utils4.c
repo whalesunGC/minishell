@@ -34,8 +34,8 @@ void	handle_counters_pipe_closing_and_redirects_array(
 	params->result->redirect[params->x] = ft_strdup("a");
 	ft_dprintf(2, "Debugging After changing current redirect array for multiple commands %s\n",
 		params->result->redirect[params->x]);
-	params->heredocs_pipe_number++;
 	params->delimiter_counter++;
+	params->heredocs_pipe_number++;
 }
 
 /**

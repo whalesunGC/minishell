@@ -30,10 +30,17 @@ void	handle_input_output_heredocs_multiple_commands(
 	ft_dprintf(2, "Debugging handling input, output, heredocs redirections\n");
 	params->b = 0;
 	while (params->result->redirect[params->b] != NULL)
+	{
+		if (ft_strcmp(params->result->redirect[params->b], "<") == 0)
+			setting_up_input_redirections_multiple_commands(params, env);
+		else if (ft_strcmp(params->result->redirect[params->b], ">") == 0)
+			setting_up_output_redirections_multiple_commands(params, env);
+		else if (ft_strcmp(params->result->redirect[params->b], ">>") == 0)
+			setting_up_output_redirections_multiple_commands(params, env);
+		else if (ft_strcmp(params->result->redirect[params->b], "a") == 0)
+			setting_up_heredocs_multiple_commands(params, env);
 		params->b++;
-	setting_up_input_redirections_multiple_commands(params, env);
-	setting_up_output_redirections_multiple_commands(params, env);
-	setting_up_heredocs_multiple_commands(params, env);
+	}
 }
 
 /**
@@ -53,29 +60,29 @@ void	setup_pipe_redirection_and_closing(
 {
 	if (params->i < params->total - 1)
 	{
-		ft_dprintf(2, "debugging for redirections if i < total - 1\n");
 		if (params->result->redirect != NULL)
 		{
+			ft_dprintf(2, "going in this loop for i < total - 1\n");
 			handle_input_output_heredocs_multiple_commands(params, env);
-			setting_up_pipes_to_redirect_output(params, env);
 		}
 		else
+		{
+			ft_dprintf(2, "going in this loop to redirect output purely\n");
 			setting_up_pipes_to_redirect_output(params, env);
+		}
 	}
 	if (params->i > 0)
-	{	
-		ft_dprintf(2, "debugging for redirections if i > 0\n");
-		if (params->result->redirect != NULL)
-			handle_input_output_heredocs_multiple_commands(params, env);
-		else
-			read_from_pipe_without_redirections(params, env);
-	}
-	params->j = 0;
-	while (params->j < params->total - 1)
 	{
-		close(params->pipes[params->j][0]);
-		close(params->pipes[params->j][1]);
-		params->j++;
+		if (params->result->redirect != NULL)
+		{
+			ft_dprintf(2, "going in this loop for i > 0\n");
+			handle_input_output_heredocs_multiple_commands(params, env);
+		}
+		else
+		{
+			ft_dprintf(2, "going in this loop to read from pipe\n");
+			read_from_pipe_without_redirections(params, env);
+		}
 	}
 }
 
@@ -161,11 +168,11 @@ void	handle_child_process(
 			t_piping_multiple_command_params *params, char ***env)
 {
 	setup_pipe_redirection_and_closing(params, env);
-	if (params->flag == 1)
-	{
-		clean_up_function_multiple_commands(params, env);
-		exit(EXIT_FAILURE);
-	}
+	close(params->input_fd);
+	close(params->output_fd);
+	if (params->heredocs_count > 0)
+		closing_heredocs_pipes(params);
+	closing_main_pipes(params);
 	handle_exit_conditions_if_built_in(params, env);
 	if (access(params->result->cmd[0], F_OK) == 0)
 		params->command_path = params->result->cmd[0];
