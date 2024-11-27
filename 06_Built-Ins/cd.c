@@ -33,17 +33,17 @@ static void	handle_cd_error(const char *dir)
  		and then changes it. If not successful, print
  		error message using handle_cd_error function.
  * 
- * @param NIL
+ * @param env: current env variable 
  * 
  * @return: void function
  */
 
-static void	change_to_home_directory(void)
+static void	change_to_home_directory(char ***env)
 
 {
 	char	*home;
 
-	home = getenv("HOME");
+	home = ft_getenv("$HOME", *env);
 	if (home == NULL)
 	{
 		ft_dprintf(2, "HOME environment variable is not set\n");
@@ -67,7 +67,7 @@ static void	change_to_home_directory(void)
  * @return: void function
  */
 
-static void	changing_directories(char **av)
+static void	changing_directories(char **av, char ***env)
 
 {
 	if (ft_strncmp(av[1], ".", 1) == 0 && ft_strlen(av[1]) == 1)
@@ -78,7 +78,7 @@ static void	changing_directories(char **av)
 			handle_cd_error(av[1]);
 	}
 	else if (ft_strncmp(av[1], "~", 1) == 0 && ft_strlen(av[1]) == 1)
-		change_to_home_directory();
+		change_to_home_directory(env);
 	else if (chdir(av[1]) != 0)
 		handle_cd_error(av[1]);
 }
@@ -98,7 +98,6 @@ static void	changing_directories(char **av)
  */
 
 char	**cd_command(int ac, char **av, char ***env)
-
 {
 	char	old_pwd[PATH_MAX];
 
@@ -106,19 +105,19 @@ char	**cd_command(int ac, char **av, char ***env)
 	{
 		if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
 		{
-			perror("getcwd failed");
+			ft_dprintf(2, "getcwd failed\n");
 			return (*env);
 		}
 		if (ac == 1 && ft_strlen(av[0]) == 2)
 		{
-			change_to_home_directory();
+			change_to_home_directory(env);
 			updating_env(env, old_pwd);
 		}
 		else if (ac >= 1 && ft_strlen(av[0]) > 2)
 			ft_dprintf(2, "%s: command not found\n", av[0]);
 		else if (ac == 2)
 		{
-			changing_directories(av);
+			changing_directories(av, env);
 			updating_env(env, old_pwd);
 		}
 		else
