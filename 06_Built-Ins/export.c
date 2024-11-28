@@ -83,7 +83,7 @@ char	**export_command(int ac, char **av, char ***env)
 			free_var_structures(&params);
 		}
 		else if (params.ac > 1 && ft_strlen(params.av[0]) != 6)
-			ft_dprintf(2, "%s: command not valid\n", params.av[0]);
+			ft_dprintf(1, "%s: command not valid\n", params.av[0]);
 	}
 	return (*env);
 }

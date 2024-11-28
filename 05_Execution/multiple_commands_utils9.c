@@ -13,15 +13,13 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: handle_arguments
- * @brief: handling the commands after input
+ * @function: closing_heredocs_pipes
+ * @brief: handle closing of heredoc pipes
  * 
  * @param t_piping_multiple_command_params *params : structure for
  	multiple commands parameters
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
  * 
- * @return: -1 if fork fails. 0 if everything is successful.
+ * @return: void function
  */
 
 void	closing_heredocs_pipes(t_piping_multiple_command_params *params)

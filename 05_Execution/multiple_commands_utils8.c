@@ -103,12 +103,15 @@ int	handle_arguments(
 			continue ;
 		}
 		if (params->result->type == AST_COMMAND)
-			handle_heredocs_pipe_number_multiple_commands(params);
-		if (params->flag == 1)
 		{
-			params->traverse = params->traverse->next;
-			params->i++;
-			continue ;
+			if (params->result->redirect != NULL)
+				handle_heredocs_pipe_number_multiple_commands(params);
+			if (params->flag == 1)
+			{
+				params->traverse = params->traverse->next;
+				params->i++;
+				continue ;
+			}
 		}
 		if (handle_forking_process_and_executing_child(params, env) == -1)
 			return (-1);
