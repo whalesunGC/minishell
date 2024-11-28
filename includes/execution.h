@@ -52,6 +52,8 @@ typedef struct s_redirect_single_command_params
 	int			delimiter_counter;
 	int			rd_arg_counter;
 	int			pipe_count;
+	int			pipe_number;
+	int			pipe_index;
 	int			count;
 	int			loop_counter;
 }	t_redirect_single_command_params;
@@ -117,7 +119,7 @@ void	handle_heredocs_readline_multiple_commands(
 			t_piping_multiple_command_params *params, char ***env);
 
 // multiple_commands_utils4 //
-void	handle_counters_pipe_closing_and_redirects_array(
+void	handle_counters_and_redirects_array(
 			t_piping_multiple_command_params *params);
 void	handle_redirect_array_for_heredocs(
 			t_piping_multiple_command_params *params, char ***env);
@@ -151,16 +153,19 @@ void	handle_child_process(
 
 // multiple_commands_utils7 //
 void	handle_file_opening_errors(t_piping_multiple_command_params *params);
-void	handling_file_opening_for_redirects(t_piping_multiple_command_params *params);
+void	handling_file_opening_for_redirects(
+			t_piping_multiple_command_params *params);
 void	handle_file_opening_multiple_commands(
 			t_piping_multiple_command_params *params);
 void	handle_heredocs_pipe_number_multiple_commands(
 			t_piping_multiple_command_params *params);
 
 // multiple_commands_utils8 //
-void	setting_up_counters_and_initialise_node(t_piping_multiple_command_params *params);
-void	increment_counters_and_traverse_next_node(t_piping_multiple_command_params *params);
-int	handle_forking_process_and_executing_child(
+void	setting_up_counters_and_initialise_node(
+			t_piping_multiple_command_params *params);
+void	increment_counters_and_traverse_next_node(
+			t_piping_multiple_command_params *params);
+int		handle_forking_process_and_executing_child(
 			t_piping_multiple_command_params *params, char ***env);
 int		handle_arguments(
 			t_piping_multiple_command_params *params, char ***env);
@@ -168,6 +173,10 @@ int		handle_arguments(
 // multiple_commands_utils9 //
 void	closing_heredocs_pipes(t_piping_multiple_command_params *params);
 void	closing_main_pipes(t_piping_multiple_command_params *params);
+void	handle_invalid_command(
+			t_piping_multiple_command_params *params, char ***env);
+void	handle_execve_failure(
+			t_piping_multiple_command_params *params, char ***env);
 void	handle_pipe_and_waiting_for_child(
 			t_piping_multiple_command_params *params);
 
@@ -191,23 +200,21 @@ int		handling_heredocs(
 			t_list *node);
 
 // single_command_utils2 //
+void	handle_pipe_reading_heredocs_and_dup2(
+			t_redirect_single_command_params *params, char ***env);
+void	handle_file_opening_redirection(
+			t_redirect_single_command_params *params);
 void	handle_file_opening_errors_redirection(
 			t_redirect_single_command_params *params, char ***env);
-void	handle_file_closing_input_redirection(
-			t_redirect_single_command_params *params);
-void	handle_file_closing_output_redirection(
-			t_redirect_single_command_params *params);
-void	handle_redirections_file_opening(
+void	handling_redirection_process(
 			t_redirect_single_command_params *params, char ***env);
-void	handle_dup_and_closing_fd(
+void	handle_file_opening_process_for_redirection(
 			t_redirect_single_command_params *params, char ***env);
 
 // single_command_utils3 //
 void	executing_execve(
 			t_redirect_single_command_params *params, char ***env);
-void	exiting_conditions_nonzero_pipecount(
-			t_redirect_single_command_params *params, char ***env);
-void	exiting_conditions_zero_pipecount(
+void	exiting_conditions_for_built_in(
 			t_redirect_single_command_params *params, char ***env);
 void	handle_execve_for_redirections(
 			t_redirect_single_command_params *params, char ***env);
@@ -238,7 +245,7 @@ int		handle_other_cases(
 int		heredocs(t_redirect_single_command_params *params, char ***env);
 
 // single_command_utils7 //
-void	closing_current_pipe_after_writing_data(
+void	handle_parent_for_handling_forking_process(
 			t_redirect_single_command_params *params);
 int		handling_forking_process(
 			t_redirect_single_command_params *params, char ***env);
@@ -248,7 +255,7 @@ int		handling_last_redirect(
 void	waiting_for_child_to_execute(t_redirect_single_command_params *params);
 
 // single_command_utils8 //
-void	closing_current_pipes_heredocs_single_command(
+void	closing_current_pipe_after_writing_data(
 			t_redirect_single_command_params *params);
 void	handle_null_heredocs_input(
 			t_redirect_single_command_params *params, char ***env);
@@ -261,9 +268,7 @@ void	handle_heredoc_child_process(
 // single_comand_utils9 //
 void	handle_exit_conditions_for_heredocs(
 			t_redirect_single_command_params *params, char ***env);
-void	handle_exit_file_opening_heredocs(
-			t_redirect_single_command_params *params, char ***env);
-void	checking_if_entire_command_has_errors(
+int		handling_dup2_and_closing_heredoc_pipes_before_execve(
 			t_redirect_single_command_params *params, char ***env);
 int		handle_execve_for_heredocs(
 			t_redirect_single_command_params *params, char ***env);

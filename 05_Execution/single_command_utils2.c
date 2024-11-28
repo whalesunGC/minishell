@@ -13,7 +13,74 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: handle_file_opening_errors
+ * @function: handle_pipe_reading_heredocs_and_dup2
+ * @brief: to make sure you are doing the correct dup2
+ 	for the correct pipe if heredocs present
+ * 
+ * @param t_redirect_single_command_params *params : structure to
+ 	store parameters for handling redirects / no redirects
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits
+ * 
+ * @return: void function
+ */
+
+void	handle_pipe_reading_heredocs_and_dup2(
+			t_redirect_single_command_params *params, char ***env)
+{
+	if (ft_strcmp(params->result->redirect[params->k], "a") == 0)
+		params->pipe_number++;
+	if (params->pipe_number > 0)
+	{
+		params->pipe_index = params->pipe_number - 1;
+		ft_dprintf(2, "Reading pipe number of heredocs [%d]\n", params->pipe_index);
+	}
+	if (dup2(params->pipes[params->pipe_index][0], STDIN_FILENO) == -1)
+	{
+		perror("dup2 failed for heredocs");
+		clean_up_function(params, env);
+		exit(EXIT_FAILURE);
+	}
+}
+
+/**
+ * @function: handle_file_opening_redirection
+ * @brief: opens files and closes the previous ones if open
+ * 
+ * @param t_redirect_single_command_params *params : structure to
+ 	store parameters for handling redirects / no redirects
+ * 
+ * @return: void function
+ */
+
+void	handle_file_opening_redirection(
+			t_redirect_single_command_params *params)
+{
+	if (ft_strcmp(params->result->redirect[params->k], "<") == 0)
+	{
+		if (params->input_fd > 0)
+			close(params->input_fd);
+		params->input_fd = open(params->result
+				->rd_arg[params->rd_arg_counter], O_RDONLY);
+	}
+	else if (ft_strcmp(params->result->redirect[params->k], ">") == 0)
+	{
+		if (params->output_fd > 0)
+			close(params->output_fd);
+		params->output_fd = open(params->result->rd_arg
+			[params->rd_arg_counter], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	}
+	else if (ft_strcmp(params->result->redirect[params->k], ">>") == 0)
+	{
+		if (params->output_fd > 0)
+			close(params->output_fd);
+		params->output_fd = open(params->result->rd_arg
+			[params->rd_arg_counter], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	}
+}
+
+/**
+ * @function: handle_file_opening_errors_redirections
  * @brief: printing error message and perform cleanup before exiting
  * 
  * @param t_redirect_single_command_params *params : structure to
@@ -37,77 +104,8 @@ void	handle_file_opening_errors_redirection(
 }
 
 /**
- * @function: handle_file_closing_input_redirection
- * @brief: making sure the correct fd is closed
- 	when looking through the redirect array
- * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- * 
- * @return: void function
- */
-
-void	handle_file_closing_input_redirection(
-			t_redirect_single_command_params *params)
-{
-	if (params->input_fd > 0)
-	{
-		if (params->result->redirect[params->k + 1] != NULL)
-		{
-			params->b = params->k;
-			while (params->result->redirect[params->b] != NULL)
-			{
-				if (params->result->redirect[params->b + 1] != NULL)
-				{
-					if (ft_strcmp(params->result->redirect
-							[params->b + 1], "<") == 0)
-						close(params->input_fd);
-				}
-				params->b++;
-			}
-		}
-	}
-}
-
-/**
- * @function: handle_file_closing_output_redirection
- * @brief: making sure the correct fd is closed
- 	when looking through the redirect array
- * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- * 
- * @return: void function
- */
-
-void	handle_file_closing_output_redirection(
-			t_redirect_single_command_params *params)
-{
-	if (params->output_fd > 0)
-	{
-		if (params->result->redirect[params->k + 1] != NULL)
-		{
-			params->b = params->k;
-			while (params->result->redirect[params->b] != NULL)
-			{
-				if (params->result->redirect[params->b + 1] != NULL)
-				{
-					if ((ft_strcmp(params->result->redirect
-								[params->b + 1], ">") == 0)
-						|| (ft_strcmp(params->result->redirect
-								[params->b + 1], ">>") == 0))
-						close(params->output_fd);
-				}
-				params->b++;
-			}
-		}
-	}
-}
-
-/**
- * @function: handle_redirections_file_opening
- * @brief: handling opening of files when redirections are called
- 	and handling errors if files are not valid
+ * @function: handle_redirection_process
+ * @brief: handles dup2 properly for input redirection or heredoc redirection
  * 
  * @param t_redirect_single_command_params *params : structure to
  	store parameters for handling redirects / no redirects
@@ -117,52 +115,10 @@ void	handle_file_closing_output_redirection(
  * @return: void function
  */
 
-void	handle_redirections_file_opening(
+void	handling_redirection_process(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging handle redirections file opening\n");
-	while (params->k < params->i)
-	{
-		if (ft_strcmp(params->result->redirect[params->k], "a") == 0)
-		{
-			params->k++;
-			continue ;
-		}
-		else if (ft_strcmp(params->result->redirect[params->k], "<") == 0)
-			params->input_fd = open(params->result
-					->rd_arg[params->rd_arg_counter], O_RDONLY);
-		else if (ft_strcmp(params->result->redirect[params->k], ">") == 0)
-			params->output_fd = open(params->result->rd_arg
-				[params->rd_arg_counter], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (ft_strcmp(params->result->redirect[params->k], ">>") == 0)
-			params->output_fd = open(params->result->rd_arg
-				[params->rd_arg_counter], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		handle_file_opening_errors_redirection(params, env);
-		handle_file_closing_input_redirection(params);
-		handle_file_closing_output_redirection(params);
-		params->rd_arg_counter++;
-		params->k++;
-	}
-}
-
-/**
- * @function: handle_dup_and_closing_fd
- * @brief: handling dup function calls for both input and output fd
- * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: void function
- */
-
-void	handle_dup_and_closing_fd(
-			t_redirect_single_command_params *params, char ***env)
-{
-	ft_dprintf(2, "Debugging handle_dup_and_closing_fd\n");
-	if (ft_strcmp(params->result->redirect[params->k - 1], "<") == 0
-		&& params->input_fd > 0)
+	if (ft_strcmp(params->result->redirect[params->k], "<") == 0)
 	{
 		if (dup2(params->input_fd, STDIN_FILENO) == -1)
 		{
@@ -172,9 +128,10 @@ void	handle_dup_and_closing_fd(
 		}
 		close(params->input_fd);
 	}
-	else if (((ft_strcmp(params->result->redirect[params->k - 1], ">") == 0)
-			|| (ft_strcmp(params->result->redirect[params->k - 1], ">>") == 0))
-		&& (params->output_fd > 0))
+	else if ((ft_strcmp(params->result->redirect
+				[params->k], ">") == 0)
+		|| (ft_strcmp(params->result->redirect
+				[params->k], ">") == 0))
 	{
 		if (dup2(params->output_fd, STDOUT_FILENO) == -1)
 		{
@@ -183,5 +140,40 @@ void	handle_dup_and_closing_fd(
 			exit(EXIT_FAILURE);
 		}
 		close(params->output_fd);
+	}
+}
+
+/**
+ * @function: handle_file_opening_process_for_redirection
+ * @brief: handles the process of opening files for redirection and
+ 	reporting errors if file opening encounters errors
+ * 
+ * @param t_redirect_single_command_params *params : structure to
+ 	store parameters for handling redirects / no redirects
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
+ * 
+ * @return: void function
+ */
+
+void	handle_file_opening_process_for_redirection(
+			t_redirect_single_command_params *params, char ***env)
+{
+	ft_dprintf(2, "Debugging handle redirections file opening\n");
+	params->loop_counter = 0;
+	params->pipe_number = 0;
+	while (params->k < params->i)
+	{
+		if (ft_strcmp(params->result->redirect[params->k], "a") == 0)
+		{
+			handle_pipe_reading_heredocs_and_dup2(params, env);
+			params->k++;
+			continue ;
+		}
+		handle_file_opening_redirection(params);
+		handle_file_opening_errors_redirection(params, env);
+		handling_redirection_process(params, env);
+		params->rd_arg_counter++;
+		params->k++;
 	}
 }

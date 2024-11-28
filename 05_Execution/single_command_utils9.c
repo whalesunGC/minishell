@@ -44,45 +44,22 @@ void	handle_exit_conditions_for_heredocs(
 }
 
 /**
- * @function: handle_exit_file_opening_heredocs
- * @brief: in the presence of heredocs, we will open up all the files
- 	to see if everything works, if everything works, we proceed with execve
+ * @function: handle_file_opening_process_for_redirection
+ * @brief: handles the process of opening files for redirection and
+ 	reporting errors if file opening encounters errors
  * 
- * @param t_redirect_single_command_params *params: structure for
- 	single_command parameters
+ * @param t_redirect_single_command_params *params : structure to
+ 	store parameters for handling redirects / no redirects
  	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
  * 
  * @return: void function
  */
 
-void	handle_exit_file_opening_heredocs(
+int	handle_file_opening_process_for_heredocs(
 			t_redirect_single_command_params *params, char ***env)
 {
-	if (params->input_fd < 0 || params->output_fd < 0)
-	{
-		clean_up_function(params, env);
-		exit(EXIT_FAILURE);
-	}
-}
-
-/**
- * @function: checking_if_entire_command_has_errors
- * @brief: in the presence of heredocs, makes sure the
- 	entire command is ok before we do execve
- * 
- * @param t_redirect_single_command_params *params: structure for
- 	single_command parameters
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: void function
- */
-
-void	checking_if_entire_command_has_errors(
-			t_redirect_single_command_params *params, char ***env)
-{
-	params->k = 0;
+	ft_dprintf(2, "Debugging handle redirections file opening\n");
 	while (params->k < params->i)
 	{
 		if (ft_strcmp(params->result->redirect[params->k], "a") == 0)
@@ -90,21 +67,56 @@ void	checking_if_entire_command_has_errors(
 			params->k++;
 			continue ;
 		}
-		else if (ft_strcmp(params->result->redirect[params->k], "<") == 0)
-			params->input_fd = open(params->result
-					->rd_arg[params->rd_arg_counter], O_RDONLY);
-		else if (ft_strcmp(params->result->redirect[params->k], ">") == 0)
-			params->output_fd = open(params->result->rd_arg
-				[params->rd_arg_counter], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (ft_strcmp(params->result->redirect[params->k], ">>") == 0)
-			params->output_fd = open(params->result->rd_arg
-				[params->rd_arg_counter], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		handle_exit_file_opening_heredocs(params, env);
-		handle_file_closing_input_redirection(params);
-		handle_file_closing_output_redirection(params);
+		handle_file_opening_redirection(params);
+		handle_file_opening_errors_redirection(params, env);
 		params->rd_arg_counter++;
 		params->k++;
 	}
+	return (0);
+}
+
+/**
+ * @function: handling_dup2_and_closing_heredoc_pipes_before_execve
+ * @brief: handling dup2 of last heredoc pipes and dup2 to output if
+ 	there is an output file before running execve
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
+ * 
+ * @return: -1 if failure, 0 if success
+ */
+
+int	handling_dup2_and_closing_heredoc_pipes_before_execve(
+			t_redirect_single_command_params *params, char ***env)
+{
+	if (params->input_fd > 0)
+		close(params->input_fd);
+	if (dup2(params->pipes[params->pipe_count - 1][0], STDIN_FILENO) == -1)
+	{
+		perror("dup2 failed");
+		return (-1);
+	}
+	if (params->output_fd > 0)
+	{
+		if (dup2(params->output_fd, STDOUT_FILENO) == -1)
+		{
+			perror("Dup2 failed for child for output_fd");
+			clean_up_function(params, env);
+			exit(EXIT_FAILURE);
+		}
+		close(params->output_fd);
+	}
+	ft_dprintf(2, "Debugging closing current pipe\n");
+	params->a = 0;
+	while (params->a < params->pipe_count)
+	{
+		close(params->pipes[params->a][0]);
+		close(params->pipes[params->a][1]);
+		params->a++;
+	}
+	return (0);
 }
 
 /**
@@ -124,18 +136,22 @@ int	handle_execve_for_heredocs(
 			t_redirect_single_command_params *params, char ***env)
 {
 	ft_dprintf(2, "Debugging handle execve for heredocs\n");
-	if (dup2(params->pipes[params->pipe_count - 1][0], STDIN_FILENO) == -1)
-	{
-		perror("dup2 failed");
+	handle_file_opening_process_for_heredocs(params, env);
+	if (handling_dup2_and_closing_heredoc_pipes_before_execve(params, env) == -1)
 		return (-1);
-	}
-	checking_if_entire_command_has_errors(params, env);
 	freeing_heredoc_pipes(params);
 	if (access(params->result->cmd[0], F_OK) == 0)
 		params->command_path = params->result->cmd[0];
 	else
 		params->command_path = find_command(&params->result->cmd[0], 0, *env);
-	if (execve(params->command_path, params->result->cmd, *env) == -1)
+	if (params->command_path == NULL)
+	{
+		ft_dprintf(2, "command not found\n");
+		freeing_heredoc_pipes(params);
+		clean_up_function(params, env);
+		exit(EXIT_FAILURE);
+	}
+	else if (execve(params->command_path, params->result->cmd, *env) == -1)
 	{
 		perror("execve failed");
 		freeing_heredoc_pipes(params);

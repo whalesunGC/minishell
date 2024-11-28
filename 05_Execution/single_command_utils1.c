@@ -93,6 +93,7 @@ void	finding_heredocs(t_redirect_single_command_params *params, t_list *node)
  * 
  * @return: -1 if there is an error, 0 if success
  */
+
 int	handling_no_heredocs(
 			t_redirect_single_command_params *params, char ***env, t_list *node)
 {	

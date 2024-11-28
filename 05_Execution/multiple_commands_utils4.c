@@ -13,7 +13,7 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: handle_counters_pipe_closing_and_redirects_array
+ * @function: handle_counters_and_redirects_array
  * @brief: handles the counters for the data structure and
  	also increment heredocs pipe number if there are further pipes
  	after the current node
@@ -25,7 +25,7 @@
  * @return: void function
  */
 
-void	handle_counters_pipe_closing_and_redirects_array(
+void	handle_counters_and_redirects_array(
 			t_piping_multiple_command_params *params)
 {
 	ft_dprintf(2, "Debugging Changing current redirect array for multiple commands %s\n",
@@ -78,7 +78,7 @@ void	handle_redirect_array_for_heredocs(
 				wait(NULL);
 			}
 			ft_signal(NULL, NULL, NULL, PARENT);
-			handle_counters_pipe_closing_and_redirects_array(params);
+			handle_counters_and_redirects_array(params);
 		}
 		params->x++;
 	}

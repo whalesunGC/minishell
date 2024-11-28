@@ -59,6 +59,42 @@ void	closing_main_pipes(t_piping_multiple_command_params *params)
 }
 
 /**
+ * @function: handle_invalid_command
+ * @brief: cleanup if command is invalid
+ * 
+ * @param t_piping_multiple_command_params *params : structure for
+ 	multiple commands parameters
+ * 
+ * @return: void function
+ */
+
+void	handle_invalid_command(t_piping_multiple_command_params *params, char ***env)
+{
+	ft_dprintf(2, "command not found\n");
+	clean_up_function_multiple_commands(params, env);
+	exit(EXIT_FAILURE);
+}
+
+/**
+ * @function: handle_execve_failure
+ * @brief: cleanup if execve fails
+ * 
+ * @param t_piping_multiple_command_params *params : structure for
+ 	multiple commands parameters
+ * 
+ * @return: void function
+ */
+
+void	handle_execve_failure(t_piping_multiple_command_params *params, char ***env)
+{
+	perror("execve process failed");
+	if (params->command_path != params->result->cmd[0])
+		free(params->command_path);
+	clean_up_function_multiple_commands(params, env);
+	exit(EXIT_FAILURE);
+}
+
+/**
  * @function: handle_pipe_and_waiting_for_child
  * @brief: cleanup after all processes are forked already
  * 
