@@ -13,55 +13,32 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: ft_env_len
- * @brief: Calculates the length of an environment variable name
+ * @function: handle_quote_status
+ * @brief: assigns flags to quotes
  *
- * @param input: The input string starting with the variable name
- * @return: The length of the environment variable name
+ * @param input: address to the pointer of the
+ * string(string by reference)
+ * @param in_single_quote: point to the index value of where '$' is found
+ * @param in_double_quote: env variables copied from main
+ * @param i: current count
+ * @return: 1 if flags change or 0
  */
-int	ft_env_len(const char *input)
+static int	handle_quote_status(char *input, int *in_single_quote,
+	int *in_d_quote, int *i)
 {
-	int	len;
-
-	len = 0;
-	if (ft_strncmp(input, "$?", 2) == 0)
-		len = 2;
-	else if (input[len] == '$')
+	if (input[*i] == '\"')
 	{
-		len++;
-		while (input[len] && (ft_isalnum(input[len]) || input[len] == '_'))
-			len++;
+		*in_d_quote = !(*in_d_quote);
+		(*i)++;
+		return (1);
 	}
-	else
-		len = 1;
-	return (len);
-}
-
-/**
- * @function: ft_var_exp
- * @brief: takes an input that starts with a '$',
-	finds the env variable and replaces inplace.
- *
- * @param input: the address to the pointer of the input string.
- * @param start_index: an int which represents the starting
-	index that points to a '$'
- *
- * @return: returns a string with the '$VAR' replaced with
-	its corresponding env variable if found, else it returns
-	a string with '$VAR' replaced with a NULL
- */
-
-char	*ft_var_exp(char **input, int start_index, char **env)
-{
-	int		env_len;
-	char	*var;
-	char	*env_var;
-
-	env_len = ft_env_len(*input + start_index);
-	var = ft_substr(*input + start_index, 0, env_len);
-	ft_printf("variable found: %s\n", var);
-	env_var = ft_env_search(var, env);
-	return (free(var), env_var);
+	else if (input[*i] == '\'')
+	{
+		*in_single_quote = !(*in_single_quote);
+		(*i)++;
+		return (1);
+	}
+	return (0);
 }
 
 /**
@@ -105,23 +82,22 @@ char	*expansion_string(char *input, int ignore_quote, char **env,
 	int *exit_status)
 {
 	int		in_single_quote;
+	int		in_d_quote;
 	int		i;
 	char	*status;
 
 	in_single_quote = 0;
+	in_d_quote = 0;
 	i = 0;
 	status = ft_itoa(*exit_status);
 	while (input[i])
 	{
-		if (input[i] == '\'')
-		{
-			in_single_quote = !in_single_quote;
-			i++;
-		}
+		if (handle_quote_status(input, &in_single_quote, &in_d_quote, &i) == 1)
+			;
 		else if ((input[i] == '$' && input[i + 1] == '?'))
 			input = ft_str_replace(input, i, status);
 		else if ((input[i] == '$' && ft_is_env(input[i + 1]))
-			&& (!in_single_quote || ignore_quote))
+			&& (!in_single_quote || ignore_quote || in_d_quote))
 			handle_env_variable(&input, &i, env);
 		else
 			i++;
