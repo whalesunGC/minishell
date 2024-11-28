@@ -21,13 +21,13 @@
  */
 static int	ft_is_blank(char *string)
 {
-	while (*string) 
+	while (*string)
 	{
 		if (*string != '\n' && !ft_iswhitespace(*string))
 			return (0);
 		string++;
 	}
-    return (1);
+	return (1);
 }
 
 /**
@@ -99,7 +99,7 @@ int	main(int ac, char **av, char **envp)
 		{
 			if (input)
 				free(input);
-			continue;
+			continue ;
 		}
 		token_data = expansion(token_data, env, exit_status);
 		ast_root = parser(token_data);

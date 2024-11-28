@@ -36,7 +36,6 @@ int	heredocs(t_redirect_single_command_params *params, char ***env)
 			if (params->result->redirect[params->x + 1] != NULL)
 			{
 				ft_dprintf(2, "Debugging next redirect\n");
-				closing_current_pipes_heredocs_single_command(params);
 				handling_next_redirect(params);
 				continue ;
 			}

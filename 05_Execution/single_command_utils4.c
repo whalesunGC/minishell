@@ -14,8 +14,8 @@
 
 /**
  * @function: handling_executing_execve_other_cases
- * @brief: checks to be conducted before execve
- 	is executed to fulfill certain test scenarios
+ * @brief: thie function will not handle redirections as
+ 	they are either done in heredocs function or handle redirect functions
  * 
  * @param t_redirect_single_command_params *params : structure for
  	single_command parameters
@@ -49,7 +49,9 @@ void	handling_executing_execve_other_cases(
 
 /**
  * @function: handle_exit_conditions_other_cases
- * @brief: handling conditions to exit child process
+ * @brief: handling conditions to exit child process, similarly redirections
+ 	will not be executed here as they are done in heredocs
+ 	or handle redirects functions
  * 
  * @param t_redirect_single_command_params *params : structure for
  	single_command parameters

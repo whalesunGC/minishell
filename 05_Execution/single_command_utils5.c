@@ -14,7 +14,10 @@
 
 /**
  * @function: execute_child_process_for_redirections
- * @brief: further summarising into a cleaner structure to read
+ * @brief: if last command is a heredoc, will not execute 
+ 	handle_redirects function as this is already done in
+ 	heredocs function. if this check passes,
+ 	will proceed to do redirections
  * 
  * @param t_redirect_single_command_params *params : structure to
  	store parameters for handling redirects / no redirects
@@ -27,8 +30,20 @@
 void	execute_child_process_for_redirections(
 			t_redirect_single_command_params *params, char ***env)
 {
-	handle_redirections_file_opening(params, env);
-	handle_dup_and_closing_fd(params, env);
+	if (params->pipe_count > 0)
+	{
+		params->loop_counter = 0;
+		while (params->result->redirect[params->loop_counter] != NULL)
+			params->loop_counter++;
+		if (ft_strcmp(params->result->redirect[params->loop_counter - 1],
+				"a") == 0)
+		{
+			freeing_heredoc_pipes(params);
+			clean_up_function(params, env);
+			exit(EXIT_SUCCESS);
+		}
+	}
+	handle_file_opening_process_for_redirection(params, env);
 	handle_execve_for_redirections(params, env);
 }
 

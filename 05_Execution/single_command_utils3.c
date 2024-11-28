@@ -32,6 +32,14 @@ void	executing_execve(
 	else
 		params->command_path = find_command
 			(&params->result->cmd[0], 0, *env);
+	if (params->command_path == NULL)
+	{
+		ft_dprintf(2, "command not found\n");
+		if (params->command_path != params->result->cmd[0])
+			free(params->command_path);
+		clean_up_function(params, env);
+		exit(EXIT_FAILURE);
+	}
 	if (execve(params->command_path, params->result->cmd, *env) == -1)
 	{
 		perror("execve failed");
@@ -43,10 +51,8 @@ void	executing_execve(
 }
 
 /**
- * @function: exiting_conditions_nonzero_pipecount
- * @brief: handling conditions to exit the
- 	child process if certain conditions are met
- 	if there are no heredocs
+ * @function: exiting_conditions_for_built_in
+ * @brief: if cmd is a built in comand, will not perform execve
  * 
  * @param t_redirect_single_command_params *params : structure to
  	store parameters for handling redirects / no redirects
@@ -56,43 +62,7 @@ void	executing_execve(
  * @return: void function
  */
 
-void	exiting_conditions_nonzero_pipecount(
-			t_redirect_single_command_params *params, char ***env)
-{
-	while (params->result->redirect[params->loop_counter] != NULL)
-		params->loop_counter++;
-	if ((ft_strcmp(params->result->cmd[0], "echo") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "cd") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "pwd") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "export") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "unset") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "env") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "exit") == 0)
-		|| (ft_strcmp(params->result->redirect[params->loop_counter - 1],
-				"a") == 0))
-	{
-		ft_dprintf(2, "Debugging exiting redirects with pipe count\n");
-		freeing_heredoc_pipes(params);
-		clean_up_function(params, env);
-		exit(EXIT_SUCCESS);
-	}
-}
-
-/**
- * @function: exiting_conditions_zero_pipecount
- * @brief: handling conditions to exit the
- 	child process if certain conditions are met
- 	if there are heredocs
- * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: void function
- */
-
-void	exiting_conditions_zero_pipecount(
+void	exiting_conditions_for_built_in(
 			t_redirect_single_command_params *params, char ***env)
 {
 	if ((ft_strcmp(params->result->cmd[0], "echo") == 0)
@@ -101,9 +71,7 @@ void	exiting_conditions_zero_pipecount(
 		|| (ft_strcmp(params->result->cmd[0], "export") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "unset") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "env") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "exit") == 0)
-		|| (ft_strcmp(params->result->redirect[params->loop_counter],
-				"a") == 0))
+		|| (ft_strcmp(params->result->cmd[0], "exit") == 0))
 	{
 		ft_dprintf(2, "Debugging exiting redirects for no pipe count\n");
 		clean_up_function(params, env);
@@ -134,9 +102,13 @@ void	handle_execve_for_redirections(
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
 	}
-	if (params->pipe_count > 0)
-		exiting_conditions_nonzero_pipecount(params, env);
-	else
-		exiting_conditions_zero_pipecount(params, env);
+	exiting_conditions_for_built_in(params, env);
+	params->a = 0;
+	while (params->a < params->pipe_count)
+	{
+		close(params->pipes[params->a][0]);
+		close(params->pipes[params->a][1]);
+		params->a++;
+	}
 	executing_execve(params, env);
 }

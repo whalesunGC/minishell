@@ -13,22 +13,32 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: closing_current_pipe_after_writing_data
- * @brief: closes the current heredocs pipe after writing data to it
+ * @function: handle_parent_for_handling_forking_process
+ * @brief: handle parent process for the function handling forking process
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
  * 
- * @return: -1 if failure, 0 if success
+ * @return: void function
  */
 
-void	closing_current_pipe_after_writing_data(
+void	handle_parent_for_handling_forking_process(
 			t_redirect_single_command_params *params)
 {
-	if (params->y < params->pipe_count)
+	int	status;
+
+	ignore_parent_signals();
+	waitpid(params->pid, &status, 0);
+	if (WIFEXITED(status))
 	{
-		close(params->pipes[params->y][1]);
-		params->y++;
+		ft_dprintf(1, "Child %d exited normally, with exit code %d\n", params->pid, WEXITSTATUS(status));
+		*params->exit_status = WEXITSTATUS(status);
+	}
+	else if (WIFSIGNALED(status))
+	{
+		ft_dprintf(1, "Child %d exited with signals, with exit code %d\n", params->pid, WTERMSIG(status));
+		*params->exit_status = WTERMSIG(status) + 128;
+		ft_dprintf(1, "Current exit status %d\n", *params->exit_status);
 	}
 }
 
@@ -47,8 +57,6 @@ void	closing_current_pipe_after_writing_data(
 int	handling_forking_process(
 			t_redirect_single_command_params *params, char ***env)
 {
-	int	status;
-
 	ft_dprintf(2, "Welcome to heredocs <<\n");
 	ft_dprintf(2, "delimiter for heredocs: %s\n",
 		params->result->delimiter[params->delimiter_counter]);
@@ -64,21 +72,7 @@ int	handling_forking_process(
 		handle_heredoc_child_process(params, env);
 	}
 	else
-	{	
-		ignore_parent_signals();
-		waitpid(params->pid, &status, 0);
-		if (WIFEXITED(status))
-		{
-			ft_dprintf(1, "Child %d exited normally, with exit code %d\n", params->pid, WEXITSTATUS(status));
-			*params->exit_status = WEXITSTATUS(status);
-		}
-		else if (WIFSIGNALED(status))
-		{
-			ft_dprintf(1, "Child %d exited with signals, with exit code %d\n", params->pid, WTERMSIG(status));
-			*params->exit_status = WTERMSIG(status) + 128;
-			ft_dprintf(1, "Current exit status %d\n", *params->exit_status);
-		}
-	}
+		handle_parent_for_handling_forking_process(params);
 	ft_signal(NULL, NULL, NULL, PARENT);
 	params->delimiter_counter++;
 	params->z++;

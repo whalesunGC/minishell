@@ -13,9 +13,8 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: closing_current_pipes_heredocs_single_command
- * @brief: handle the closure of current pipe in parnet process
- 	after heredocs has been performed
+ * @function: closing_current_pipe_after_writing_data
+ * @brief: closes the current heredocs pipe after writing data to it
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
@@ -23,20 +22,18 @@
  * @return: void function
  */
 
-void	closing_current_pipes_heredocs_single_command(
+void	closing_current_pipe_after_writing_data(
 			t_redirect_single_command_params *params)
 {
-	ft_dprintf(2, "Debugging closing current pipe\n");
-	if (params->a < params->pipe_count)
+	if (params->y < params->pipe_count)
 	{
-		close(params->pipes[params->a][0]);
-		close(params->pipes[params->a][1]);
-		params->a++;
+		close(params->pipes[params->y][1]);
+		params->y++;
 	}
 }
 
 /**
- * @function: handle_null_heredocs
+ * @function: handle_null_heredocs_input
  * @brief: handling null input if ctrl + D is pressed in readline
  * 
  * @param t_redirect_single_command_params *params: structure for

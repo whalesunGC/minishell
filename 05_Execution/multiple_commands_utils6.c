@@ -33,12 +33,12 @@ void	handle_input_output_heredocs_multiple_commands(
 	{
 		if (ft_strcmp(params->result->redirect[params->b], "<") == 0)
 			setting_up_input_redirections_multiple_commands(params, env);
+		else if (ft_strcmp(params->result->redirect[params->b], "a") == 0)
+			setting_up_heredocs_multiple_commands(params, env);
 		else if (ft_strcmp(params->result->redirect[params->b], ">") == 0)
 			setting_up_output_redirections_multiple_commands(params, env);
 		else if (ft_strcmp(params->result->redirect[params->b], ">>") == 0)
 			setting_up_output_redirections_multiple_commands(params, env);
-		else if (ft_strcmp(params->result->redirect[params->b], "a") == 0)
-			setting_up_heredocs_multiple_commands(params, env);
 		params->b++;
 	}
 }
@@ -64,6 +64,8 @@ void	setup_pipe_redirection_and_closing(
 		{
 			ft_dprintf(2, "going in this loop for i < total - 1\n");
 			handle_input_output_heredocs_multiple_commands(params, env);
+			if (params->output_fd == 0)
+				setting_up_pipes_to_redirect_output(params, env);
 		}
 		else
 		{
@@ -168,8 +170,10 @@ void	handle_child_process(
 			t_piping_multiple_command_params *params, char ***env)
 {
 	setup_pipe_redirection_and_closing(params, env);
-	close(params->input_fd);
-	close(params->output_fd);
+	if (params->input_fd > 0)
+		close(params->input_fd);
+	if (params->output_fd > 0)
+		close(params->output_fd);
 	if (params->heredocs_count > 0)
 		closing_heredocs_pipes(params);
 	closing_main_pipes(params);
@@ -178,12 +182,8 @@ void	handle_child_process(
 		params->command_path = params->result->cmd[0];
 	else
 		params->command_path = find_command(&params->result->cmd[0], 0, *env);
-	if (execve(params->command_path, params->result->cmd, *env) == -1)
-	{
-		perror("execve process failed");
-		if (params->command_path != params->result->cmd[0])
-			free(params->command_path);
-		clean_up_function_multiple_commands(params, env);
-		exit(EXIT_FAILURE);
-	}
+	if (params->command_path == NULL)
+		handle_invalid_command(params, env);
+	else if (execve(params->command_path, params->result->cmd, *env) == -1)
+		handle_execve_failure(params, env);
 }
