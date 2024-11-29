@@ -101,7 +101,7 @@ void	variable_value_check(t_export_params *params)
 		if (ft_isvalidvariable(params->current_char) == 0)
 		{
 			params->is_valid = 0;
-			ft_dprintf(2, "%s%s: not an identifier2\n",
+			ft_dprintf(1, "%s%s: not an identifier2\n",
 				params->var_name[params->i],
 				params->var_value[params->i]);
 			removing_invalid_identifier(params);
@@ -177,7 +177,7 @@ void	variable_name_character_checks(t_export_params *params)
 		else
 		{
 			params->is_valid = 0;
-			ft_dprintf(2, "%s=%s: not an identifier1\n",
+			ft_dprintf(1, "%s=%s: not an identifier1\n",
 				params->var_name[params->i],
 				params->var_value[params->i]);
 			removing_invalid_identifier(params);

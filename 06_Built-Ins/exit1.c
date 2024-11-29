@@ -55,7 +55,7 @@ static void	exit_is_the_only_argument(
 {
 	free_dup_envp(env);
 	rl_clear_history();
-	ft_dprintf(2, "exit\n");
+	ft_dprintf(1, "exit\n");
 	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	if (params->exit_status)
 		free(params->exit_status);
@@ -83,7 +83,7 @@ static void	exit_with_one_other_argument(
 	exit_status = ft_atoi(params->av[1]);
 	free_dup_envp(env);
 	rl_clear_history();
-	ft_dprintf(2, "exit\n");
+	ft_dprintf(1, "exit\n");
 	exit_status = (exit_status % 256 + 256) % 256;
 	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	if (params->exit_status)
@@ -140,12 +140,12 @@ void	exit_command_multiple(
 		if (params->ac == 1 && ft_strlen(params->av[0]) == 4)
 			exit_is_the_only_argument(params, env);
 		else if (params->ac == 1 && ft_strlen(params->av[0]) != 4)
-			ft_dprintf(2, "%s: command not found\n", params->av[0]);
+			ft_dprintf(1, "%s: command not found\n", params->av[0]);
 		else if (params->ac == 2 && ft_strlen(params->av[0]) == 4)
 		{
 			if (is_argument_numeric(params->av[1]) == 0)
 			{
-				ft_dprintf(2, "%s: %s: numberic"
+				ft_dprintf(1, "%s: %s: numberic"
 					" argument required\n", params->av[0], params->av[1]);
 				exit_is_the_only_argument(params, env);
 			}
@@ -153,7 +153,7 @@ void	exit_command_multiple(
 		}
 		else
 		{
-			ft_dprintf(2, "%s: too many arguments\n", params->av[0]);
+			ft_dprintf(1, "%s: too many arguments\n", params->av[0]);
 			exit_is_the_only_argument(params, env);
 		}
 	}
