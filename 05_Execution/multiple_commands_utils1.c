@@ -35,7 +35,8 @@ int	check_for_pipes(t_list *node)
 		result = (t_exec_node *)traverse->content;
 		if (result->type == AST_PIPE)
 		{
-			ft_dprintf(2, "Debugging pipes detected. Continuing with function\n");
+			ft_dprintf(2, "Debugging pipes detected."
+				"Continuing with function\n");
 			return (0);
 		}
 		traverse = traverse->next;

@@ -33,7 +33,8 @@ void	handle_pipe_reading_heredocs_and_dup2(
 	if (params->pipe_number > 0)
 	{
 		params->pipe_index = params->pipe_number - 1;
-		ft_dprintf(2, "Reading pipe number of heredocs [%d]\n", params->pipe_index);
+		ft_dprintf(2, "Reading pipe number of heredocs [%d]\n",
+			params->pipe_index);
 	}
 	if (dup2(params->pipes[params->pipe_index][0], STDIN_FILENO) == -1)
 	{

@@ -74,7 +74,7 @@ int	handle_redirects(
 		perror("forking failed");
 		return (-1);
 	}
-	if (params->pid == 0)	
+	if (params->pid == 0)
 		execute_child_process_for_redirections(params, env);
 	else
 		handle_parent_for_handling_forking_process(params);
@@ -95,14 +95,11 @@ void	freeing_heredoc_pipes(t_redirect_single_command_params *params)
 {
 	ft_dprintf(2, "Debugging freeing heredoc pipes single commands\n");
 	params->z = 0;
-	if (params->pipe_count != 0)
+	while (params->z < params->pipe_count)
 	{
-		while (params->z < params->pipe_count)
-		{
-			close(params->pipes[params->z][0]);
-			close(params->pipes[params->z][1]);
-			params->z++;
-		}
+		close(params->pipes[params->z][0]);
+		close(params->pipes[params->z][1]);
+		params->z++;
 	}
 }
 
@@ -122,11 +119,11 @@ void	clean_up_function(
 			t_redirect_single_command_params *params, char ***env)
 {
 	ft_dprintf(2, "Debugging clean up function single commands\n");
-	freeing_heredoc_pipes(params);
-	free_pipes(params->pipes, params->pipe_count);
 	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	free(params->signal_data);
 	free(params->exit_status);
+	freeing_heredoc_pipes(params);
+	free_pipes(params->pipes, params->pipe_count);
 	free_dup_envp(*env);
 	rl_clear_history();
 }

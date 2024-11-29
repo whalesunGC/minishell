@@ -42,6 +42,7 @@ typedef struct s_redirect_single_command_params
 	int			ac;
 	int			input_fd;
 	int			output_fd;
+	int			ignore_quote;
 	int			i;
 	int			k;
 	int			x;
@@ -75,6 +76,7 @@ typedef struct s_piping_multiple_command_params
 	int			count;
 	int			heredocs_count;
 	int			total;
+	int			ignore_quote;
 	int			i;
 	int			j;
 	int			x;
@@ -114,12 +116,14 @@ void	handle_multiple_commands_null_heredocs_input(
 void	handle_multiple_commands_heredocs_delimiter(
 			t_piping_multiple_command_params *params, char ***env);
 void	handle_multiple_commands_heredocs_input(
-			t_piping_multiple_command_params *params);
+			t_piping_multiple_command_params *params, char ***env);
 void	handle_heredocs_readline_multiple_commands(
 			t_piping_multiple_command_params *params, char ***env);
 
 // multiple_commands_utils4 //
 void	handle_counters_and_redirects_array(
+			t_piping_multiple_command_params *params);
+void	handle_delimiter_input_multiple_commands(
 			t_piping_multiple_command_params *params);
 void	handle_redirect_array_for_heredocs(
 			t_piping_multiple_command_params *params, char ***env);
@@ -212,6 +216,8 @@ void	handle_file_opening_process_for_redirection(
 			t_redirect_single_command_params *params, char ***env);
 
 // single_command_utils3 //
+void	handle_command_path_and_execve_failure(
+			t_redirect_single_command_params *params, char ***env);
 void	executing_execve(
 			t_redirect_single_command_params *params, char ***env);
 void	exiting_conditions_for_built_in(
@@ -247,6 +253,10 @@ int		heredocs(t_redirect_single_command_params *params, char ***env);
 // single_command_utils7 //
 void	handle_parent_for_handling_forking_process(
 			t_redirect_single_command_params *params);
+void	handle_delimiter_input_single_commands(
+			t_redirect_single_command_params *params);
+void	handle_parent_for_handling_forking_process(
+			t_redirect_single_command_params *params);
 int		handling_forking_process(
 			t_redirect_single_command_params *params, char ***env);
 void	handling_next_redirect(t_redirect_single_command_params *params);
@@ -260,16 +270,19 @@ void	handle_null_heredocs_input(
 			t_redirect_single_command_params *params, char ***env);
 void	handle_heredocs_delimiter(
 			t_redirect_single_command_params *params, char ***env);
-void	handle_heredocs_input(t_redirect_single_command_params *params);
+void	handle_heredocs_input(
+			t_redirect_single_command_params *params, char ***env);
 void	handle_heredoc_child_process(
 			t_redirect_single_command_params *params, char ***env);
 
 // single_comand_utils9 //
 void	handle_exit_conditions_for_heredocs(
 			t_redirect_single_command_params *params, char ***env);
-int		handling_dup2_and_closing_heredoc_pipes_before_execve(
+int	handle_file_opening_process_for_heredocs(
 			t_redirect_single_command_params *params, char ***env);
-int		handle_execve_for_heredocs(
+int	handling_dup2_and_closing_heredoc_pipes_before_execve(
+			t_redirect_single_command_params *params, char ***env);
+int	handle_execve_for_heredocs(
 			t_redirect_single_command_params *params, char ***env);
 int		handle_child_execution(
 			t_redirect_single_command_params *params, char ***env);
