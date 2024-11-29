@@ -43,14 +43,15 @@ static void	change_to_home_directory(char ***env)
 {
 	char	*home;
 
-	home = ft_getenv("$HOME", *env);
+	home = ft_getenv("HOME", *env);
 	if (home == NULL)
 	{
 		ft_dprintf(1, "HOME environment variable is not set\n");
 		return ;
 	}
-	if (chdir(home) != 0)
+	else if (chdir(home) != 0)
 		handle_cd_error(home);
+	free(home);
 }
 
 /**

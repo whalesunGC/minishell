@@ -72,7 +72,7 @@ static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
 void	ft_free_signal(t_sig_data *data)
 {
 	int	y;
-	
+
 	y = 0;
 	if (data)
 	{

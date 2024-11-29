@@ -149,14 +149,14 @@ int	handle_execve_for_heredocs(
 		ft_dprintf(2, "command not found\n");
 		freeing_heredoc_pipes(params);
 		clean_up_function(params, env);
-		exit(EXIT_FAILURE);
+		exit(127);
 	}
 	else if (execve(params->command_path, params->result->cmd, *env) == -1)
 	{
 		perror("execve failed");
 		freeing_heredoc_pipes(params);
 		clean_up_function(params, env);
-		exit(EXIT_FAILURE);
+		exit(126);
 	}
 	return (0);
 }
@@ -181,6 +181,8 @@ int	handle_child_execution(
 	params->i = 0;
 	while (params->result->redirect[params->i] != NULL)
 		params->i++;
+	if (*params->exit_status != 0)
+		return (-1);
 	params->pid = fork();
 	if (params->pid < 0)
 	{
@@ -193,5 +195,7 @@ int	handle_child_execution(
 		if (handle_execve_for_heredocs(params, env) == -1)
 			return (-1);
 	}
+	else
+		handle_parent_for_handling_forking_process(params);
 	return (0);
 }

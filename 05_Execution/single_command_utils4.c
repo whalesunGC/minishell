@@ -133,6 +133,8 @@ void	child_process_other_cases(
 int	handle_fork_plus_executing_child(
 			t_redirect_single_command_params *params, char ***env)
 {
+	if (*params->exit_status != 0)
+		return (-1);
 	params->pid = fork();
 	if (params->pid < 0)
 	{
@@ -140,20 +142,9 @@ int	handle_fork_plus_executing_child(
 		return (-1);
 	}
 	if (params->pid == 0)
-	{
-		ft_signal(params, NULL, *env, CHILD);
 		child_process_other_cases(params, env);
-	}
 	else
-	{
-		ignore_parent_signals();
-		waitpid(params->pid, params->exit_status, 0);
-		if (WIFEXITED(*params->exit_status))
-			ft_dprintf(1, "Child exited with %d, with exit code %d\n", params->pid, WEXITSTATUS(*params->exit_status));
-		*params->exit_status = WEXITSTATUS(*params->exit_status);
-		ft_dprintf(1, "new exit status is %d\n", *params->exit_status);
-	}
-	ft_signal(NULL, NULL, NULL, PARENT);
+		handle_parent_for_handling_forking_process(params);
 	return (0);
 }
 

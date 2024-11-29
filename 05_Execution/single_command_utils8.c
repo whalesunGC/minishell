@@ -47,10 +47,10 @@ void	closing_current_pipe_after_writing_data(
 void	handle_null_heredocs_input(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging ERROR, please use delimiter\n");
+	ft_dprintf(2, "warning: here-document at delimited by end-of-file\n");
 	freeing_heredoc_pipes(params);
 	clean_up_function(params, env);
-	exit(EXIT_FAILURE);
+	exit(EXIT_SUCCESS);
 }
 
 /**
