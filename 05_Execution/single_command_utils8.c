@@ -86,9 +86,13 @@ void	handle_heredocs_delimiter(
  * @return: void function
  */
 
-void	handle_heredocs_input(t_redirect_single_command_params *params)
+void	handle_heredocs_input(
+			t_redirect_single_command_params *params, char ***env)
 {
 	ft_dprintf(2, "Debugging handling heredocs input\n");
+	if (params->ignore_quote == 1)
+		params->input1 = expansion_string(params->input1,
+				params->ignore_quote, *env, params->exit_status);
 	write(params->pipes[params->z][1], params->input1,
 		ft_strlen(params->input1));
 	write(params->pipes[params->z][1], "\n", 1);
@@ -121,6 +125,6 @@ void	handle_heredoc_child_process(
 				params->result->delimiter[params->delimiter_counter]) == 0)
 			handle_heredocs_delimiter(params, env);
 		else if (params->input1 != NULL)
-			handle_heredocs_input(params);
+			handle_heredocs_input(params, env);
 	}
 }

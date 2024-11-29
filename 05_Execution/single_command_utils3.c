@@ -13,6 +13,27 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_command_path_and_execve_failure
+ * @brief: freeing up resources before exiting child process
+ * 
+ * @param t_redirect_single_command_params *params : structure to
+ 	store parameters for handling redirects / no redirects
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
+ * 
+ * @return: void function
+ */
+
+void	handle_command_path_and_execve_failure(
+			t_redirect_single_command_params *params, char ***env)
+{
+	if (params->command_path != params->result->cmd[0])
+		free(params->command_path);
+	clean_up_function(params, env);
+	exit(127);
+}
+
+/**
  * @function: executing_execve
  * @brief: executing execve function after all conditions met
  * 
@@ -27,6 +48,12 @@
 void	executing_execve(
 			t_redirect_single_command_params *params, char ***env)
 {
+	if (ft_strcmp(params->result->cmd[0], "") == 0)
+	{
+		ft_dprintf(2, "command not found\n");
+		clean_up_function(params, env);
+		exit(127);
+	}
 	if (access(params->result->cmd[0], F_OK) == 0)
 		params->command_path = params->result->cmd[0];
 	else
@@ -35,18 +62,12 @@ void	executing_execve(
 	if (params->command_path == NULL)
 	{
 		ft_dprintf(2, "command not found\n");
-		if (params->command_path != params->result->cmd[0])
-			free(params->command_path);
-		clean_up_function(params, env);
-		exit(127);
+		handle_command_path_and_execve_failure(params, env);
 	}
 	if (execve(params->command_path, params->result->cmd, *env) == -1)
 	{
 		perror("execve failed");
-		if (params->command_path != params->result->cmd[0])
-			free(params->command_path);
-		clean_up_function(params, env);
-		exit(126);
+		handle_command_path_and_execve_failure(params, env);
 	}
 }
 
@@ -98,7 +119,6 @@ void	handle_execve_for_redirections(
 	if (params->result->cmd[0] == NULL)
 	{
 		ft_dprintf(2, "No commands found, so we just exit\n");
-		freeing_heredoc_pipes(params);
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
 	}

@@ -178,6 +178,8 @@ void	handle_child_process(
 		closing_heredocs_pipes(params);
 	closing_main_pipes(params);
 	handle_exit_conditions_if_built_in(params, env);
+	if (ft_strcmp(params->result->cmd[0], "") == 0)
+		handle_invalid_command(params, env);
 	if (access(params->result->cmd[0], F_OK) == 0)
 		params->command_path = params->result->cmd[0];
 	else

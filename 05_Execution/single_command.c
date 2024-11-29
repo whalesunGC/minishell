@@ -45,7 +45,7 @@ void	execution(t_list *node, char ***env, int *exit_status)
 	{
 		ft_dprintf(2, "Entering pipe count\n");
 		if (creating_pipes(&params) == -1)
-			;
+			return ;
 		if (handling_heredocs(&params, env, node) == -1)
 			;
 		freeing_heredoc_pipes(&params);

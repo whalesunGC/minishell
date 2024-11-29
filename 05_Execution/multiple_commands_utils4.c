@@ -28,14 +28,41 @@
 void	handle_counters_and_redirects_array(
 			t_piping_multiple_command_params *params)
 {
-	ft_dprintf(2, "Debugging Changing current redirect array for multiple commands %s\n",
-		params->result->redirect[params->x]);
+	ft_dprintf(2, "Debugging Changing current redirect array"
+		"for multiple commands %s\n", params->result->redirect[params->x]);
 	free(params->result->redirect[params->x]);
 	params->result->redirect[params->x] = ft_strdup("a");
-	ft_dprintf(2, "Debugging After changing current redirect array for multiple commands %s\n",
-		params->result->redirect[params->x]);
+	ft_dprintf(2, "Debugging After changing current redirect"
+		"array for multiple commands %s\n", params->result->redirect[params->x]);
 	params->delimiter_counter++;
 	params->heredocs_pipe_number++;
+}
+
+/**
+ * @function: handle_delimiter_input_multiple_commands
+ * @brief: checking if expanstion is necessary if heredocs is met
+ 	and cleaning input after that
+ 	0 means not necessary. 1 means necessary
+ * 
+ * @param t_piping_multiple_command_params *params : structure of
+ 	multiple command parameters
+ * 
+ * @return: void function
+ */
+
+void	handle_delimiter_input_multiple_commands(
+			t_piping_multiple_command_params *params)
+{
+	params->ignore_quote = 0;
+	if (ft_has_quote(params->result->delimiter[params->delimiter_counter]) == 1)
+		params->ignore_quote = 0;
+	else
+		params->ignore_quote = 1;
+	params->result->delimiter[params->delimiter_counter]
+		= ft_remove_quote(params->result->delimiter[params->delimiter_counter]);
+	ft_dprintf(2, "current delimiter now after clean up %s\n",
+		params->result->delimiter[params->delimiter_counter]);
+	ft_dprintf(2, "value of params ignore_quote [%d]\n", params->ignore_quote);
 }
 
 /**
@@ -61,6 +88,7 @@ void	handle_redirect_array_for_heredocs(
 		{
 			ft_dprintf(2, "Debugging Delimiter for multiple pipes heredocs: %s\n",
 				params->result->delimiter[params->delimiter_counter]);
+			handle_delimiter_input_multiple_commands(params);
 			params->pid = fork();
 			if (params->pid < 0)
 			{

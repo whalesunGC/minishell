@@ -28,7 +28,8 @@
 void	handle_exit_conditions_for_heredocs(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging exit conditions for heredocs if built in command\n");
+	ft_dprintf(2, "Debugging exit conditions for"
+		"heredocs if built in command\n");
 	if ((ft_strcmp(params->result->cmd[0], "echo") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "cd") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "pwd") == 0)
@@ -137,7 +138,8 @@ int	handle_execve_for_heredocs(
 {
 	ft_dprintf(2, "Debugging handle execve for heredocs\n");
 	handle_file_opening_process_for_heredocs(params, env);
-	if (handling_dup2_and_closing_heredoc_pipes_before_execve(params, env) == -1)
+	if (handling_dup2_and_closing_heredoc_pipes_before_execve
+		(params, env) == -1)
 		return (-1);
 	freeing_heredoc_pipes(params);
 	if (access(params->result->cmd[0], F_OK) == 0)

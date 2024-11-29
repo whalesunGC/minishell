@@ -14,7 +14,7 @@
 
 /**
  * @function: handle_parent_for_handling_forking_process
- * @brief: handle parent process for the function handling forking process
+ * @brief: handle parent process for the function handling forking process below
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
@@ -44,6 +44,33 @@ void	handle_parent_for_handling_forking_process(
 }
 
 /**
+ * @function: handle_delimiter_input_single_commands
+ * @brief: checking if expanstion is necessary if heredocs is met
+ 	and cleaning input after that
+ 	0 means not necessary. 1 means necessary
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ * 
+ * @return: void function
+ */
+
+void	handle_delimiter_input_single_commands(
+			t_redirect_single_command_params *params)
+{
+	params->ignore_quote = 0;
+	if (ft_has_quote(params->result->delimiter[params->delimiter_counter]) == 1)
+		params->ignore_quote = 0;
+	else
+		params->ignore_quote = 1;
+	params->result->delimiter[params->delimiter_counter]
+		= ft_remove_quote(params->result->delimiter[params->delimiter_counter]);
+	ft_dprintf(2, "current delimiter now after clean up %s\n",
+		params->result->delimiter[params->delimiter_counter]);
+	ft_dprintf(2, "value of params ignore_quote [%d]\n", params->ignore_quote);
+}
+
+/**
  * @function: handling_forking_process
  * @brief: handles the heredoc process once "<<" is found in commands
  * 
@@ -63,6 +90,7 @@ int	handling_forking_process(
 		params->result->delimiter[params->delimiter_counter]);
 	if (*params->exit_status != 0)
 		return (-1);
+	handle_delimiter_input_single_commands(params);
 	params->pid = fork();
 	if (params->pid < 0)
 	{
