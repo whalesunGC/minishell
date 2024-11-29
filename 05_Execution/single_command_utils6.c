@@ -45,7 +45,6 @@ int	heredocs(t_redirect_single_command_params *params, char ***env)
 				if (handling_last_redirect(params, env) == -1)
 					return (-1);
 			}
-			waiting_for_child_to_execute(params);
 		}
 		params->x++;
 	}

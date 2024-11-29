@@ -122,6 +122,8 @@ t_ast_node	*parser(t_list *token_data)
 	{
 		ft_printf("Error: %s\n", context.error_message);
 		ft_treeclear(&ast_root, free);
+		if (context.error_message)
+			free(context.error_message);
 		return (NULL);
 	}
 	else

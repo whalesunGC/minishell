@@ -66,16 +66,18 @@ int	handle_redirects(
 	ft_dprintf(2, "Debugging handle redirects\n");
 	while (params->result->redirect[params->i] != NULL)
 		params->i++;
+	if (*params->exit_status != 0)
+		return (-1);
 	params->pid = fork();
 	if (params->pid < 0)
 	{
 		perror("forking failed");
 		return (-1);
 	}
-	if (params->pid == 0)
+	if (params->pid == 0)	
 		execute_child_process_for_redirections(params, env);
 	else
-		wait(NULL);
+		handle_parent_for_handling_forking_process(params);
 	return (0);
 }
 
@@ -93,11 +95,14 @@ void	freeing_heredoc_pipes(t_redirect_single_command_params *params)
 {
 	ft_dprintf(2, "Debugging freeing heredoc pipes single commands\n");
 	params->z = 0;
-	while (params->z < params->pipe_count)
+	if (params->pipe_count != 0)
 	{
-		close(params->pipes[params->z][0]);
-		close(params->pipes[params->z][1]);
-		params->z++;
+		while (params->z < params->pipe_count)
+		{
+			close(params->pipes[params->z][0]);
+			close(params->pipes[params->z][1]);
+			params->z++;
+		}
 	}
 }
 

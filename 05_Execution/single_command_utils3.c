@@ -38,7 +38,7 @@ void	executing_execve(
 		if (params->command_path != params->result->cmd[0])
 			free(params->command_path);
 		clean_up_function(params, env);
-		exit(EXIT_FAILURE);
+		exit(127);
 	}
 	if (execve(params->command_path, params->result->cmd, *env) == -1)
 	{
@@ -46,7 +46,7 @@ void	executing_execve(
 		if (params->command_path != params->result->cmd[0])
 			free(params->command_path);
 		clean_up_function(params, env);
-		exit(EXIT_FAILURE);
+		exit(126);
 	}
 }
 

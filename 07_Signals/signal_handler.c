@@ -23,11 +23,9 @@
  */
 void	handle_child_sigint(int signum)
 {
-	ft_dprintf(2, "\nchild_sigint\n");
 	signal_cleanup(NULL);
-	signal(SIGINT, SIG_DFL);
 	(void)signum;
-	kill(getpid(), SIGINT);
+	exit(130);
 }
 
 /**
@@ -134,7 +132,7 @@ void	setup_signal_handlers_for_child(void)
 		exit(EXIT_FAILURE);
 	}
 	ft_memset(&signal_quit, 0, sizeof(signal_quit));
-	signal_quit.sa_handler = handle_child_sigint;
+	signal_quit.sa_handler = SIG_IGN;
 	sigemptyset(&signal_quit.sa_mask);
 	if (sigaction(SIGQUIT, &signal_quit, NULL) == -1)
 	{

@@ -252,7 +252,6 @@ int		handling_forking_process(
 void	handling_next_redirect(t_redirect_single_command_params *params);
 int		handling_last_redirect(
 			t_redirect_single_command_params *params, char ***env);
-void	waiting_for_child_to_execute(t_redirect_single_command_params *params);
 
 // single_command_utils8 //
 void	closing_current_pipe_after_writing_data(
