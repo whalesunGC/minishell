@@ -67,6 +67,8 @@ void	increment_counters_and_traverse_next_node(
 int	handle_forking_process_and_executing_child(
 			t_piping_multiple_command_params *params, char ***env)
 {
+	if (*params->exit_status != 0)
+		return ;
 	params->pid = fork();
 	if (params->pid < 0)
 	{
@@ -74,7 +76,12 @@ int	handle_forking_process_and_executing_child(
 		return (-1);
 	}
 	if (params->pid == 0)
+	{
+		ft_signal(NULL, params, *env, CHILD);
 		handle_child_process(params, env);
+	}
+	else
+		handle_parent_for_handling_forking_process_multi(params);
 	return (0);
 }
 /**
