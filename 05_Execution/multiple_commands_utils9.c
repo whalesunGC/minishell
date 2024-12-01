@@ -107,6 +107,8 @@ void	handle_execve_failure(
 void	handle_pipe_and_waiting_for_child(
 			t_piping_multiple_command_params *params)
 {
+	int	status;
+
 	ft_dprintf(2, "Debugging closing pipes and waiting"
 		"for child process to finish\n");
 	if (params->heredocs_count > 0)
@@ -115,7 +117,18 @@ void	handle_pipe_and_waiting_for_child(
 	params->j = 0;
 	while (params->j < params->total)
 	{
-		wait(NULL);
+		wait(&status);
+		if (WIFEXITED(status))
+		{
+			ft_dprintf(1, "Child %d exited normally, with exit code %d\n", params->pid, WEXITSTATUS(status));
+			*params->exit_status = WEXITSTATUS(status);
+		}
+		else if (WIFSIGNALED(status))
+		{
+			ft_dprintf(1, "Child %d exited with signals, with exit code %d\n", params->pid, WTERMSIG(status));
+			*params->exit_status = WTERMSIG(status) + 128;
+		}
+		ft_dprintf(1, "Current exit status %d\n", *params->exit_status);
 		params->j++;
 	}
 }
