@@ -71,7 +71,7 @@ void	handle_invalid_command(
 {
 	ft_dprintf(1, "command not found\n");
 	clean_up_function_multiple_commands(params, env);
-	exit(EXIT_FAILURE);
+	exit(127);
 }
 
 /**
@@ -91,7 +91,7 @@ void	handle_execve_failure(
 	if (params->command_path != params->result->cmd[0])
 		free(params->command_path);
 	clean_up_function_multiple_commands(params, env);
-	exit(EXIT_FAILURE);
+	exit(126);
 }
 
 /**
