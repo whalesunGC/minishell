@@ -133,6 +133,8 @@ void	child_process_other_cases(
 int	handle_fork_plus_executing_child(
 			t_redirect_single_command_params *params, char ***env)
 {
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	params->pid = fork();
 	if (params->pid < 0)
 	{

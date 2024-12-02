@@ -58,6 +58,7 @@ static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
 	data->input1 = params_m->input1;
 	data->exit_status = params_m->exit_status;
 	data->z = 0;
+	data->pid_array = params_m->pid_array;
 	signal_cleanup(data);
 	setup_signal_handlers_for_child();
 }
@@ -71,23 +72,9 @@ static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
  */
 void	ft_free_signal(t_sig_data *data)
 {
-	int	y;
-
-	y = 0;
 	if (data)
 	{
-		while (y < data->heredocs_count)
-		{
-			close(data->heredocs_pipes[y][0]);
-			close(data->heredocs_pipes[y][1]);
-			y++;
-		}
-		while (data->z < data->pipe_count)
-		{
-			close(data->pipes[data->z][0]);
-			close(data->pipes[data->z][1]);
-			data->z++;
-		}
+		handle_cleanup_pipes(data);
 		if (data->exec_data_head)
 			ft_lstclear(&data->exec_data_head, ft_free_exec_data);
 		if (data->env)
@@ -102,6 +89,8 @@ void	ft_free_signal(t_sig_data *data)
 			free(data->input1);
 		if (data->exit_status)
 			free(data->exit_status);
+		if (data->pid_array)
+			free(data->pid_array);
 		free(data);
 	}
 }

@@ -113,24 +113,27 @@ void	handle_pipe_and_waiting_for_child(
 		"for child process to finish\n");
 	if (params->heredocs_count > 0)
 		closing_heredocs_pipes(params);
+	closing_main_pipes(params);
 	params->j = 0;
 	while (params->j < params->total)
 	{
-		if (*params->exit_status != 0)
-			break ;
-		wait(&status);
-		if (WIFEXITED(status))
+		ignore_parent_signals();
+		if (waitpid(-1, &status, 0) == params->pid_array[params->total - 1])
 		{
-			ft_dprintf(1, "Child %d exited normally, with exit code %d\n", params->pid, WEXITSTATUS(status));
-			*params->exit_status = WEXITSTATUS(status);
+			if (WIFEXITED(status))
+			{
+				ft_dprintf(1, "Child %d exited normally, with exit code %d\n", params->pid_array[params->total - 1], WEXITSTATUS(status));
+				*params->exit_status = WEXITSTATUS(status);
+			}
+			else if (WIFSIGNALED(status))
+			{
+				ft_dprintf(1, "Child %d exited with signals, with exit code %d\n", params->pid_array[params->total - 1], WTERMSIG(status));
+				*params->exit_status = WTERMSIG(status) + 128;
+			}
 		}
-		else if (WIFSIGNALED(status))
-		{
-			ft_dprintf(1, "Child %d exited with signals, with exit code %d\n", params->pid, WTERMSIG(status));
-			*params->exit_status = WTERMSIG(status) + 128;
-		}
-		ft_dprintf(1, "Current exit status %d\n", *params->exit_status);
+		else
+			ft_dprintf(1, "Current exit status %d\n", *params->exit_status);
 		params->j++;
 	}
-	closing_main_pipes(params);
+	ft_signal(NULL, NULL, NULL, PARENT);
 }

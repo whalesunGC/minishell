@@ -23,6 +23,7 @@
  */
 void	handle_child_sigint(int signum)
 {
+	ft_dprintf(2, "entering child signal cleanup\n");
 	signal_cleanup(NULL);
 	(void)signum;
 	exit(130);

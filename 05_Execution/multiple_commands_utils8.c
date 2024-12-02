@@ -65,17 +65,19 @@ void	increment_counters_and_traverse_next_node(
  */
 
 int	handle_forking_process_and_executing_child(
-			t_piping_multiple_command_params *params, char ***env)
+			t_piping_multiple_command_params *params, char ***env, int i)
 {
 	if (*params->exit_status != 0)
 		return (-1);
-	params->pid = fork();
-	if (params->pid < 0)
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	params->pid_array[i] = fork();
+	if (params->pid_array[i] < 0)
 	{
 		perror("fork failed");
 		return (-1);
 	}
-	if (params->pid == 0)
+	if (params->pid_array[i] == 0)
 		handle_child_process(params, env);
 	return (0);
 }
@@ -117,7 +119,7 @@ int	handle_arguments(
 				continue ;
 			}
 		}
-		if (handle_forking_process_and_executing_child(params, env) == -1)
+		if (handle_forking_process_and_executing_child(params, env, params->i) == -1)
 			return (-1);
 		increment_counters_and_traverse_next_node(params);
 	}

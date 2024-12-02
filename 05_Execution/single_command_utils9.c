@@ -185,6 +185,8 @@ int	handle_child_execution(
 		params->i++;
 	if (*params->exit_status != 0)
 		return (-1);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	params->pid = fork();
 	if (params->pid < 0)
 	{
