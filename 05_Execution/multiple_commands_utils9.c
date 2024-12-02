@@ -113,7 +113,6 @@ void	handle_pipe_and_waiting_for_child(
 		"for child process to finish\n");
 	if (params->heredocs_count > 0)
 		closing_heredocs_pipes(params);
-	closing_main_pipes(params);
 	params->j = 0;
 	while (params->j < params->total)
 	{
@@ -133,4 +132,5 @@ void	handle_pipe_and_waiting_for_child(
 		ft_dprintf(1, "Current exit status %d\n", *params->exit_status);
 		params->j++;
 	}
+	closing_main_pipes(params);
 }
