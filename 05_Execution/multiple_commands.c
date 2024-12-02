@@ -34,7 +34,11 @@ void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 	ft_memset(&params, 0, sizeof(t_piping_multiple_command_params));
 	params.exec_data_head = node;
 	params.exit_status = exit_status;
+	*exit_status = 0;
 	params.total = check_total_commands(node);
+	params.pid_array = (pid_t *)malloc(sizeof(pid_t) * params.total);
+	if (!params.pid_array)
+		return ;
 	params.pipes = creating_new_pipes(params.total - 1);
 	if (params.pipes == NULL || setting_up_pipes(&params) == -1)
 		return ;
@@ -55,4 +59,5 @@ void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 	handle_pipe_and_waiting_for_child(&params);
 	free_pipes(params.pipes, params.total - 1);
 	free_heredocs_pipes(params.heredocs_pipes, params.heredocs_count);
+	free(params.pid_array);
 }

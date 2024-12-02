@@ -13,6 +13,29 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_clean_up_pipes
+ * @brief: clean up all pipes in child exit on signal
+ * @param data: t_sig_data
+ */
+void	handle_cleanup_pipes(t_sig_data *data)
+{
+	int	y;
+
+	y = 0;
+	while (y < data->heredocs_count)
+	{
+		close(data->heredocs_pipes[y][0]);
+		close(data->heredocs_pipes[y][1]);
+		y++;
+	}
+	while (data->z < data->pipe_count)
+	{
+		close(data->pipes[data->z][0]);
+		close(data->pipes[data->z][1]);
+		data->z++;
+	}
+}
+/**
  * @function: signal_parent
  * @brief: create static data for status update
  *

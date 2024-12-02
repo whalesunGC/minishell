@@ -25,6 +25,7 @@ typedef struct s_sig_data
 	char	*input1;
 	int		*exit_status;
 	int		z;
+	pid_t	*pid_array;
 }		t_sig_data;
 
 typedef struct s_redirect_single_command_params
@@ -72,6 +73,7 @@ typedef struct s_piping_multiple_command_params
 	char		*command_path;
 	char		*input1;
 	pid_t		pid;
+	pid_t		*pid_array;
 	int			ac;
 	int			count;
 	int			heredocs_count;
@@ -170,7 +172,7 @@ void	setting_up_counters_and_initialise_node(
 void	increment_counters_and_traverse_next_node(
 			t_piping_multiple_command_params *params);
 int		handle_forking_process_and_executing_child(
-			t_piping_multiple_command_params *params, char ***env);
+			t_piping_multiple_command_params *params, char ***env, int i);
 int		handle_arguments(
 			t_piping_multiple_command_params *params, char ***env);
 

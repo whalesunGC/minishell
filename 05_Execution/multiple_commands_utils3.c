@@ -34,6 +34,8 @@ void	clean_up_function_multiple_commands(
 	free(params->signal_data);
 	free(params->exit_status);
 	free_dup_envp(*env);
+	if (params->pid_array)
+		free(params->pid_array);
 	rl_clear_history();
 }
 
@@ -53,8 +55,22 @@ void	handle_multiple_commands_null_heredocs_input(
 		t_piping_multiple_command_params *params, char ***env)
 {
 	ft_dprintf(2, "Debugging NULL heredocs input Please use DELIMITER\n");
+	params->heredocs_pipe_number = 0;
+	while (params->heredocs_pipe_number < params->heredocs_count)
+	{
+		close(params->heredocs_pipes[params->heredocs_pipe_number][0]);
+		close(params->heredocs_pipes[params->heredocs_pipe_number][1]);
+		params->heredocs_pipe_number++;
+	}
+	params->z = 0;
+	while (params->z < params->total - 1)
+	{
+		close(params->pipes[params->z][0]);
+		close(params->pipes[params->z][1]);
+		params->z++;
+	}
 	clean_up_function_multiple_commands(params, env);
-	exit(EXIT_FAILURE);
+	exit(EXIT_SUCCESS);
 }
 
 /**
