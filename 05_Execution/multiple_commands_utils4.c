@@ -89,8 +89,8 @@ void	handle_redirect_array_for_heredocs(
 			ft_dprintf(2, "Debugging Delimiter for multiple pipes heredocs: %s\n",
 				params->result->delimiter[params->delimiter_counter]);
 			handle_delimiter_input_multiple_commands(params);
-			/*if (*params->exit_status != 0)
-				return (handle_counters_and_redirects_array(params));*/
+			if (*params->exit_status != 0)
+				return (handle_counters_and_redirects_array(params));
 			params->pid = fork();
 			if (params->pid < 0)
 			{

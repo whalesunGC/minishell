@@ -67,6 +67,8 @@ void	increment_counters_and_traverse_next_node(
 int	handle_forking_process_and_executing_child(
 			t_piping_multiple_command_params *params, char ***env)
 {
+	if (*params->exit_status != 0)
+		return (-1);
 	params->pid = fork();
 	if (params->pid < 0)
 	{
@@ -106,6 +108,8 @@ int	handle_arguments(
 		{
 			if (params->result->redirect != NULL)
 				handle_heredocs_pipe_number_multiple_commands(params);
+			if (ft_strcmp(params->result->cmd[0], "") == 0)
+				params->flag = 1;
 			if (params->flag == 1)
 			{
 				params->traverse = params->traverse->next;

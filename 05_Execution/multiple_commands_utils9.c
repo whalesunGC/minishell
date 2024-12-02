@@ -117,6 +117,8 @@ void	handle_pipe_and_waiting_for_child(
 	params->j = 0;
 	while (params->j < params->total)
 	{
+		if (*params->exit_status != 0)
+			break ;
 		wait(&status);
 		if (WIFEXITED(status))
 		{
