@@ -23,6 +23,7 @@ typedef struct s_export_params
 	char	**split_result;
 	char	*equal_sign;
 	char	*equal_sign1;
+	char	*result;
 	char	current_char;
 	int		ac;
 	int		i;
