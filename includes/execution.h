@@ -184,6 +184,10 @@ void	handle_execve_failure(
 void	handle_pipe_and_waiting_for_child(
 			t_piping_multiple_command_params *params);
 
+// multiple_commands_utils10 //
+void	handle_parent_for_handling_forking_process_multi(
+			t_piping_multiple_command_params *params);
+
 // free_pipes.c //
 void	free_pipes(int **pipes, int num_pipes);
 void	free_heredocs_pipes(int **heredocs_pipes, int heredocs_count);

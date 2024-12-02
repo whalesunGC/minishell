@@ -51,7 +51,7 @@ void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 	ft_dprintf(2, "Going into handle arguments loop\n");
 	params.traverse = node;
 	if (handle_arguments(&params, env) == -1)
-		return ;
+		;
 	handle_pipe_and_waiting_for_child(&params);
 	free_pipes(params.pipes, params.total - 1);
 	free_heredocs_pipes(params.heredocs_pipes, params.heredocs_count);
