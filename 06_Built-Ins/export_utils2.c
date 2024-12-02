@@ -63,11 +63,15 @@ static char	**ft_split_export(char *string, char c)
  */
 static int	splitting_arguments_by_delimiter(t_export_params *params)
 {
-	params->split_result = ft_split_export(params->av[params->i], '=');
-	if (params->split_result == NULL)
+	params->result = ft_strchr(params->av[params->i], '=');
+	if (params->result != NULL)
 	{
-		ft_dprintf(1, "splitting arguments failed\n");
-		return (-1);
+		params->split_result = ft_split_export(params->av[params->i], '=');
+		if (params->split_result == NULL)
+		{
+			ft_dprintf(1, "splitting arguments failed\n");
+			return (-1);
+		}
 	}
 	return (0);
 }
@@ -87,11 +91,20 @@ static int	splitting_arguments_by_delimiter(t_export_params *params)
 
 static int	extracting_var_names(t_export_params *params)
 {
-	params->var_name[params->j] = ft_strdup(params->split_result[0]);
-	if (params->var_name[params->j] == NULL)
+	if (params->result != NULL)
 	{
-		free_split_result(params);
-		return (-1);
+		params->var_name[params->j] = ft_strdup(params->split_result[0]);
+		if (params->var_name[params->j] == NULL)
+		{
+			free_split_result(params);
+			return (-1);
+		}
+	}
+	else
+	{
+		params->var_name[params->j] = ft_strdup(params->av[params->i]);
+		if (params->var_name[params->j] == NULL)
+			return (-1);
 	}
 	return (0);
 }
@@ -112,15 +125,27 @@ static int	extracting_var_names(t_export_params *params)
 
 static int	extracting_var_values(t_export_params *params)
 {
-	if (params->split_result[1] != NULL)
-		params->var_value[params->j] = ft_strdup(params->split_result[1]);
-	else
-		params->var_value[params->j] = ft_strdup("");
-	if (params->var_value[params->j] == NULL)
+	if (params->result != NULL)
 	{
-		free_var_name(params);
-		free_split_result(params);
-		return (-1);
+		if (params->split_result[1] != NULL)
+			params->var_value[params->j] = ft_strdup(params->split_result[1]);
+		else
+			params->var_value[params->j] = ft_strdup("");
+		if (params->var_value[params->j] == NULL)
+		{
+			free_var_name(params);
+			free_split_result(params);
+			return (-1);
+		}
+	}
+	else
+	{
+		params->var_value[params->j] = ft_strdup("");
+		if (params->var_value[params->j] == NULL)
+		{
+			free_var_name(params);
+			return (-1);
+		}
 	}
 	return (0);
 }
@@ -145,11 +170,6 @@ int	parse_export_arguments(t_export_params *params)
 	{
 		if (splitting_arguments_by_delimiter(params) == -1)
 			return (-1);
-		else if (params->split_result == NULL)
-		{
-			params->i++;
-			continue ;
-		}
 		else
 		{
 			if (extracting_var_names(params) == -1)
@@ -158,7 +178,8 @@ int	parse_export_arguments(t_export_params *params)
 				return (-1);
 			params->j++;
 		}
-		free_split_result(params);
+		if (params->result != NULL)
+			free_split_result(params);
 		params->i++;
 	}
 	params->var_value[params->j] = NULL;
