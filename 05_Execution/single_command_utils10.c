@@ -92,7 +92,7 @@ int	handling_dup2_and_closing_heredoc_pipes_before_execve(
 		close(params->input_fd);
 	if (dup2(params->pipes[params->pipe_count - 1][0], STDIN_FILENO) == -1)
 	{
-		perror("dup2 failed");
+		perror("dup2 failed for pipes");
 		return (-1);
 	}
 	if (params->output_fd > 0)
