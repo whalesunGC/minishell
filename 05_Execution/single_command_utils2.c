@@ -132,7 +132,7 @@ void	handling_redirection_process(
 	else if ((ft_strcmp(params->result->redirect
 				[params->k], ">") == 0)
 		|| (ft_strcmp(params->result->redirect
-				[params->k], ">") == 0))
+				[params->k], ">>") == 0))
 	{
 		if (dup2(params->output_fd, STDOUT_FILENO) == -1)
 		{

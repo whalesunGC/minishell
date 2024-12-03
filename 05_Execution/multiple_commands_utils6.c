@@ -58,19 +58,6 @@ void	handle_input_output_heredocs_multiple_commands(
 void	setup_pipe_redirection_and_closing(
 			t_piping_multiple_command_params *params, char ***env)
 {
-	if (params->i > 0)
-	{
-		if (params->result->redirect != NULL)
-		{
-			ft_dprintf(2, "going in this loop for i > 0\n");
-			handle_input_output_heredocs_multiple_commands(params, env);
-		}
-		else
-		{
-			ft_dprintf(2, "going in this loop to read from pipe\n");
-			read_from_pipe_without_redirections(params, env);
-		}
-	}
 	if (params->i < params->total - 1)
 	{
 		if (params->result->redirect != NULL)
@@ -86,6 +73,21 @@ void	setup_pipe_redirection_and_closing(
 			setting_up_pipes_to_redirect_output(params, env);
 		}
 	}
+	if (params->i > 0)
+	{
+		if (params->result->redirect != NULL)
+		{
+			if (params->output_fd > 0)
+				read_from_pipe(params, env);
+			ft_dprintf(2, "going in this loop for i > 0\n");
+			handle_input_output_heredocs_multiple_commands(params, env);
+		}
+		else
+		{
+			ft_dprintf(2, "going in this loop to read from pipe\n");
+			read_from_pipe(params, env);
+		}
+	}	
 }
 
 /**

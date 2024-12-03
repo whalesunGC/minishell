@@ -117,7 +117,7 @@ void	setting_up_pipes_to_redirect_output(
  * @return: void function
  */
 
-void	read_from_pipe_without_redirections(
+void	read_from_pipe(
 			t_piping_multiple_command_params *params, char ***env)
 {
 	if (dup2(params->pipes[params->i - 1][0], STDIN_FILENO) == -1)

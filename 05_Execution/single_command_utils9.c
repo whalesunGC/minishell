@@ -13,9 +13,28 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: handle_exit_conditions_for_heredocs
- * @brief: handling certain exit conditions
- 	so that execve will not be run
+ * @function: closing_current_pipe_after_writing_data
+ * @brief: closes the current heredocs pipe after writing data to it
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ * 
+ * @return: void function
+ */
+
+void	closing_current_pipe_after_writing_data(
+			t_redirect_single_command_params *params)
+{
+	if (params->y < params->pipe_count)
+	{
+		close(params->pipes[params->y][1]);
+		params->y++;
+	}
+}
+
+/**
+ * @function: handle_null_heredocs_input
+ * @brief: handling null input if ctrl + D is pressed in readline
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
@@ -25,181 +44,87 @@
  * @return: void function
  */
 
-void	handle_exit_conditions_for_heredocs(
+void	handle_null_heredocs_input(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging exit conditions for"
-		"heredocs if built in command\n");
-	if ((ft_strcmp(params->result->cmd[0], "echo") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "cd") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "pwd") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "export") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "unset") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "env") == 0)
-		|| (ft_strcmp(params->result->cmd[0], "exit") == 0))
-	{
-		ft_dprintf(2, "Debugging exiting heredocs\n");
-		clean_up_function(params, env);
-		exit(EXIT_SUCCESS);
-	}
-}
-
-/**
- * @function: handle_file_opening_process_for_redirection
- * @brief: handles the process of opening files for redirection and
- 	reporting errors if file opening encounters errors
- * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: void function
- */
-
-int	handle_file_opening_process_for_heredocs(
-			t_redirect_single_command_params *params, char ***env)
-{
-	ft_dprintf(2, "Debugging handle redirections file opening\n");
-	while (params->k < params->i)
-	{
-		if (ft_strcmp(params->result->redirect[params->k], "a") == 0)
-		{
-			params->k++;
-			continue ;
-		}
-		handle_file_opening_redirection(params);
-		handle_file_opening_errors_redirection(params, env);
-		params->rd_arg_counter++;
-		params->k++;
-	}
-	return (0);
-}
-
-/**
- * @function: handling_dup2_and_closing_heredoc_pipes_before_execve
- * @brief: handling dup2 of last heredoc pipes and dup2 to output if
- 	there is an output file before running execve
- * 
- * @param t_redirect_single_command_params *params: structure for
- 	single_command parameters
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: -1 if failure, 0 if success
- */
-
-int	handling_dup2_and_closing_heredoc_pipes_before_execve(
-			t_redirect_single_command_params *params, char ***env)
-{
-	if (params->input_fd > 0)
-		close(params->input_fd);
-	if (dup2(params->pipes[params->pipe_count - 1][0], STDIN_FILENO) == -1)
-	{
-		perror("dup2 failed");
-		return (-1);
-	}
-	if (params->output_fd > 0)
-	{
-		if (dup2(params->output_fd, STDOUT_FILENO) == -1)
-		{
-			perror("Dup2 failed for child for output_fd");
-			clean_up_function(params, env);
-			exit(EXIT_FAILURE);
-		}
-		close(params->output_fd);
-	}
-	ft_dprintf(2, "Debugging closing current pipe\n");
-	params->a = 0;
-	while (params->a < params->pipe_count)
-	{
-		close(params->pipes[params->a][0]);
-		close(params->pipes[params->a][1]);
-		params->a++;
-	}
-	return (0);
-}
-
-/**
- * @function: handle_execve_for_heredocs
- * @brief: executing execve for heredocs
- * 
- * @param t_redirect_single_command_params *params: structure for
- 	single_command parameters
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: -1 if failure, 0 if success,
- 	0 will never be reached if execve is successful.
- */
-
-int	handle_execve_for_heredocs(
-			t_redirect_single_command_params *params, char ***env)
-{
-	ft_dprintf(2, "Debugging handle execve for heredocs\n");
-	handle_file_opening_process_for_heredocs(params, env);
-	if (handling_dup2_and_closing_heredoc_pipes_before_execve
-		(params, env) == -1)
-		return (-1);
+	ft_dprintf(2, "warning: here-document at delimited by end-of-file\n");
 	freeing_heredoc_pipes(params);
-	if (access(params->result->cmd[0], F_OK) == 0)
-		params->command_path = params->result->cmd[0];
-	else
-		params->command_path = find_command(&params->result->cmd[0], 0, *env);
-	if (params->command_path == NULL)
-	{
-		ft_dprintf(2, "command not found\n");
-		freeing_heredoc_pipes(params);
-		clean_up_function(params, env);
-		exit(127);
-	}
-	else if (execve(params->command_path, params->result->cmd, *env) == -1)
-	{
-		perror("execve failed");
-		freeing_heredoc_pipes(params);
-		clean_up_function(params, env);
-		exit(126);
-	}
-	return (0);
+	clean_up_function(params, env);
+	exit(EXIT_SUCCESS);
 }
 
 /**
- * @function: handle_child_execution
- * @brief: forking child processes and to
- 	execute them upon certain conditions
+ * @function: handle_heredocs_delimiter
+ * @brief: handling the instance where the input is the delimiter in readline
  * 
  * @param t_redirect_single_command_params *params: structure for
  	single_command parameters
  	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
  * 
- * @return: -1 if failure, 0 if success
+ * @return: void function
  */
 
-int	handle_child_execution(
+void	handle_heredocs_delimiter(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging Entering the heredocs loop\n");
-	params->i = 0;
-	while (params->result->redirect[params->i] != NULL)
-		params->i++;
-	if (*params->exit_status != 0)
-		return (-1);
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	params->pid = fork();
-	if (params->pid < 0)
+	ft_dprintf(2, "Debugging Delimiter spotted\n");
+	freeing_heredoc_pipes(params);
+	clean_up_function(params, env);
+	free(params->input1);
+	exit(EXIT_SUCCESS);
+}
+
+/**
+ * @function: handle_heredocs_input
+ * @brief: handling the data by writing it to a pipe
+ 	if there is input in readline
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ * 
+ * @return: void function
+ */
+
+void	handle_heredocs_input(
+			t_redirect_single_command_params *params, char ***env)
+{
+	ft_dprintf(2, "Debugging handling heredocs input\n");
+	if (params->ignore_quote == 1)
+		params->input1 = expansion_string(params->input1,
+				params->ignore_quote, *env, params->exit_status);
+	write(params->pipes[params->z][1], params->input1,
+		ft_strlen(params->input1));
+	write(params->pipes[params->z][1], "\n", 1);
+	free(params->input1);
+}
+
+/**
+ * @function: handle_heredoc_child_process
+ * @brief: using the child process to perform readline for heredocs
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
+ * 
+ * @return: void function
+ */
+
+void	handle_heredoc_child_process(
+			t_redirect_single_command_params *params, char ***env)
+{
+	ft_dprintf(2, "Writing into pipe number [%d]\n", params->z);
+	while (1)
 	{
-		perror("forking failed");
-		return (-1);
+		ft_dprintf(2, "Debugging readline heredocs\n");
+		params->input1 = readline("heredocs> ");
+		if (params->input1 == NULL)
+			handle_null_heredocs_input(params, env);
+		else if (ft_strcmp(params->input1,
+				params->result->delimiter[params->delimiter_counter]) == 0)
+			handle_heredocs_delimiter(params, env);
+		else if (params->input1 != NULL)
+			handle_heredocs_input(params, env);
 	}
-	if (params->pid == 0)
-	{
-		handle_exit_conditions_for_heredocs(params, env);
-		if (handle_execve_for_heredocs(params, env) == -1)
-			return (-1);
-	}
-	else
-		handle_parent_for_handling_forking_process(params);
-	return (0);
 }

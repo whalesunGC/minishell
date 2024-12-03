@@ -13,148 +13,172 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: execute_child_process_for_redirections
- * @brief: if last command is a heredoc, will not execute 
- 	handle_redirects function as this is already done in
- 	heredocs function. if this check passes,
- 	will proceed to do redirections
+ * @function: handle_single_commands_without_redirects
+ * @brief: handles cases where there are no redirects
+ 	including built-in functions
  * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	***env: *** is called in the calling function
+ * @param t_redirect_single_command_params *params : structure for
+ 	single_command parameters
+ 	***env : needed *** to amend env
+ 	if cd and export command is called
  	needed ** to free data if child process exits.
  * 
- * @return: void function
+ * @return: -1 if forking process fails, 0 if all commands are successfully run
  */
 
-void	execute_child_process_for_redirections(
+int	handle_single_commands_without_redirects(
 			t_redirect_single_command_params *params, char ***env)
 {
-	if (params->pipe_count > 0)
-	{
-		params->loop_counter = 0;
-		while (params->result->redirect[params->loop_counter] != NULL)
-			params->loop_counter++;
-		if (ft_strcmp(params->result->redirect[params->loop_counter - 1],
-				"a") == 0)
-		{
-			freeing_heredoc_pipes(params);
-			clean_up_function(params, env);
-			exit(EXIT_SUCCESS);
-		}
-	}
-	handle_file_opening_process_for_redirection(params, env);
-	handle_execve_for_redirections(params, env);
-}
-
-/**
- * @function: handle_redirects
- * @brief: handling redirections if command consists of redirects
- 	execute_child_process is in single_command_utils1.c
- * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: -1 if forking fails, 0 if all commands is executed
- */
-
-int	handle_redirects(
-			t_redirect_single_command_params *params, char ***env)
-{
-	ft_dprintf(2, "Debugging handle redirects\n");
-	while (params->result->redirect[params->i] != NULL)
-		params->i++;
-	if (*params->exit_status != 0)
+	if (ft_strcmp(params->av[0], "echo") == 0)
+		echo_command(params->ac, params->av);
+	else if (ft_strcmp(params->av[0], "cd") == 0)
+		cd_command(params->ac, params->av, env);
+	else if (ft_strcmp(params->av[0], "pwd") == 0)
+		pwd_command(params->ac, params->av);
+	else if (ft_strcmp(params->av[0], "export") == 0)
+		export_command(params->ac, params->av, env);
+	else if (ft_strcmp(params->av[0], "unset") == 0)
+		unset_command(params->ac, params->av, *env);
+	else if (ft_strcmp(params->av[0], "env") == 0)
+		env_command(params->ac, params->av, *env);
+	else if (ft_strcmp(params->av[0], "exit") == 0)
+		exit_command(params, *env);
+	else if (handle_fork_plus_executing_child(params, env) == -1)
 		return (-1);
-	params->pid = fork();
-	if (params->pid < 0)
-	{
-		perror("forking failed");
-		return (-1);
-	}
-	if (params->pid == 0)
-		execute_child_process_for_redirections(params, env);
-	else
-		handle_parent_for_handling_forking_process(params);
 	return (0);
 }
 
 /**
- * @function: freeing_heredoc_pipes
- * @brief: freeing pipes which are being set up during the heredoc process
+ * @function: handle_dup2_built_in_with_redirects
+ * @brief: handles dup2 and file opening when there is an
+ 	output redirection with built-ins
+ 	this is being handled in the parent process
  * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
+ * @param t_redirect_single_command_params *params : structure for
+ 	single_command parameters
  * 
- * @return: void function
+ * @return: -1 if dup2 fails, 0 if everything is ok
  */
 
-void	freeing_heredoc_pipes(t_redirect_single_command_params *params)
+int	handle_dup2_built_in_with_redirects(
+			t_redirect_single_command_params *params)
 {
-	ft_dprintf(2, "Debugging freeing heredoc pipes single commands\n");
-	params->z = 0;
-	while (params->z < params->pipe_count)
+	if (params->output_fd > 0)
+		close(params->output_fd);
+	params->output_fd = open(params->result->rd_arg
+		[params->rd_arg_counter], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (dup2(params->output_fd, STDOUT_FILENO) == -1)
 	{
-		close(params->pipes[params->z][0]);
-		close(params->pipes[params->z][1]);
-		params->z++;
+		perror("dup2 failed");
+		return (-1);
 	}
+	params->rd_arg_counter++;
+	return (0);
 }
 
 /**
- * @function: clean_up_function
- * @brief: freeing up resources when child process exits
+ * @function: handle_single_commands_built_in_with_redirects
+ * @brief: handling file opening when there is an output and input redirection
+ 	dup2 will be carried out if there's an output redirection
  * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
+ * @param t_redirect_single_command_params *params : structure for
+ 	single_command parameters
+ * 
+ * @return: -1 if dup2 fails, 0 if everything is ok
+ */
+
+int	handle_single_commands_built_in_with_redirects(
+			t_redirect_single_command_params *params)
+{
+	params->g = 0;
+	params->rd_arg_counter = 0;
+	if (params->result->redirect != NULL)
+	{
+		params->original_fd = dup(STDOUT_FILENO);
+		while (params->result->redirect[params->g] != NULL)
+		{
+			if (ft_strcmp(params->result->redirect[params->g], "<") == 0)
+			{
+				if (params->input_fd > 0)
+					close(params->input_fd);
+				params->input_fd = open(params->result->rd_arg
+					[params->rd_arg_counter], O_RDONLY);
+			}
+			else if ((ft_strcmp(params->result->redirect[params->g], ">") == 0)
+				|| (ft_strcmp(params->result->redirect[params->g], ">>") == 0))
+			{
+				if (handle_dup2_built_in_with_redirects(params) == -1)
+					return (-1);
+			}
+			params->g++;
+		}
+	}
+	return (0);
+}
+
+/**
+ * @function: execute_bulit_in_commands_with_redirects
+ * @brief: after redirections are carried out, we execute the built-ins
+ 	closing of all fds and changing of output_fd
+ 	back to original fd if there was output redirection
+ * 
+ * @param t_redirect_single_command_params *params : structure for
+ 	single_command parameters
+ 	***env : needed *** to amend env
+ 	if cd and export command is called
  * 
  * @return: void function
  */
 
-void	clean_up_function(
+void	execute_bulit_in_commands_with_redirects(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging clean up function single commands\n");
-	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
-	free(params->signal_data);
-	free(params->exit_status);
-	freeing_heredoc_pipes(params);
-	free_pipes(params->pipes, params->pipe_count);
-	free_dup_envp(*env);
-	rl_clear_history();
+	if (ft_strcmp(params->av[0], "echo") == 0)
+		echo_command(params->ac, params->av);
+	else if (ft_strcmp(params->av[0], "cd") == 0)
+		cd_command(params->ac, params->av, env);
+	else if (ft_strcmp(params->av[0], "pwd") == 0)
+		pwd_command(params->ac, params->av);
+	else if (ft_strcmp(params->av[0], "export") == 0)
+		export_command(params->ac, params->av, env);
+	else if (ft_strcmp(params->av[0], "unset") == 0)
+		unset_command(params->ac, params->av, *env);
+	else if (ft_strcmp(params->av[0], "env") == 0)
+		env_command(params->ac, params->av, *env);
+	else if (ft_strcmp(params->av[0], "exit") == 0)
+		exit_command(params, *env);
 }
 
 /**
- * @function: handle_other_cases
- * @brief: handling other test case scenarios
+ * @function: handle_single_commands
+ * @brief: handles single commands with built-in features
  * 
- * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
- 	***env: *** is called in the calling function
+ * @param t_redirect_single_command_params *params : structure for
+ 	single_command parameters
+ 	***env : needed *** to amend env
+ 	if cd and export command is called
  	needed ** to free data if child process exits.
  * 
- * @return: -1 if forking fails 0 if all commands is executed
+ * @return: -1 if forking process fails, 0 if all commands are successfully run
  */
 
-int	handle_other_cases(t_redirect_single_command_params *params, char ***env)
+int	handle_single_commands(
+			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging handle other cases\n");
+	ft_dprintf(2, "Debugging built in commands if no redirections\n");
 	if (params->result->cmd[0] == NULL)
 	{
-		if (handle_single_commands(params, env) == -1)
+		if (handle_fork_plus_executing_child(params, env) == -1)
 			return (-1);
 	}
-	else
+	else if (params->result->redirect == NULL)
 	{
-		params->av = params->result->cmd;
-		params->ac = 0;
-		while (params->av[params->ac] != NULL)
-			params->ac++;
-		if (handle_single_commands(params, env) == -1)
+		if (handle_single_commands_without_redirects(params, env) == -1)
+			return (-1);
+	}
+	else if (params->result->redirect != NULL)
+	{
+		if (handle_single_commands_built_in(params, env) == -1)
 			return (-1);
 	}
 	return (0);

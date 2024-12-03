@@ -60,6 +60,7 @@ static void	exit_is_the_only_argument(
 	if (params->exit_status)
 		free(params->exit_status);
 	ft_free_all_pipes(params);
+	free(params->pid_array);
 	exit(EXIT_SUCCESS);
 }
 
@@ -89,6 +90,7 @@ static void	exit_with_one_other_argument(
 	if (params->exit_status)
 		free(params->exit_status);
 	ft_free_all_pipes(params);
+	free(params->pid_array);
 	exit(exit_status);
 }
 
