@@ -50,9 +50,8 @@ void	executing_execve(
 {
 	if (ft_strcmp(params->result->cmd[0], "") == 0)
 	{
-		ft_dprintf(2, "command not found\n");
 		clean_up_function(params, env);
-		exit(127);
+		exit(EXIT_SUCCESS);
 	}
 	if (access(params->result->cmd[0], F_OK) == 0)
 		params->command_path = params->result->cmd[0];
