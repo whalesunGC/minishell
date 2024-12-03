@@ -13,41 +13,6 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: handling_executing_execve_other_cases
- * @brief: thie function will not handle redirections as
- 	they are either done in heredocs function or handle redirect functions
- * 
- * @param t_redirect_single_command_params *params : structure for
- 	single_command parameters
- 	***env: *** is called in the calling function
- 	needed ** to free data if child process exits.
- * 
- * @return: void function
- */
-
-void	handling_executing_execve_other_cases(
-			t_redirect_single_command_params *params, char ***env)
-{
-	if (params->result->redirect != NULL)
-	{
-		if ((ft_strcmp(params->result->redirect[params->loop_counter],
-					"a") == 0)
-			|| (ft_strcmp(params->result->redirect[params->loop_counter],
-					"<") == 0)
-			|| (ft_strcmp(params->result->redirect[params->loop_counter],
-					">") == 0)
-			|| (ft_strcmp(params->result->redirect[params->loop_counter],
-					">>") == 0))
-		{
-			ft_dprintf(2, "exiting no_pipes for executing execve other cases\n");
-			clean_up_function(params, env);
-			exit(EXIT_SUCCESS);
-		}
-	}
-	executing_execve(params, env);
-}
-
-/**
  * @function: handle_exit_conditions_other_cases
  * @brief: handling conditions to exit child process, similarly redirections
  	will not be executed here as they are done in heredocs
@@ -149,45 +114,61 @@ int	handle_fork_plus_executing_child(
 }
 
 /**
- * @function: handle_single_commands
- * @brief: handles single commands with built-in features
+ * @function: handle_built_in_closing_and_restore_original_fd
+ * @brief: closing fds and restore original fd back to STDOUT
  * 
- * @param t_redirect_single_command_params *params : structure for
+ * @param t_redirect_single_commands_params *params : structure for
  	single_command parameters
- 	***env : needed *** to amend env
- 	if cd and export command is called
- 	needed ** to free data if child process exits.
  * 
- * @return: -1 if forking process fails, 0 if all commands are successfully run
+ * @return: -1 if dup2 of original fd fails. 0 
  */
 
-int	handle_single_commands(
+int	handle_built_in_closing_and_restore_original_fd(
+			t_redirect_single_command_params *params)
+{
+	if (params->input_fd > 0)
+		close(params->input_fd);
+	if (params->output_fd > 0)
+	{
+		if (dup2(params->original_fd, STDOUT_FILENO) == -1)
+		{
+			perror("dup2 failed");
+			return (-1);
+		}
+		close(params->output_fd);
+	}
+	close(params->original_fd);
+	return (0);
+}
+
+/**
+ * @function: handle_single_commands_built_in
+ * @brief: handles situations when there are redirections in built-ins
+ * 
+ * @param t_redirect_single_commands_params *params : structure for
+ 	single_command parameters
+ * 
+ * @return: -1 if dup2 of original fd fails. 0 
+ */
+
+int	handle_single_commands_built_in(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging built in commands if no redirections\n");
-	if (params->result->cmd[0] == NULL)
+	if ((ft_strcmp(params->av[0], "echo") == 0)
+		|| (ft_strcmp(params->av[0], "cd") == 0)
+		|| (ft_strcmp(params->av[0], "pwd") == 0)
+		|| (ft_strcmp(params->av[0], "export") == 0)
+		|| (ft_strcmp(params->av[0], "unset") == 0)
+		|| (ft_strcmp(params->av[0], "env") == 0)
+		|| (ft_strcmp(params->av[0], "exit") == 0))
 	{
-		if (handle_fork_plus_executing_child(params, env) == -1)
+		if (handle_single_commands_built_in_with_redirects(params) == -1)
+			return (-1);
+		execute_bulit_in_commands_with_redirects(params, env);
+		if (handle_built_in_closing_and_restore_original_fd(params) == -1)
 			return (-1);
 	}
-	else
-	{
-		if (ft_strcmp(params->av[0], "echo") == 0)
-			echo_command(params->ac, params->av);
-		else if (ft_strcmp(params->av[0], "cd") == 0)
-			cd_command(params->ac, params->av, env);
-		else if (ft_strcmp(params->av[0], "pwd") == 0)
-			pwd_command(params->ac, params->av);
-		else if (ft_strcmp(params->av[0], "export") == 0)
-			export_command(params->ac, params->av, env);
-		else if (ft_strcmp(params->av[0], "unset") == 0)
-			unset_command(params->ac, params->av, *env);
-		else if (ft_strcmp(params->av[0], "env") == 0)
-			env_command(params->ac, params->av, *env);
-		else if (ft_strcmp(params->av[0], "exit") == 0)
-			exit_command(params, *env);
-		else if (handle_fork_plus_executing_child(params, env) == -1)
-			return (-1);
-	}
+	else if (handle_fork_plus_executing_child(params, env) == -1)
+		return (-1);
 	return (0);
 }

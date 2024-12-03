@@ -132,3 +132,38 @@ void	handle_execve_for_redirections(
 	}
 	executing_execve(params, env);
 }
+
+/**
+ * @function: handling_executing_execve_other_cases
+ * @brief: thie function will not handle redirections as
+ 	they are either done in heredocs function or handle redirect functions
+ * 
+ * @param t_redirect_single_command_params *params : structure for
+ 	single_command parameters
+ 	***env: *** is called in the calling function
+ 	needed ** to free data if child process exits.
+ * 
+ * @return: void function
+ */
+
+void	handling_executing_execve_other_cases(
+			t_redirect_single_command_params *params, char ***env)
+{
+	if (params->result->redirect != NULL)
+	{
+		if ((ft_strcmp(params->result->redirect[params->loop_counter],
+					"a") == 0)
+			|| (ft_strcmp(params->result->redirect[params->loop_counter],
+					"<") == 0)
+			|| (ft_strcmp(params->result->redirect[params->loop_counter],
+					">") == 0)
+			|| (ft_strcmp(params->result->redirect[params->loop_counter],
+					">>") == 0))
+		{
+			ft_dprintf(2, "exiting no_pipes for executing execve other cases\n");
+			clean_up_function(params, env);
+			exit(EXIT_SUCCESS);
+		}
+	}
+	executing_execve(params, env);
+}
