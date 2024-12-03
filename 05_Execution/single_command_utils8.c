@@ -65,9 +65,6 @@ void	handle_delimiter_input_single_commands(
 		params->ignore_quote = 1;
 	params->result->delimiter[params->delimiter_counter]
 		= ft_remove_quote(params->result->delimiter[params->delimiter_counter]);
-	ft_dprintf(2, "current delimiter now after clean up %s\n",
-		params->result->delimiter[params->delimiter_counter]);
-	ft_dprintf(2, "value of params ignore_quote [%d]\n", params->ignore_quote);
 }
 
 /**
@@ -85,9 +82,6 @@ void	handle_delimiter_input_single_commands(
 int	handling_forking_process(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Welcome to heredocs <<\n");
-	ft_dprintf(2, "delimiter for heredocs: %s\n",
-		params->result->delimiter[params->delimiter_counter]);
 	if (*params->exit_status != 0)
 		return (-1);
 	handle_delimiter_input_single_commands(params);
@@ -123,12 +117,8 @@ int	handling_forking_process(
 
 void	handling_next_redirect(t_redirect_single_command_params *params)
 {	
-	ft_dprintf(2, "Entering here to change current redirect array %s\n",
-		params->result->redirect[params->x]);
 	free(params->result->redirect[params->x]);
 	params->result->redirect[params->x] = ft_strdup("a");
-	ft_dprintf(2, "After changing redirect array %s\n",
-		params->result->redirect[params->x]);
 	params->x++;
 }
 
@@ -147,12 +137,8 @@ void	handling_next_redirect(t_redirect_single_command_params *params)
 int	handling_last_redirect(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Entering here to change current redirect array %s\n",
-		params->result->redirect[params->x]);
 	free(params->result->redirect[params->x]);
 	params->result->redirect[params->x] = ft_strdup("a");
-	ft_dprintf(2, "After changing redirect array %s\n",
-		params->result->redirect[params->x]);
 	if (params->result->cmd[0] != NULL)
 	{
 		if (handle_child_execution(params, env) == -1)

@@ -31,7 +31,7 @@ void	handling_exit_conditions_other_cases(
 {
 	if (params->result->cmd[0] == NULL)
 	{
-		ft_dprintf(2, "No commands found, so we just exit handling exit conditions other cases function\n");
+		ft_dprintf(2, "No commands found, so we just exit\n");
 		freeing_heredoc_pipes(params);
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
@@ -48,7 +48,6 @@ void	handling_exit_conditions_other_cases(
 		|| (ft_strcmp(params->result->redirect[params->loop_counter - 1],
 				">>") == 0))
 	{
-		ft_dprintf(2, "exiting no redirects handling exit conditions other cases function\n");
 		freeing_heredoc_pipes(params);
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
@@ -72,15 +71,9 @@ void	child_process_other_cases(
 			t_redirect_single_command_params *params, char ***env)
 {
 	if (params->pipe_count == 0)
-	{
-		ft_dprintf(2, "Debugging executing execve other cases\n");
 		handling_executing_execve_other_cases(params, env);
-	}
 	else
-	{
-		ft_dprintf(2, "Debugging handling exit conditions other cases\n");
 		handling_exit_conditions_other_cases(params, env);
-	}
 }
 
 /**

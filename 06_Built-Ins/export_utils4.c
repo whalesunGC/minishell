@@ -40,7 +40,7 @@ int	ft_isvalidvariable(int c)
 static void	variable_name_first_character_check_fail(t_export_params *params)
 
 {
-	ft_dprintf(1, "%s: not an identifier\n", params->var_name[params->i]);
+	ft_dprintf(2, "%s: not an identifier\n", params->var_name[params->i]);
 	removing_invalid_identifier(params);
 }
 

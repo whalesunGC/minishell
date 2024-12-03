@@ -31,11 +31,7 @@ void	handle_pipe_reading_heredocs_and_dup2(
 	if (ft_strcmp(params->result->redirect[params->k], "a") == 0)
 		params->pipe_number++;
 	if (params->pipe_number > 0)
-	{
 		params->pipe_index = params->pipe_number - 1;
-		ft_dprintf(2, "Reading pipe number of heredocs [%d]\n",
-			params->pipe_index);
-	}
 	if (dup2(params->pipes[params->pipe_index][0], STDIN_FILENO) == -1)
 	{
 		perror("dup2 failed for heredocs");
@@ -160,7 +156,6 @@ void	handling_redirection_process(
 void	handle_file_opening_process_for_redirection(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging handle redirections file opening\n");
 	params->loop_counter = 0;
 	params->pipe_number = 0;
 	while (params->k < params->i)

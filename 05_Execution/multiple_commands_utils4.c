@@ -28,12 +28,8 @@
 void	handle_counters_and_redirects_array(
 			t_piping_multiple_command_params *params)
 {
-	ft_dprintf(2, "Debugging Changing current redirect array"
-		"for multiple commands %s\n", params->result->redirect[params->x]);
 	free(params->result->redirect[params->x]);
 	params->result->redirect[params->x] = ft_strdup("a");
-	ft_dprintf(2, "Debugging After changing current redirect"
-		"array for multiple commands %s\n", params->result->redirect[params->x]);
 	params->delimiter_counter++;
 	params->heredocs_pipe_number++;
 }
@@ -60,9 +56,6 @@ void	handle_delimiter_input_multiple_commands(
 		params->ignore_quote = 1;
 	params->result->delimiter[params->delimiter_counter]
 		= ft_remove_quote(params->result->delimiter[params->delimiter_counter]);
-	ft_dprintf(2, "current delimiter now after clean up %s\n",
-		params->result->delimiter[params->delimiter_counter]);
-	ft_dprintf(2, "value of params ignore_quote [%d]\n", params->ignore_quote);
 }
 
 /**
@@ -86,8 +79,6 @@ void	handle_redirect_array_for_heredocs(
 	{
 		if (ft_strcmp(params->result->redirect[params->x], "<<") == 0)
 		{
-			ft_dprintf(2, "Debugging Delimiter for multiple pipes heredocs: %s\n",
-				params->result->delimiter[params->delimiter_counter]);
 			handle_delimiter_input_multiple_commands(params);
 			if (*params->exit_status != 0)
 				return (handle_counters_and_redirects_array(params));
@@ -139,10 +130,7 @@ void	handle_heredocs_multiple_commands(
 		if (params->result->type == AST_COMMAND)
 		{
 			if (params->result->redirect != NULL)
-			{
-				ft_dprintf(2, "Debugging handle redirect array for heredocs\n");
 				handle_redirect_array_for_heredocs(params, env);
-			}
 		}
 		params->traverse = params->traverse->next;
 	}

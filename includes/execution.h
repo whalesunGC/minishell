@@ -300,11 +300,11 @@ void	handle_heredoc_child_process(
 // single_command_utils10 //
 void	handle_exit_conditions_for_heredocs(
 			t_redirect_single_command_params *params, char ***env);
-int	handle_file_opening_process_for_heredocs(
+int		handle_file_opening_process_for_heredocs(
 			t_redirect_single_command_params *params, char ***env);
-int	handling_dup2_and_closing_heredoc_pipes_before_execve(
+int		handling_dup2_and_closing_heredoc_pipes_before_execve(
 			t_redirect_single_command_params *params, char ***env);
-int	handle_execve_for_heredocs(
+int		handle_execve_for_heredocs(
 			t_redirect_single_command_params *params, char ***env);
 int		handle_child_execution(
 			t_redirect_single_command_params *params, char ***env);

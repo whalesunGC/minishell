@@ -68,7 +68,6 @@ void	handle_null_heredocs_input(
 void	handle_heredocs_delimiter(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging Delimiter spotted\n");
 	freeing_heredoc_pipes(params);
 	clean_up_function(params, env);
 	free(params->input1);
@@ -89,7 +88,6 @@ void	handle_heredocs_delimiter(
 void	handle_heredocs_input(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging handling heredocs input\n");
 	if (params->ignore_quote == 1)
 		params->input1 = expansion_string(params->input1,
 				params->ignore_quote, *env, params->exit_status);
@@ -114,10 +112,8 @@ void	handle_heredocs_input(
 void	handle_heredoc_child_process(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Writing into pipe number [%d]\n", params->z);
 	while (1)
 	{
-		ft_dprintf(2, "Debugging readline heredocs\n");
 		params->input1 = readline("heredocs> ");
 		if (params->input1 == NULL)
 			handle_null_heredocs_input(params, env);

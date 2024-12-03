@@ -43,9 +43,5 @@ void	env_command(int ac, char **av, char **env)
 				i++;
 			}
 		}
-		else if (ac >= 1 && ft_strlen(av[0]) != 3)
-			ft_dprintf(1, "%s: command not found\n", av[0]);
-		else
-			ft_dprintf(1, "%s: '%s': No such file or directory\n", av[0], av[1]);
 	}
 }

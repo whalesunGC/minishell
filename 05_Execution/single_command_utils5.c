@@ -165,7 +165,6 @@ void	execute_bulit_in_commands_with_redirects(
 int	handle_single_commands(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging built in commands if no redirections\n");
 	if (params->result->cmd[0] == NULL)
 	{
 		if (handle_fork_plus_executing_child(params, env) == -1)

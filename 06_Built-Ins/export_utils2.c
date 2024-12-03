@@ -69,7 +69,7 @@ static int	splitting_arguments_by_delimiter(t_export_params *params)
 		params->split_result = ft_split_export(params->av[params->i], '=');
 		if (params->split_result == NULL)
 		{
-			ft_dprintf(1, "splitting arguments failed\n");
+			ft_dprintf(2, "splitting arguments failed\n");
 			return (-1);
 		}
 	}

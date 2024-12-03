@@ -45,14 +45,12 @@ void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 	searching_for_heredocs(&params, node);
 	if (params.heredocs_count > 0)
 	{
-		ft_dprintf(2, "Going into here docs loop\n");
 		params.heredocs_pipes = creating_heredocs_pipes(params.heredocs_count);
 		if (params.heredocs_pipes == NULL || setting_up_heredocs_pipes
 			(&params) == -1)
 			return ;
 		handle_heredocs_multiple_commands(&params, node, env);
 	}
-	ft_dprintf(2, "Going into handle arguments loop\n");
 	params.traverse = node;
 	if (handle_arguments(&params, env) == -1)
 		;

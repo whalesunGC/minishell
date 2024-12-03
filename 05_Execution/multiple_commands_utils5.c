@@ -122,7 +122,7 @@ void	read_from_pipe(
 {
 	if (dup2(params->pipes[params->i - 1][0], STDIN_FILENO) == -1)
 	{	
-		perror("dup2 to stdin failed");
+		perror("dup2 to stdin failed for reading from pipe");
 		clean_up_function_multiple_commands(params, env);
 		exit(EXIT_FAILURE);
 	}
