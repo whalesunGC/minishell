@@ -23,19 +23,19 @@ char	*ft_input_validation(char *input)
 {
 	if (!check_quotes_balance(input) || !check_parentheses_balance(input))
 	{
-		ft_printf("Error: Unbalanced quotes or parentheses\n");
+		ft_dprintf(2, "Error: Unbalanced quotes or parentheses\n");
 		free(input);
 		return (NULL);
 	}
 	if (!check_or_placement(input) || !check_and_placement(input))
 	{
-		ft_printf("Error: Invalid || or && placement\n");
+		ft_dprintf(2, "Error: Invalid || or && placement\n");
 		free(input);
 		return (NULL);
 	}
 	if (!check_pipe_placement(input))
 	{
-		ft_printf("Error: Invalid pipe placement\n");
+		ft_dprintf(2, "Error: Invalid pipe placement\n");
 		free(input);
 		return (NULL);
 	}

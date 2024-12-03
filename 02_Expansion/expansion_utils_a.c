@@ -47,14 +47,6 @@ char	*ft_env_search(char *var, char **env)
 	char	*env_var;
 
 	env_var = ft_getenv(++var, env);
-	if (env_var != NULL)
-	{
-		ft_printf("env_var found: %s\n", env_var);
-	}
-	else
-	{
-		ft_printf("env_var not found: %s\n", env_var);
-	}
 	return (env_var);
 }
 

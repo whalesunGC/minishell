@@ -120,13 +120,11 @@ t_ast_node	*parser(t_list *token_data)
 		ast_root = ast_root->parent;
 	if (context.error)
 	{
-		ft_printf("Error: %s\n", context.error_message);
+		ft_dprintf(2, "Error: %s\n", context.error_message);
 		ft_treeclear(&ast_root, free);
 		if (context.error_message)
 			free(context.error_message);
 		return (NULL);
 	}
-	else
-		ft_print_tree(ast_root);
 	return (ast_root);
 }

@@ -65,11 +65,11 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	if (envp[0] == NULL)
-		ft_printf("envp not initialised\n");
+		ft_dprintf(1, "envp not initialised\n");
 	env = copy_envp(envp);
 	if (env == NULL)
 	{
-		ft_printf("Duplicate of envp error!\n");
+		ft_dprintf(2, "Duplicate of envp error!\n");
 		exit(EXIT_FAILURE);
 	}
 	token_data = NULL;
@@ -86,7 +86,7 @@ int	main(int ac, char **av, char **envp)
 		input = readline("minishell>> ");
 		if (input == NULL)
 		{
-			ft_printf("Exiting minishell\n");
+			ft_dprintf(1, "Exiting minishell\n");
 			break ;
 		}
 		if (!ft_is_blank(input))

@@ -98,12 +98,6 @@ void					ft_free_exec_helper(char **stringarray);
 // parser utils_b
 void					ft_free_node_components(t_exec_node *node);
 
-// parser_print_tree.c
-void					ft_print_tree_helper(t_ast_node *node, int depth);
-void					ft_print_tree(t_ast_node *root);
-void					ft_print_exec_list(t_list *node);
-void					ft_print_stringarray(char **stringarray, int i);
-
 // parser_ast_to_ll.c
 t_list					*ft_ast_preorder(t_ast_node *node);
 t_list					*ft_ast_to_linkedlist(t_ast_node *node);

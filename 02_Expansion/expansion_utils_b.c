@@ -59,7 +59,6 @@ char	*ft_var_exp(char **input, int start_index, char **env)
 
 	env_len = ft_env_len(*input + start_index);
 	var = ft_substr(*input + start_index, 0, env_len);
-	ft_printf("variable found: %s\n", var);
 	env_var = ft_env_search(var, env);
 	return (free(var), env_var);
 }
