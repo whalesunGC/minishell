@@ -37,9 +37,9 @@ void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 	*exit_status = 0;
 	params.total = check_total_commands(node);
 	params.pid_array = (pid_t *)malloc(sizeof(pid_t) * params.total);
-	ft_memset(params.pid_array, 0, sizeof(pid_t) * params.total);
 	if (!params.pid_array)
 		return ;
+	ft_memset(params.pid_array, 0, sizeof(pid_t) * params.total);
 	params.pipes = creating_new_pipes(params.total - 1);
 	if (params.pipes == NULL || setting_up_pipes(&params) == -1)
 		return ;

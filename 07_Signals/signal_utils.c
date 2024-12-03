@@ -35,6 +35,7 @@ void	handle_cleanup_pipes(t_sig_data *data)
 		data->z++;
 	}
 }
+
 /**
  * @function: signal_parent
  * @brief: create static data for status update

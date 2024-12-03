@@ -25,9 +25,7 @@
  */
 int	ft_add_whitespace_special(char **input, int i, int in_s_q, int in_d_q)
 {
-	if ((*input)[i] == '$' && !ft_is_env((*input)[i + 1]) && !in_s_q && !in_d_q)
-		i = ft_add_whitespace_helper(input, i, 1);
-	else if ((*input)[i] == '>' && (*input)[i + 1] != '>' && !in_s_q && !in_d_q)
+	if ((*input)[i] == '>' && (*input)[i + 1] != '>' && !in_s_q && !in_d_q)
 		i = ft_add_whitespace_helper(input, i, 0);
 	else if ((*input)[i] == '<' && (*input)[i + 1] != '<' && !in_s_q && !in_d_q)
 		i = ft_add_whitespace_helper(input, i, 0);
@@ -145,11 +143,11 @@ char	*ft_input_swap_whitespace(char *input)
  * @param input: input string from readline
  * @return: modified string that is delimited for the lexer module.
  */
-char	*input_clean(char *input)
+char	*input_clean(char *input, int *exit_status)
 {
 	input = ft_input_swap_whitespace(input);
 	input = ft_input_add_whitespace(input);
 	input = ft_input_remove_extra_whitespace(input);
-	input = ft_input_validation(input);
+	input = ft_input_validation(input, exit_status);
 	return (input);
 }
