@@ -28,8 +28,6 @@
 void	handle_exit_conditions_for_heredocs(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging exit conditions for"
-		"heredocs if built in command\n");
 	if ((ft_strcmp(params->result->cmd[0], "echo") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "cd") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "pwd") == 0)
@@ -38,7 +36,6 @@ void	handle_exit_conditions_for_heredocs(
 		|| (ft_strcmp(params->result->cmd[0], "env") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "exit") == 0))
 	{
-		ft_dprintf(2, "Debugging exiting heredocs\n");
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
 	}
@@ -60,7 +57,6 @@ void	handle_exit_conditions_for_heredocs(
 int	handle_file_opening_process_for_heredocs(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging handle redirections file opening\n");
 	while (params->k < params->i)
 	{
 		if (ft_strcmp(params->result->redirect[params->k], "a") == 0)
@@ -96,7 +92,7 @@ int	handling_dup2_and_closing_heredoc_pipes_before_execve(
 		close(params->input_fd);
 	if (dup2(params->pipes[params->pipe_count - 1][0], STDIN_FILENO) == -1)
 	{
-		perror("dup2 failed");
+		perror("dup2 failed for pipes");
 		return (-1);
 	}
 	if (params->output_fd > 0)
@@ -109,7 +105,6 @@ int	handling_dup2_and_closing_heredoc_pipes_before_execve(
 		}
 		close(params->output_fd);
 	}
-	ft_dprintf(2, "Debugging closing current pipe\n");
 	params->a = 0;
 	while (params->a < params->pipe_count)
 	{
@@ -136,7 +131,6 @@ int	handling_dup2_and_closing_heredoc_pipes_before_execve(
 int	handle_execve_for_heredocs(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging handle execve for heredocs\n");
 	handle_file_opening_process_for_heredocs(params, env);
 	if (handling_dup2_and_closing_heredoc_pipes_before_execve
 		(params, env) == -1)
@@ -179,7 +173,6 @@ int	handle_execve_for_heredocs(
 int	handle_child_execution(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging Entering the heredocs loop\n");
 	params->i = 0;
 	while (params->result->redirect[params->i] != NULL)
 		params->i++;

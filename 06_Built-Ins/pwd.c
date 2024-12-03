@@ -32,13 +32,9 @@ void	pwd_command(int ac, char **av)
 		if (ac == 1 && ft_strlen(av[0]) == 3)
 		{
 			if (getcwd(pwd, sizeof(pwd)) != NULL)
-				ft_dprintf(2, "%s\n", pwd);
+				ft_dprintf(1, "%s\n", pwd);
 			else
 				perror("pwd error");
 		}
-		else if (ac == 1 && ft_strlen(av[0]) != 3)
-			ft_dprintf(2, "%s: command not found\n", av[0]);
-		else
-			ft_dprintf(2, "%s : too many arguments\n", av[0]);
 	}
 }

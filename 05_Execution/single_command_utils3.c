@@ -94,7 +94,6 @@ void	exiting_conditions_for_built_in(
 		|| (ft_strcmp(params->result->cmd[0], "env") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "exit") == 0))
 	{
-		ft_dprintf(2, "Debugging exiting redirects for no pipe count\n");
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
 	}
@@ -115,7 +114,6 @@ void	exiting_conditions_for_built_in(
 void	handle_execve_for_redirections(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging entering handle_execve_for_redirections\n");
 	if (params->result->cmd[0] == NULL)
 	{
 		ft_dprintf(2, "No commands found, so we just exit\n");
@@ -160,7 +158,6 @@ void	handling_executing_execve_other_cases(
 			|| (ft_strcmp(params->result->redirect[params->loop_counter],
 					">>") == 0))
 		{
-			ft_dprintf(2, "exiting no_pipes for executing execve other cases\n");
 			clean_up_function(params, env);
 			exit(EXIT_SUCCESS);
 		}

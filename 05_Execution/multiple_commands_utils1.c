@@ -34,11 +34,7 @@ int	check_for_pipes(t_list *node)
 	{
 		result = (t_exec_node *)traverse->content;
 		if (result->type == AST_PIPE)
-		{
-			ft_dprintf(2, "Debugging pipes detected."
-				"Continuing with function\n");
 			return (0);
-		}
 		traverse = traverse->next;
 	}
 	return (-1);
@@ -71,7 +67,6 @@ int	check_total_commands(t_list *node)
 		traverse = traverse->next;
 	}
 	command_count++;
-	ft_dprintf(2, "Total number of commands: %d\n", command_count);
 	return (command_count);
 }
 
@@ -178,5 +173,4 @@ void	searching_for_heredocs(
 		}
 		params->traverse = params->traverse->next;
 	}
-	ft_dprintf(2, "Total Number of heredocs: %d\n", params->heredocs_count);
 }

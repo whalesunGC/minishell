@@ -63,7 +63,6 @@ void	execute_child_process_for_redirections(
 int	handle_redirects(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging handle redirects\n");
 	while (params->result->redirect[params->i] != NULL)
 		params->i++;
 	if (*params->exit_status != 0)
@@ -93,7 +92,6 @@ int	handle_redirects(
 
 void	freeing_heredoc_pipes(t_redirect_single_command_params *params)
 {
-	ft_dprintf(2, "Debugging freeing heredoc pipes single commands\n");
 	params->z = 0;
 	while (params->z < params->pipe_count)
 	{
@@ -118,7 +116,6 @@ void	freeing_heredoc_pipes(t_redirect_single_command_params *params)
 void	clean_up_function(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging clean up function single commands\n");
 	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	free(params->signal_data);
 	free(params->exit_status);
@@ -142,7 +139,6 @@ void	clean_up_function(
 
 int	handle_other_cases(t_redirect_single_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging handle other cases\n");
 	if (params->result->cmd[0] == NULL)
 	{
 		if (handle_single_commands(params, env) == -1)

@@ -84,7 +84,6 @@ void	handling_file_opening_for_redirects(
 void	handle_file_opening_multiple_commands(
 			t_piping_multiple_command_params *params)
 {
-	ft_dprintf(2, "Debugging file opening\n");
 	params->b = 0;
 	while (params->result->redirect[params->b] != NULL)
 		params->b++;
@@ -128,24 +127,18 @@ void	handle_heredocs_pipe_number_multiple_commands(
 {
 	if (params->result->redirect != NULL)
 	{
-		ft_dprintf(2, "Debugging heredocs\n");
 		handle_file_opening_multiple_commands(params);
 		if (params->heredocs_count > 0)
 		{
 			params->b = 0;
 			while (params->result->redirect[params->b] != NULL)
 			{
-				ft_dprintf(2, "Debugging counting heredocs count total\n");
 				if (ft_strcmp(params->result->redirect[params->b], "a") == 0)
 					params->heredocs_pipe_number++;
 				params->b++;
 			}
 			if (params->heredocs_pipe_number > 0)
-			{
 				params->heredocs_pipe_index = params->heredocs_pipe_number - 1;
-				ft_dprintf(2, "reading pipe number [%d]\n",
-					params->heredocs_pipe_index);
-			}
 		}
 	}
 }

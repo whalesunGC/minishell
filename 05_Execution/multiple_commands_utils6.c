@@ -27,7 +27,6 @@
 void	handle_input_output_heredocs_multiple_commands(
 		t_piping_multiple_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging handling input, output, heredocs redirections\n");
 	params->b = 0;
 	while (params->result->redirect[params->b] != NULL)
 	{
@@ -62,16 +61,12 @@ void	setup_pipe_redirection_and_closing(
 	{
 		if (params->result->redirect != NULL)
 		{
-			ft_dprintf(2, "going in this loop for i < total - 1\n");
 			handle_input_output_heredocs_multiple_commands(params, env);
 			if (params->output_fd == 0)
 				setting_up_pipes_to_redirect_output(params, env);
 		}
 		else
-		{
-			ft_dprintf(2, "going in this loop to redirect output purely\n");
 			setting_up_pipes_to_redirect_output(params, env);
-		}
 	}
 	if (params->i > 0)
 	{
@@ -79,14 +74,10 @@ void	setup_pipe_redirection_and_closing(
 		{
 			if (params->output_fd > 0)
 				read_from_pipe(params, env);
-			ft_dprintf(2, "going in this loop for i > 0\n");
 			handle_input_output_heredocs_multiple_commands(params, env);
 		}
 		else
-		{
-			ft_dprintf(2, "going in this loop to read from pipe\n");
 			read_from_pipe(params, env);
-		}
 	}	
 }
 
@@ -104,7 +95,6 @@ void	setup_pipe_redirection_and_closing(
 void	handle_built_in_multiple_piping_commands(
 			t_piping_multiple_command_params *params, char ***env)
 {
-	ft_dprintf(2, "debugging handle built in multiple piping commands\n");
 	params->av = params->result->cmd;
 	params->ac = 0;
 	while (params->av[params->ac] != NULL)
@@ -141,7 +131,6 @@ void	handle_built_in_multiple_piping_commands(
 void	handle_exit_conditions_if_built_in(
 			t_piping_multiple_command_params *params, char ***env)
 {
-	ft_dprintf(2, "debugging handle exit conditions if built in\n");
 	if ((ft_strcmp(params->result->cmd[0], "echo") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "cd") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "pwd") == 0)

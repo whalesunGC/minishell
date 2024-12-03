@@ -27,7 +27,6 @@
 void	clean_up_function_multiple_commands(
 			t_piping_multiple_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging clean up function\n");
 	free_pipes(params->pipes, params->total - 1);
 	free_heredocs_pipes(params->heredocs_pipes, params->heredocs_count);
 	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
@@ -54,7 +53,7 @@ void	clean_up_function_multiple_commands(
 void	handle_multiple_commands_null_heredocs_input(
 		t_piping_multiple_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging NULL heredocs input Please use DELIMITER\n");
+	ft_dprintf(2, "warning: here-document at delimited by end-of-file\n");
 	params->heredocs_pipe_number = 0;
 	while (params->heredocs_pipe_number < params->heredocs_count)
 	{
@@ -120,7 +119,6 @@ void	handle_multiple_commands_heredocs_delimiter(
 void	handle_multiple_commands_heredocs_input(
 			t_piping_multiple_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging heredocs if there is input\n");
 	if (params->ignore_quote == 1)
 		params->input1 = expansion_string(params->input1,
 				params->ignore_quote, *env, params->exit_status);
@@ -146,8 +144,6 @@ void	handle_multiple_commands_heredocs_input(
 void	handle_heredocs_readline_multiple_commands(
 		t_piping_multiple_command_params *params, char ***env)
 {
-	ft_dprintf(2, "Debugging Writing into pipe number [%d]\n",
-		params->heredocs_pipe_number);
 	while (1)
 	{
 		params->input1 = readline("heredocs> ");

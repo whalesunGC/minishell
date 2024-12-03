@@ -35,13 +35,11 @@ int	heredocs(t_redirect_single_command_params *params, char ***env)
 				return (-1);
 			if (params->result->redirect[params->x + 1] != NULL)
 			{
-				ft_dprintf(2, "Debugging next redirect\n");
 				handling_next_redirect(params);
 				continue ;
 			}
 			else if (params->result->redirect[params->x + 1] == NULL)
 			{
-				ft_dprintf(2, "Debugging handling last redirect <<\n");
 				if (handling_last_redirect(params, env) == -1)
 					return (-1);
 			}

@@ -46,7 +46,7 @@ static void	change_to_home_directory(char ***env)
 	home = ft_getenv("HOME", *env);
 	if (home == NULL)
 	{
-		ft_dprintf(1, "HOME environment variable is not set\n");
+		ft_dprintf(2, "HOME environment variable is not set\n");
 		return ;
 	}
 	else if (chdir(home) != 0)
@@ -106,7 +106,7 @@ char	**cd_command(int ac, char **av, char ***env)
 	{
 		if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
 		{
-			ft_dprintf(1, "getcwd failed\n");
+			ft_dprintf(2, "getcwd failed\n");
 			return (*env);
 		}
 		if (ac == 1 && ft_strlen(av[0]) == 2)
@@ -115,14 +115,14 @@ char	**cd_command(int ac, char **av, char ***env)
 			updating_env(env, old_pwd);
 		}
 		else if (ac >= 1 && ft_strlen(av[0]) > 2)
-			ft_dprintf(1, "%s: command not found\n", av[0]);
+			ft_dprintf(2, "%s: command not found\n", av[0]);
 		else if (ac == 2)
 		{
 			changing_directories(av, env);
 			updating_env(env, old_pwd);
 		}
 		else
-			ft_dprintf(1, "Too many arguments!\n");
+			ft_dprintf(2, "Too many arguments!\n");
 	}
 	return (*env);
 }

@@ -35,10 +35,7 @@ int	checking_if_pipes_exist(t_list *node)
 	{
 		result = (t_exec_node *)traverse->content;
 		if (result->type == AST_PIPE)
-		{
-			ft_dprintf(2, "Pipes detected. Proceeding to function with pipes\n");
 			return (-1);
-		}
 		traverse = traverse->next;
 	}
 	return (0);
@@ -61,7 +58,6 @@ void	finding_heredocs(t_redirect_single_command_params *params, t_list *node)
 	params->traverse = node;
 	while (params->traverse)
 	{
-		ft_dprintf(2, "checking for heredocs\n");
 		params->result = (t_exec_node *)params->traverse->content;
 		if (params->result->type == AST_COMMAND)
 		{
@@ -97,7 +93,6 @@ void	finding_heredocs(t_redirect_single_command_params *params, t_list *node)
 int	handling_no_heredocs(
 			t_redirect_single_command_params *params, char ***env, t_list *node)
 {	
-	ft_dprintf(2, "handling no heredocs\n");
 	params->traverse = node;
 	while (params->traverse)
 	{
@@ -106,16 +101,13 @@ int	handling_no_heredocs(
 		{
 			if (params->result->redirect != NULL)
 			{
-				ft_dprintf(2, "handling redirects first\n");
 				if (handle_redirects(params, env) == -1)
 					return (-1);
-				ft_dprintf(2, "handling other cases\n");
 				if (handle_other_cases(params, env) == -1)
 					return (-1);
 			}
 			else
 			{
-				ft_dprintf(2, "handling no redirects at all\n");
 				if (handle_other_cases(params, env) == -1)
 					return (-1);
 			}
@@ -138,7 +130,6 @@ int	handling_no_heredocs(
 
 int	creating_pipes(t_redirect_single_command_params *params)
 {
-	ft_dprintf(2, "Total heredocs found: %d\n", params->pipe_count);
 	params->pipes = creating_new_pipes(params->pipe_count);
 	if (params->pipes == NULL)
 	{
@@ -178,19 +169,15 @@ int	handling_heredocs(
 	params->traverse = node;
 	while (params->traverse)
 	{
-		ft_dprintf(2, "Debugging traversing node handling heredocs\n");
 		params->result = (t_exec_node *)params->traverse->content;
 		if (params->result->type == AST_COMMAND)
 		{
 			if (params->result->redirect != NULL)
 			{
-				ft_dprintf(2, "Debugging entering heredocs function\n");
 				if (heredocs(params, env) == -1)
 					return (-1);
-				ft_dprintf(2, "Debugging entering handle_redirects function\n");
 				if (handle_redirects(params, env) == -1)
 					return (-1);
-				ft_dprintf(2, "Debugging entering handle_other_cases function\n");
 				if (handle_other_cases(params, env) == -1)
 					return (-1);
 			}
