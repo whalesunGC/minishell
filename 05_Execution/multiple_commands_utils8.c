@@ -67,7 +67,7 @@ void	increment_counters_and_traverse_next_node(
 int	handle_forking_process_and_executing_child(
 			t_piping_multiple_command_params *params, char ***env, int i)
 {
-	if (*params->exit_status != 0)
+	if (*params->exit_status != 0 && *params->exit_status != 1)
 		return (-1);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
