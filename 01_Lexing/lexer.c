@@ -121,7 +121,6 @@ t_list	*lexer(char *input)
 	char	**tokens;
 	t_list	*token_data;
 
-	ft_printf("%s\n", input);
 	tokens = tokenize(input);
 	if (!tokens)
 		return (free(input), NULL);
@@ -130,7 +129,6 @@ t_list	*lexer(char *input)
 		token_data = lexer_init_data(tokens);
 		if (!token_data)
 			return (ft_free_split(tokens), free(tokens), NULL);
-		ft_print_tokens(token_data);
 	}
 	return (ft_free_split(tokens), free(tokens), token_data);
 }
