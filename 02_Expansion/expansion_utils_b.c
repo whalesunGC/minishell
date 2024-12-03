@@ -100,6 +100,8 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 	{
 		data->raw_string = expansion_string(data->raw_string, 0,
 				env, exit_status);
+		if (data->type == TOKEN_VARIABLE && data->is_first_token)
+			data->type = TOKEN_COMMAND;
 		if (data->type == TOKEN_VARIABLE)
 			data->type = TOKEN_STRING;
 		if (data->type == TOKEN_RD_FD)
@@ -108,7 +110,7 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 			token_data = handle_word_split(ft_strdup(data->raw_string),
 					token_data);
 		data = (t_lex_data *)(*token_data)->content;
-		if (data->type != TOKEN_STRING)
+		if (!(data->type == TOKEN_STRING) && !(data->type == TOKEN_COMMAND))
 			handle_retokenize(data);
 	}
 	handle_remove_quote(data);

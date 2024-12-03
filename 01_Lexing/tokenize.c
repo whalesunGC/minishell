@@ -36,8 +36,6 @@ void	handle_retokenize(t_lex_data *data)
  */
 t_token_type	lexer_token_type_a(char *input, int is_first_token)
 {
-	if (is_first_token)
-		return (TOKEN_COMMAND);
 	if (ft_strncmp(input, ">>", 2) == 0)
 		return (TOKEN_REDIRECTION_APPEND);
 	else if (ft_strncmp(input, "<<", 2) == 0)
@@ -56,6 +54,8 @@ t_token_type	lexer_token_type_a(char *input, int is_first_token)
 		return (TOKEN_OR_SEQ);
 	else if (ft_strncmp(input, "|", 1) == 0)
 		return (TOKEN_PIPE);
+	else if (is_first_token)
+		return (TOKEN_COMMAND);
 	else
 		return (42);
 }
