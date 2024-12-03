@@ -123,6 +123,5 @@ t_list	*expansion(t_list *token_data, char **env, int *exit_status)
 	else
 		while (token_data != NULL)
 			token_data = ft_expansion_tokens(&token_data, env, exit_status);
-	ft_print_tokens(head);
 	return (head);
 }

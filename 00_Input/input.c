@@ -75,7 +75,6 @@ char	*ft_input_remove_extra_whitespace(char *input)
 		else
 			i++;
 	}
-	ft_printf("Output from remove_extra_whitespace: %s\n", input);
 	return (input);
 }
 
@@ -104,7 +103,6 @@ char	*ft_input_add_whitespace(char *input)
 		i = ft_add_whitespace_special(&input, i, in_s_q, in_d_q);
 		i++;
 	}
-	ft_printf("Output from add_whitespace: %s\n", input);
 	return (input);
 }
 
@@ -136,7 +134,6 @@ char	*ft_input_swap_whitespace(char *input)
 			input = ft_str_replace(input, i, " ");
 		i++;
 	}
-	ft_printf("Output from swap_whitespace: %s\n", input);
 	return (input);
 }
 
@@ -150,11 +147,9 @@ char	*ft_input_swap_whitespace(char *input)
  */
 char	*input_clean(char *input)
 {
-	ft_printf("Readline input: %s\n", input);
 	input = ft_input_swap_whitespace(input);
 	input = ft_input_add_whitespace(input);
 	input = ft_input_remove_extra_whitespace(input);
-	ft_printf("Cleaned input: %s\n", input);
 	input = ft_input_validation(input);
 	return (input);
 }

@@ -53,13 +53,13 @@ static int	ft_handle_invalid_nodes(t_ast_node *ast_node, t_list *exec_list)
 	if (ast_node->type == AST_AND || ast_node->type == AST_OR)
 	{
 		ft_lstclear(&exec_list, ft_free_exec_data);
-		ft_printf("Syntax error: && or ||\n");
+		ft_dprintf(2, "Syntax error: && or ||\n");
 		return (1);
 	}
 	if (ast_node->type == AST_SUBSHELL)
 	{
 		ft_lstclear(&exec_list, ft_free_exec_data);
-		ft_printf("Syntax error: Subshell\n");
+		ft_dprintf(2, "Syntax error: Subshell\n");
 		return (1);
 	}
 	return (0);
@@ -146,6 +146,5 @@ t_list	*ft_ast_to_linkedlist(t_ast_node *node)
 	}
 	if (!exec_node)
 		return (NULL);
-	ft_print_exec_list(exec_node);
 	return (exec_node);
 }
