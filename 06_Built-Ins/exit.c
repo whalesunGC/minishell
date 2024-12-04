@@ -13,14 +13,28 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: exit_too_many_args
+ * @brief: return prompt
+ * 
+ * @param param: to free up the arguments which
+ *		are already split into tokens
+ *@param env: to free up the duplicated env
+ * 
+ * @return: void function
+ */
+
+static void	exit_too_many_args(int *e_s)
+{
+	ft_dprintf(1, "exit\n");
+	*e_s = 1;
+}
+
+/**
  * @function: exit_is_the_only_argument
  * @brief: exits the program if the only argument is exit
  * 
  * @param **av: to free up the arguments which
- 		are already split into tokens
- 	 **env: to free up the duplicated env
- * 
- * @return: void function
+ 		are already split exit(EXIT_SUCCESS);
  */
 
 static void	exit_is_the_only_argument(t_redirect_single_command_params *params,
@@ -111,7 +125,7 @@ static int	is_argument_numeric(const char *arg)
  */
 
 void	exit_command(t_redirect_single_command_params *params,
-		char **env)
+		char **env, int *e_s)
 {
 	if (params->ac > 0 && ft_strncmp(params->av[0], "exit", 4) == 0)
 	{
@@ -119,7 +133,7 @@ void	exit_command(t_redirect_single_command_params *params,
 			exit_is_the_only_argument(params, env);
 		else if (params->ac == 1 && ft_strlen(params->av[0]) != 4)
 			ft_dprintf(2, "%s: command not found\n", params->av[0]);
-		else if (params->ac == 2 && ft_strlen(params->av[0]) == 4)
+		else if (params->ac >= 2 && ft_strlen(params->av[0]) == 4)
 		{
 			if (is_argument_numeric(params->av[1]) == 0)
 			{
@@ -127,12 +141,14 @@ void	exit_command(t_redirect_single_command_params *params,
 					" argument required\n", params->av[0], params->av[1]);
 				exit_is_the_only_argument(params, env);
 			}
-			exit_with_one_other_argument(params, env);
-		}
-		else
-		{
-			ft_dprintf(1, "%s: too many arguments\n", params->av[0]);
-			exit_is_the_only_argument(params, env);
+			else if (params-> ac == 2)
+				exit_with_one_other_argument(params, env);
+			else
+			{
+				ft_dprintf(2, "%s: too many arguments\n", params->av[0]);
+				exit_too_many_args(e_s);
+				return ;
+			}
 		}
 	}
 }

@@ -112,7 +112,7 @@ void	handle_built_in_multiple_piping_commands(
 	else if (ft_strcmp(params->av[0], "env") == 0)
 		env_command(params->ac, params->av, *env);
 	else if (ft_strcmp(params->av[0], "exit") == 0)
-		exit_command_multiple(params, *env);
+		exit_command_multiple(params, *env, e_s);
 }
 
 /**
