@@ -43,5 +43,9 @@ void	env_command(int ac, char **av, char **env)
 				i++;
 			}
 		}
+		else if (ac >= 1 && ft_strlen(av[0]) != 3)
+			ft_dprintf(1, "%s: too many arguments\n", av[0]);
+		else
+			ft_dprintf(1, "%s: '%s': too many arguments\n", av[0], av[1]);
 	}
 }

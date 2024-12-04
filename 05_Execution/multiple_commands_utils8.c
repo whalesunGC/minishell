@@ -110,7 +110,6 @@ int	handle_arguments(
 		{
 			if (params->result->redirect != NULL)
 				handle_heredocs_pipe_number_multiple_commands(params);
-
 			if (params->flag == 1)
 			{
 				params->traverse = params->traverse->next;

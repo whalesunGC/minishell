@@ -36,6 +36,11 @@ void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 	params.exit_status = exit_status;
 	*exit_status = 0;
 	params.total = check_total_commands(node);
+	if (params.total > 43)
+	{
+		ft_dprintf(2, "Too many pipes created\n");
+		return ;
+	}
 	params.pid_array = (pid_t *)malloc(sizeof(pid_t) * params.total);
 	if (!params.pid_array)
 		return ;
@@ -44,6 +49,14 @@ void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 	if (params.pipes == NULL || setting_up_pipes(&params) == -1)
 		return ;
 	searching_for_heredocs(&params, node);
+	if (params.heredocs_count > 16)
+	{
+		ft_dprintf(2, "Maximum here-dcoument count exceeded\n");
+		closing_main_pipes(&params);
+		free_pipes(params.pipes, params.total - 1);
+		free(params.pid_array);
+		return ;
+	}
 	if (params.heredocs_count > 0)
 	{
 		params.heredocs_pipes = creating_heredocs_pipes(params.heredocs_count);

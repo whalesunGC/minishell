@@ -22,13 +22,11 @@
  */
 static int	ft_only_n(char *string)
 {
-	string++;
 	while (*string)
 	{
-		if (*string == 'n')
-			string++;
-		else
+		if (*string != 'n')
 			return (0);
+		string++;
 	}
 	return (1);
 }
@@ -42,12 +40,12 @@ static int	ft_only_n(char *string)
  *
  * @return: void function
  */
-static void	print_with_n_option(int ac, char **av)
+static void	print_with_n_option(int ac, char **av, int start)
 
 {
 	int	i;
 
-	i = 2;
+	i = start;
 	while (i < ac)
 	{
 		ft_dprintf(1, "%s", av[i]);
@@ -67,12 +65,12 @@ static void	print_with_n_option(int ac, char **av)
  * @return: void function
  */
 
-static void	print_without_n_option(int ac, char **av)
+static void	print_without_n_option(int ac, char **av, int start)
 
 {
 	int	i;
 
-	i = 1;
+	i = start;
 	while (i < ac)
 	{
 		ft_dprintf(1, "%s", av[i]);
@@ -95,21 +93,25 @@ static void	print_without_n_option(int ac, char **av)
 
 void	echo_command(int ac, char **av)
 {
+	int	i;
+	int	n_option_count;
+	
+	i = 1;
+	n_option_count = 0;
 	if (ac > 0 && ft_strncmp(av[0], "echo", 4) == 0)
 	{
-		if (ac == 1)
-			ft_dprintf(1, "\n");
-		else if (ac > 1 && ft_strncmp(av[1], "-n", 2) == 0 && ft_only_n(av[1]))
+		while (i < ac && ft_strncmp(av[i], "-n", 2) == 0 && ft_only_n(av[i] + 2))
 		{
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			print_with_n_option(ac, av);
+			n_option_count++;
+			i++;
 		}
+		if (i == ac)
+			return ;
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		if (n_option_count > 0)
+			print_with_n_option(ac, av, i);
 		else
-		{
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			print_without_n_option(ac, av);
-		}
+			print_without_n_option(ac, av, i);
 	}
 }

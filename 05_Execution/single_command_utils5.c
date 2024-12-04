@@ -65,11 +65,25 @@ int	handle_dup2_built_in_with_redirects(
 {
 	if (params->output_fd > 0)
 		close(params->output_fd);
-	params->output_fd = open(params->result->rd_arg
-		[params->rd_arg_counter], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (ft_strcmp(params->result->redirect[params->g], ">") == 0)
+	{
+		params->output_fd = open(params->result->rd_arg
+			[params->rd_arg_counter], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	}
+	else if (ft_strcmp(params->result->redirect[params->g], ">>") == 0)
+	{
+		params->output_fd = open(params->result->rd_arg
+			[params->rd_arg_counter], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	}
+	if (params->output_fd < 0)
+	{
+		close(params->original_fd);
+		return (-1);
+	}
 	if (dup2(params->output_fd, STDOUT_FILENO) == -1)
 	{
 		perror("dup2 failed");
+		close(params->original_fd);
 		return (-1);
 	}
 	params->rd_arg_counter++;
@@ -103,6 +117,11 @@ int	handle_single_commands_built_in_with_redirects(
 					close(params->input_fd);
 				params->input_fd = open(params->result->rd_arg
 					[params->rd_arg_counter], O_RDONLY);
+				if (params->input_fd < 0)
+				{
+					close(params->original_fd);
+					return (-1);
+				}
 			}
 			else if ((ft_strcmp(params->result->redirect[params->g], ">") == 0)
 				|| (ft_strcmp(params->result->redirect[params->g], ">>") == 0))
