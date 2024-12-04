@@ -132,7 +132,7 @@ void	handle_exit_conditions_if_built_in(
 			t_piping_multiple_command_params *params, char ***env)
 {
 	int	e_s;
-
+	
 	e_s = 0;
 	if ((ft_strcmp(params->result->cmd[0], "echo") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "cd") == 0)

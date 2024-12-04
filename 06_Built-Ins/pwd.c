@@ -29,7 +29,7 @@ void	pwd_command(int ac, char **av, int *e_s)
 
 	if (ac > 0 && ft_strncmp(av[0], "pwd", 3) == 0)
 	{
-		if (ac == 1 && ft_strlen(av[0]) == 3)
+		if (ac >= 1 && ft_strlen(av[0]) == 3)
 		{
 			if (getcwd(pwd, sizeof(pwd)) != NULL)
 				ft_dprintf(1, "%s\n", pwd);

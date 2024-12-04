@@ -32,6 +32,11 @@ void	execution(t_list *node, char ***env, int *exit_status)
 		return ;
 	ft_memset(&params, 0, sizeof(t_redirect_single_command_params));
 	finding_heredocs(&params, node);
+	if (params.pipe_count > 16)
+	{
+		ft_dprintf(2, "Maximum here-dcoument count exceeded\n");
+		return ;
+	}
 	params.exec_data_head = node;
 	params.exit_status = exit_status;
 	*exit_status = 0;
