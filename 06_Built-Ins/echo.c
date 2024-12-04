@@ -106,8 +106,6 @@ void	echo_command(int ac, char **av)
 			n_option_count++;
 			i++;
 		}
-		if (i == ac)
-			return ;
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		if (n_option_count > 0)

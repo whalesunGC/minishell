@@ -45,7 +45,7 @@ char	**updating_env(char ***env, char *old_pwd);
 void	pwd_command(int ac, char **av, int *e_s);
 void	env_command(int ac, char **av, char **env);
 void	exit_command(t_redirect_single_command_params *params, char **env,
-		 int *e_s);
+			int *e_s);
 void	exit_command_multiple(t_piping_multiple_command_params *params,
 			char **env, int *e_s);
 void	echo_command(int ac, char **av);
