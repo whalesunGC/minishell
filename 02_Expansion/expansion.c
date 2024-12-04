@@ -48,10 +48,9 @@ static int	handle_quote_status(char *input, int *in_single_quote,
  *
  * @param input: address to the pointer of the
  * string(string by reference)
- * @param i: point to the index value of where '$' is found
+ * @param i: index value of where '$' is found
  * @param env: env variables copied from main
  *
- * @return: returns expanded string or NULL if expansion fails.
  */
 static void	handle_env_variable(char **input, int *i, char **env)
 {

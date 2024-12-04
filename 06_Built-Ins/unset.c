@@ -97,13 +97,13 @@ char	**unset_command(int ac, char **av, char **env)
 		if (ac >= 1 && ft_strlen(av[0]) == 5)
 		{
 			if (ac == 1)
-				ft_dprintf(2, "%s: Nothing to unset\n", av[j]);
+				ft_dprintf(1, "%s: Nothing to unset\n", av[j]);
 			while (j < ac)
 			{
 				if (unset_variable(av[j], env) == 0)
-					ft_dprintf(2, "%s: unset string error\n", av[j]);
+					ft_dprintf(1, "%s: unset string error\n", av[j]);
 				else
-					ft_dprintf(2, "%s: unset string removed\n", av[j]);
+					ft_dprintf(1, "%s: unset string removed\n", av[j]);
 				j++;
 			}
 		}

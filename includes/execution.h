@@ -153,7 +153,7 @@ void	handle_input_output_heredocs_multiple_commands(
 void	setup_pipe_redirection_and_closing(
 			t_piping_multiple_command_params *params, char ***env);
 void	handle_built_in_multiple_piping_commands(
-			t_piping_multiple_command_params *params, char ***env);
+			t_piping_multiple_command_params *params, char ***env, int *e_s);
 void	handle_exit_conditions_if_built_in(
 			t_piping_multiple_command_params *params, char ***env);
 void	handle_child_process(

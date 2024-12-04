@@ -116,6 +116,8 @@ int	valid_export_arguments_first_parse(t_export_params *params,
 	params->is_valid = 1;
 	params->i = 0;
 	first_parsing(params);
+	if (params->valid_count == 0)
+		return (free_var_name(params), free_var_value(params), -1);
 	if (params->valid_count > 0)
 	{
 		params->new_env = copy_envp_with_ac(*env, params->valid_count);

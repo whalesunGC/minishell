@@ -69,7 +69,9 @@ void	closing_main_pipes(t_piping_multiple_command_params *params)
 void	handle_invalid_command(
 			t_piping_multiple_command_params *params, char ***env)
 {
-	ft_dprintf(1, "command not found\n");
+	ft_dprintf(2, "%s : command not found\n", params->result->cmd[0]);
+	if (params->command_path != params->result->cmd[0])
+		free(params->command_path);
 	clean_up_function_multiple_commands(params, env);
 	exit(127);
 }

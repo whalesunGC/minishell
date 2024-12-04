@@ -93,7 +93,7 @@ void	setup_pipe_redirection_and_closing(
  */
 
 void	handle_built_in_multiple_piping_commands(
-			t_piping_multiple_command_params *params, char ***env)
+			t_piping_multiple_command_params *params, char ***env, int *e_s)
 {
 	params->av = params->result->cmd;
 	params->ac = 0;
@@ -102,11 +102,11 @@ void	handle_built_in_multiple_piping_commands(
 	if (ft_strcmp(params->av[0], "echo") == 0)
 		echo_command(params->ac, params->av);
 	else if (ft_strcmp(params->av[0], "cd") == 0)
-		cd_command(params->ac, params->av, env);
+		cd_command(params->ac, params->av, env, e_s);
 	else if (ft_strcmp(params->av[0], "pwd") == 0)
-		pwd_command(params->ac, params->av);
+		pwd_command(params->ac, params->av, e_s);
 	else if (ft_strcmp(params->av[0], "export") == 0)
-		export_command(params->ac, params->av, env);
+		export_command(params->ac, params->av, env, e_s);
 	else if (ft_strcmp(params->av[0], "unset") == 0)
 		unset_command(params->ac, params->av, *env);
 	else if (ft_strcmp(params->av[0], "env") == 0)
@@ -131,6 +131,9 @@ void	handle_built_in_multiple_piping_commands(
 void	handle_exit_conditions_if_built_in(
 			t_piping_multiple_command_params *params, char ***env)
 {
+	int	e_s;
+
+	e_s = 0;
 	if ((ft_strcmp(params->result->cmd[0], "echo") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "cd") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "pwd") == 0)
@@ -139,9 +142,9 @@ void	handle_exit_conditions_if_built_in(
 		|| (ft_strcmp(params->result->cmd[0], "env") == 0)
 		|| (ft_strcmp(params->result->cmd[0], "exit") == 0))
 	{
-		handle_built_in_multiple_piping_commands(params, env);
+		handle_built_in_multiple_piping_commands(params, env, &e_s);
 		clean_up_function_multiple_commands(params, env);
-		exit(EXIT_SUCCESS);
+		exit(e_s);
 	}	
 }
 
@@ -168,12 +171,17 @@ void	handle_child_process(
 	if (params->heredocs_count > 0)
 		closing_heredocs_pipes(params);
 	closing_main_pipes(params);
+	if (!params->result->cmd[0])
+	{
+		clean_up_function_multiple_commands(params, env);
+		exit(EXIT_SUCCESS);
+	}
 	handle_exit_conditions_if_built_in(params, env);
 	if (access(params->result->cmd[0], F_OK) == 0)
 		params->command_path = params->result->cmd[0];
 	else
 		params->command_path = find_command(&params->result->cmd[0], 0, *env);
-	if (params->command_path == NULL)
+	if (params->command_path == NULL || *params->result->cmd[0] == '\0')
 		handle_invalid_command(params, env);
 	else if (execve(params->command_path, params->result->cmd, *env) == -1)
 		handle_execve_failure(params, env);

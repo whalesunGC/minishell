@@ -59,7 +59,7 @@ static void	free_var_structures(t_export_params *params)
  * @return: (*env)
  */
 
-char	**export_command(int ac, char **av, char ***env)
+char	**export_command(int ac, char **av, char ***env, int *e_s)
 {
 	t_export_params	params;
 
@@ -73,11 +73,12 @@ char	**export_command(int ac, char **av, char ***env)
 		{
 			setting_up_of_av_structure(&params);
 			if (initialise_var_name_var_value(&params) == -1)
-				return (NULL);
-			parse_export_arguments(&params);
+				return (*e_s = 1, NULL);
+			if (parse_export_arguments(&params) == -1)
+				return (*e_s = 1, NULL);
 			checking_for_duplicates_in_var_name(&params);
 			if (valid_export_arguments_first_parse(&params, env) == -1)
-				return (NULL);
+				return (*e_s = 1, NULL);
 			if (params.valid_count > 0)
 				processing_for_valid_counts(&params, env);
 			free_var_structures(&params);

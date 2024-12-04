@@ -13,6 +13,18 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_empty_expansion
+ * @brief: frees and sets raw_string to NULL 
+ *
+ * @param data: token data
+ */
+static void	handle_empty_expansion(t_lex_data *data)
+{
+	free(data->raw_string);
+	data->raw_string = NULL;
+}
+
+/**
  * @function: ft_env_len
  * @brief: Calculates the length of an environment variable name
  *
@@ -122,6 +134,8 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 			data->type = lexer_token_type_c(data->raw_string, data->in_quote,
 					data->is_hd_delimiter, data->is_fd);
 	}
+	if (*data->raw_string == '\0')
+		handle_empty_expansion(data);
 	if ((data->type == TOKEN_STRING || data->type == TOKEN_COMMAND
 			|| data->type == TOKEN_INQUOTE) && ft_has_quote(data->raw_string))
 		data->raw_string = ft_remove_quote(data->raw_string);

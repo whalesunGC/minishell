@@ -86,6 +86,8 @@ static int	is_argument_numeric(const char *arg)
 	i = 0;
 	if (arg[i] == '-' || arg[i] == '+')
 		i = 1;
+	if (arg[i] == '\0')
+		return (0);
 	while (arg[i] != '\0')
 	{
 		if (ft_isdigit(arg[i]) == 0)
@@ -116,7 +118,7 @@ void	exit_command(t_redirect_single_command_params *params,
 		if (params->ac == 1 && ft_strlen(params->av[0]) == 4)
 			exit_is_the_only_argument(params, env);
 		else if (params->ac == 1 && ft_strlen(params->av[0]) != 4)
-			ft_dprintf(1, "%s: command not found\n", params->av[0]);
+			ft_dprintf(2, "%s: command not found\n", params->av[0]);
 		else if (params->ac == 2 && ft_strlen(params->av[0]) == 4)
 		{
 			if (is_argument_numeric(params->av[1]) == 0)
