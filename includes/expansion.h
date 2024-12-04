@@ -26,9 +26,6 @@ void	expansion_replace_string(char *env_var, int index, char **exp_input);
 //expansion_utils_b.c
 t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 			int *exist_status);
-char	*ft_getenv(char *string, char **env);
-char	*ft_var_exp(char **input, int start_index, char **env);
-int		ft_env_len(const char *input);
 
 //expansion_utils_c.c
 int		ft_has_whitespace(char *string);
@@ -37,4 +34,9 @@ int		ft_has_quote(char *string);
 t_list	**handle_word_split(char *string, t_list **current_token,
 			int *exit_status);
 t_list	*ft_lstinsert(t_list *node, t_list *current);
+
+//expansion_utils_d.c
+char	*ft_getenv(char *string, char **env);
+char	*ft_var_exp(char **input, int start_index, char **env);
+int		ft_env_len(const char *input);
 #endif

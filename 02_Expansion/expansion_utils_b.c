@@ -25,85 +25,25 @@ static void	handle_empty_expansion(t_lex_data *data)
 }
 
 /**
- * @function: ft_env_len
- * @brief: Calculates the length of an environment variable name
+ * @function: ft_is_only_whitespace
+ * @brief: checks if string contains only whitespace
  *
- * @param input: The input string starting with the variable name
- * @return: The length of the environment variable name
+ * @param string: input string
+ * @return: 1 if true, 0 if false
  */
-int	ft_env_len(const char *input)
+static int	ft_is_only_whitespace(char *string)
 {
-	int	len;
-
-	len = 0;
-	if (ft_strncmp(input, "$?", 2) == 0)
-		len = 2;
-	else if (input[len] == '$')
+	if (!string)
+		return (0);
+	while (*string)
 	{
-		len++;
-		while (input[len] && (ft_isalnum(input[len]) || input[len] == '_'))
-			len++;
+		if (ft_iswhitespace(*string))
+			;
+		else
+			return (0);
+		string++;
 	}
-	else
-		len = 1;
-	return (len);
-}
-
-/**
- * @function: ft_var_exp
- * @brief: takes an input that starts with a '$',
-	finds the env variable and replaces inplace.
- *
- * @param input: the address to the pointer of the input string.
- * @param start_index: an int which represents the starting
-	index that points to a '$'
- *
- * @return: returns a string with the '$VAR' replaced with
-	its corresponding env variable if found, else it returns
-	a string with '$VAR' replaced with a NULL
- */
-
-char	*ft_var_exp(char **input, int start_index, char **env)
-{
-	int		env_len;
-	char	*var;
-	char	*env_var;
-
-	env_len = ft_env_len(*input + start_index);
-	var = ft_substr(*input + start_index, 0, env_len);
-	env_var = ft_env_search(var, env);
-	return (free(var), env_var);
-}
-
-/**
- * @function: ft_getenv
- * @brief: takes a string and searches the env array for a corresponding
- * string after the = sign
- * 
- * @param string: search string
- * @param env: array of strings to search
- * @return: the result env if found, NULL if not found.
- */
-char	*ft_getenv(char *string, char **env)
-{
-	int		i;
-	int		len;
-	char	*value;
-
-	if (!string || !env)
-		return (NULL);
-	len = ft_strlen(string);
-	i = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], string, len) == 0 && env[i][len] == '=')
-		{
-			value = ft_strdup(env[i] + len + 1);
-			return (value);
-		}
-		i++;
-	}
-	return (NULL);
+	return (1);
 }
 
 /**
@@ -134,7 +74,7 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 			data->type = lexer_token_type_c(data->raw_string, data->in_quote,
 					data->is_hd_delimiter, data->is_fd);
 	}
-	if (*data->raw_string == '\0')
+	if (*data->raw_string == '\0' || ft_is_only_whitespace(data->raw_string))
 		handle_empty_expansion(data);
 	if ((data->type == TOKEN_STRING || data->type == TOKEN_COMMAND
 			|| data->type == TOKEN_INQUOTE) && ft_has_quote(data->raw_string))

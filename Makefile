@@ -7,7 +7,7 @@ LDFLAGS = -lreadline
 # Source files names for each directory
 INPUT_FILES = input.c	input_utils.c	input_validation.c	input_validation_helper.c
 LEXER_FILES = lexer.c	tokenize.c	lexer_utils.c	ft_split_ignore_quotes.c	ft_strchr_ignore_quotes.c
-EXPANSION_FILES = expansion.c	expansion_utils_a.c	expansion_utils_b.c	expansion_utils_c.c
+EXPANSION_FILES = expansion.c	expansion_utils_a.c	expansion_utils_b.c	expansion_utils_c.c	expansion_utils_d.c
 PARSER_FILES = parser.c	parser_utils_a.c	parser_utils_b.c	parser_rd_helper.c	parser_rd_helper_b.c	parser_recursive_descent.c	parser_ast_to_ll.c	parser_exec.c
 REDIRECTION_FILES = path_construction.c	path_construction_utils.c
 EXECUTION_FILES = single_command.c	single_command_utils1.c	single_command_utils2.c	single_command_utils3.c	single_command_utils4.c	single_command_utils5.c	single_command_utils6.c	single_command_utils7.c	single_command_utils8.c	single_command_utils9.c	single_command_utils10.c	multiple_commands.c	multiple_commands_utils1.c	multiple_commands_utils2.c	multiple_commands_utils3.c	multiple_commands_utils4.c	multiple_commands_utils5.c	multiple_commands_utils6.c	multiple_commands_utils7.c	multiple_commands_utils8.c	multiple_commands_utils9.c	multiple_commands_utils10.c	free_pipes.c
