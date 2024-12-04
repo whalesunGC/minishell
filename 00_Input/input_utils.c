@@ -21,7 +21,7 @@
  */
 int	ft_is_env(int i)
 {
-	return (ft_isalpha(i) || i == '_');
+	return (ft_isalpha(i) || i == '_' || ft_isdigit(i));
 }
 
 /**

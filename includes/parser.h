@@ -56,7 +56,7 @@ typedef struct s_ast_node
 }						t_ast_node;
 
 // parser.c
-t_ast_node				*parser(t_list *token_data);
+t_ast_node				*parser(t_list *token_data, int *exit_status);
 t_ast_node				*parse_command_line(t_parser_context *context);
 t_ast_node				*parse_pipeline(t_parser_context *context);
 t_ast_node				*parse_subshell_or_pipeline(t_parser_context *context);

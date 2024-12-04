@@ -104,7 +104,7 @@ t_ast_node	*parse_pipeline(t_parser_context *context)
  * @return: A parsed AST following the bash syntax,
  * or NULL if an error occurred
  */
-t_ast_node	*parser(t_list *token_data)
+t_ast_node	*parser(t_list *token_data, int *exit_status)
 {
 	t_parser_context	context;
 	t_ast_node			*ast_root;
@@ -124,6 +124,7 @@ t_ast_node	*parser(t_list *token_data)
 		ft_treeclear(&ast_root, free);
 		if (context.error_message)
 			free(context.error_message);
+		*exit_status = 2;
 		return (NULL);
 	}
 	return (ast_root);

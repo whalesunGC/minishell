@@ -22,7 +22,7 @@
  * @return: void function
  */
 
-void	pwd_command(int ac, char **av)
+void	pwd_command(int ac, char **av, int *e_s)
 
 {
 	char	pwd[PATH_MAX];
@@ -34,7 +34,10 @@ void	pwd_command(int ac, char **av)
 			if (getcwd(pwd, sizeof(pwd)) != NULL)
 				ft_dprintf(1, "%s\n", pwd);
 			else
+			{
+				*e_s = 1;
 				perror("pwd error");
+			}
 		}
 	}
 }

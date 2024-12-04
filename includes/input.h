@@ -14,7 +14,7 @@
 # define INPUT_H
 
 // input.c
-char	*input_clean(char *input);
+char	*input_clean(char *input, int *exit_status);
 char	*ft_input_swap_whitespace(char *input);
 char	*ft_input_remove_extra_whitespace(char *input);
 char	*ft_input_add_whitespace(char *input);
@@ -27,7 +27,7 @@ int		ft_add_whitespace_helper(char **input, int i, int delta);
 int		ft_is_env(int i);
 
 // input_validation.c
-char	*ft_input_validation(char *input);
+char	*ft_input_validation(char *input, int *exit_status);
 int		check_pipe_placement(const char *input);
 int		check_or_placement(const char *input);
 int		check_and_placement(const char *input);

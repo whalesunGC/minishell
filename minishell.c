@@ -91,7 +91,7 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (!ft_is_blank(input))
 			add_history(input);
-		input = input_clean(input);
+		input = input_clean(input, exit_status);
 		if (input == NULL)
 			continue ;
 		token_data = lexer(input);
@@ -102,7 +102,7 @@ int	main(int ac, char **av, char **envp)
 			continue ;
 		}
 		token_data = expansion(token_data, env, exit_status);
-		ast_root = parser(token_data);
+		ast_root = parser(token_data, exit_status);
 		exec_data = ft_ast_to_linkedlist(ast_root);
 		if (!exec_data)
 		{

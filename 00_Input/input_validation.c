@@ -19,24 +19,27 @@
  * @param input: input string from readline
  * @return: modified string that is delimited for the lexer module.
  */
-char	*ft_input_validation(char *input)
+char	*ft_input_validation(char *input, int *exit_status)
 {
 	if (!check_quotes_balance(input) || !check_parentheses_balance(input))
 	{
 		ft_dprintf(2, "Error: Unbalanced quotes or parentheses\n");
 		free(input);
+		*exit_status = 2;
 		return (NULL);
 	}
 	if (!check_or_placement(input) || !check_and_placement(input))
 	{
 		ft_dprintf(2, "Error: Invalid || or && placement\n");
 		free(input);
+		*exit_status = 2;
 		return (NULL);
 	}
 	if (!check_pipe_placement(input))
 	{
 		ft_dprintf(2, "Error: Invalid pipe placement\n");
 		free(input);
+		*exit_status = 2;
 		return (NULL);
 	}
 	return (input);

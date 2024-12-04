@@ -157,6 +157,8 @@ int	handle_single_commands_built_in(
 		|| (ft_strcmp(params->av[0], "env") == 0)
 		|| (ft_strcmp(params->av[0], "exit") == 0))
 	{
+		if (*params->exit_status != 0)
+			return (-1);
 		if (handle_single_commands_built_in_with_redirects(params) == -1)
 			return (-1);
 		execute_bulit_in_commands_with_redirects(params, env);

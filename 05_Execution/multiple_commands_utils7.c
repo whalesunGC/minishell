@@ -28,6 +28,7 @@ void	handle_file_opening_errors(t_piping_multiple_command_params *params)
 	{
 		ft_dprintf(2, "%s: ", params->result->rd_arg[params->rd_arg_counter]);
 		perror("Error opening file");
+		*params->exit_status = 1;
 		params->flag = 1;
 	}
 }

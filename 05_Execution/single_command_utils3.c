@@ -48,7 +48,7 @@ void	handle_command_path_and_execve_failure(
 void	executing_execve(
 			t_redirect_single_command_params *params, char ***env)
 {
-	if (ft_strcmp(params->result->cmd[0], "") == 0)
+	if (!params->result->cmd[0])
 	{
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
@@ -58,9 +58,9 @@ void	executing_execve(
 	else
 		params->command_path = find_command
 			(&params->result->cmd[0], 0, *env);
-	if (params->command_path == NULL)
+	if (params->command_path == NULL || *params->result->cmd[0] == '\0')
 	{
-		ft_dprintf(2, "command not found\n");
+		ft_dprintf(2, "%s : command not found\n", params->result->cmd[0]);
 		handle_command_path_and_execve_failure(params, env);
 	}
 	if (execve(params->command_path, params->result->cmd, *env) == -1)

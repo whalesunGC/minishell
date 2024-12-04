@@ -32,11 +32,11 @@ int	handle_single_commands_without_redirects(
 	if (ft_strcmp(params->av[0], "echo") == 0)
 		echo_command(params->ac, params->av);
 	else if (ft_strcmp(params->av[0], "cd") == 0)
-		cd_command(params->ac, params->av, env);
+		cd_command(params->ac, params->av, env, params->exit_status);
 	else if (ft_strcmp(params->av[0], "pwd") == 0)
-		pwd_command(params->ac, params->av);
+		pwd_command(params->ac, params->av, params->exit_status);
 	else if (ft_strcmp(params->av[0], "export") == 0)
-		export_command(params->ac, params->av, env);
+		export_command(params->ac, params->av, env, params->exit_status);
 	else if (ft_strcmp(params->av[0], "unset") == 0)
 		unset_command(params->ac, params->av, *env);
 	else if (ft_strcmp(params->av[0], "env") == 0)
@@ -136,11 +136,11 @@ void	execute_bulit_in_commands_with_redirects(
 	if (ft_strcmp(params->av[0], "echo") == 0)
 		echo_command(params->ac, params->av);
 	else if (ft_strcmp(params->av[0], "cd") == 0)
-		cd_command(params->ac, params->av, env);
+		cd_command(params->ac, params->av, env, params->exit_status);
 	else if (ft_strcmp(params->av[0], "pwd") == 0)
-		pwd_command(params->ac, params->av);
+		pwd_command(params->ac, params->av, params->exit_status);
 	else if (ft_strcmp(params->av[0], "export") == 0)
-		export_command(params->ac, params->av, env);
+		export_command(params->ac, params->av, env, params->exit_status);
 	else if (ft_strcmp(params->av[0], "unset") == 0)
 		unset_command(params->ac, params->av, *env);
 	else if (ft_strcmp(params->av[0], "env") == 0)
