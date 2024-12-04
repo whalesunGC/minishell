@@ -95,12 +95,13 @@ void	echo_command(int ac, char **av)
 {
 	int	i;
 	int	n_option_count;
-	
+
 	i = 1;
 	n_option_count = 0;
 	if (ac > 0 && ft_strncmp(av[0], "echo", 4) == 0)
 	{
-		while (i < ac && ft_strncmp(av[i], "-n", 2) == 0 && ft_only_n(av[i] + 2))
+		while (i < ac && ft_strncmp(av[i], "-n", 2)
+			== 0 && ft_only_n(av[i] + 2))
 		{
 			n_option_count++;
 			i++;

@@ -137,8 +137,6 @@ char	**cd_command(int ac, char **av, char ***env, int *e_s)
 			change_to_home_directory(env, e_s);
 			updating_env(env, old_pwd);
 		}
-		else if (ac >= 1 && ft_strlen(av[0]) > 2)
-			ft_dprintf(2, "%s: command not found\n", av[0]);
 		else if (ac == 2)
 		{
 			changing_directories(av, env, e_s);
