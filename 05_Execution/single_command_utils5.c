@@ -155,11 +155,7 @@ void	execute_bulit_in_commands_with_redirects(
 		env_command(params->ac, params->av, *env, params->exit_status);
 	else if (ft_strcmp(params->av[0], "exit") == 0)
 	{
-		if (params->output_fd > 0)
-		{
-			close(params->output_fd);
-			close(params->original_fd);
-		}
+		handle_closing_and_freeing(params);
 		*params->exit_status = exit_s;
 		exit_command(params, *env, params->exit_status);
 	}

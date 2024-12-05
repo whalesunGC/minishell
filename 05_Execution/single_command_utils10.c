@@ -64,7 +64,7 @@ int	handle_file_opening_process_for_heredocs(
 			params->k++;
 			continue ;
 		}
-		handle_file_opening_redirection(params);
+		handle_file_opening_redirection(params, env);
 		handle_file_opening_errors_redirection(params, env);
 		params->rd_arg_counter++;
 		params->k++;

@@ -129,7 +129,8 @@ void	clean_up_function(
  * @brief: handling other test case scenarios
  * 
  * @param t_redirect_single_command_params *params : structure to
- 	store parameters for handling redirects / no redirects
+ 	store parameters for han
+		echo_command(params->ac, params->av);dling redirects / no redirects
  	***env: *** is called in the calling function
  	needed ** to free data if child process exits.
  * 
