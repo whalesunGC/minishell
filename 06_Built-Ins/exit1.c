@@ -147,7 +147,7 @@ void	exit_command_multiple(
 		{
 			if (is_argument_numeric(params->av[1]) == 0)
 			{
-				ft_dprintf(2, "%s: %s: numberic"
+				ft_dprintf(2, "%s: %s: numeric"
 					" argument required\n", params->av[0], params->av[1]);
 				*params->exit_status = 2;
 				exit_is_the_only_argument(params, env);
