@@ -26,9 +26,13 @@ char	**ft_add_string(char **string_array, char *string)
 	char	**new_array;
 	int		len;
 	int		i;
+	char	*temp;
 
 	len = 0;
 	i = 0;
+	temp = ft_strdup("");
+	if (!string)
+		string = temp;
 	while (string_array && string_array[len])
 		len++;
 	new_array = (char **)malloc((len + 2) * sizeof(char *));
@@ -42,6 +46,7 @@ char	**ft_add_string(char **string_array, char *string)
 	new_array[i] = ft_strdup(string);
 	new_array[i + 1] = NULL;
 	free(string_array);
+	free(temp);
 	return (new_array);
 }
 
