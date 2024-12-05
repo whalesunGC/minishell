@@ -123,18 +123,11 @@ void	handle_pipe_and_waiting_for_child(
 		if (waitpid(-1, &status, 0) == params->pid_array[params->total - 1])
 		{
 			if (WIFEXITED(status))
-			{
-				ft_dprintf(1, "Child %d exited normally, with exit code %d\n", params->pid_array[params->total - 1], WEXITSTATUS(status));
 				*params->exit_status = WEXITSTATUS(status);
-			}
 			else if (WIFSIGNALED(status))
-			{
-				ft_dprintf(1, "Child %d exited with signals, with exit code %d\n", params->pid_array[params->total - 1], WTERMSIG(status));
 				*params->exit_status = WTERMSIG(status) + 128;
-			}
 		}
 		else
-			ft_dprintf(1, "Current exit status %d\n", *params->exit_status);
 		params->j++;
 	}
 	ft_signal(NULL, NULL, NULL, PARENT);

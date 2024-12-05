@@ -27,14 +27,14 @@
 void	clean_up_function_multiple_commands(
 			t_piping_multiple_command_params *params, char ***env)
 {
+	(void)env;
 	free_pipes(params->pipes, params->total - 1);
 	free_heredocs_pipes(params->heredocs_pipes, params->heredocs_count);
-	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
-	free(params->signal_data);
-	free(params->exit_status);
-	free_dup_envp(*env);
+	if (params->signal_data)
+		free(params->signal_data);
 	if (params->pid_array)
 		free(params->pid_array);
+	ft_free(&params->msd);
 	rl_clear_history();
 }
 

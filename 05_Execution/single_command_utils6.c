@@ -116,12 +116,11 @@ void	freeing_heredoc_pipes(t_redirect_single_command_params *params)
 void	clean_up_function(
 			t_redirect_single_command_params *params, char ***env)
 {
-	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
 	free(params->signal_data);
-	free(params->exit_status);
 	freeing_heredoc_pipes(params);
 	free_pipes(params->pipes, params->pipe_count);
-	free_dup_envp(*env);
+	ft_free(&params->msd);
+	(void)env;
 	rl_clear_history();
 }
 

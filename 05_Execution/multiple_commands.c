@@ -25,7 +25,7 @@
  * @return: void function
  */
 
-void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
+void	execution_with_pipes(t_list *node, char ***env, t_ms_data *msd)
 {
 	t_piping_multiple_command_params	params;
 
@@ -33,8 +33,9 @@ void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 		return ;
 	ft_memset(&params, 0, sizeof(t_piping_multiple_command_params));
 	params.exec_data_head = node;
-	params.exit_status = exit_status;
-	*exit_status = 0;
+	params.exit_status = msd->exit_status;
+	*msd->exit_status = 0;
+	params.msd = msd;
 	params.total = check_total_commands(node);
 	if (params.total > 43)
 	{
@@ -51,7 +52,7 @@ void	execution_with_pipes(t_list *node, char ***env, int *exit_status)
 	searching_for_heredocs(&params, node);
 	if (params.heredocs_count > 16)
 	{
-		ft_dprintf(2, "Maximum here-dcoument count exceeded\n");
+		ft_dprintf(2, "Maximum here-document count exceeded\n");
 		closing_main_pipes(&params);
 		free_pipes(params.pipes, params.total - 1);
 		free(params.pid_array);

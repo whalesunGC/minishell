@@ -41,4 +41,6 @@
 # include <limits.h>
 # include <fcntl.h>
 
+void	ft_free(t_ms_data **msd);
+
 #endif

@@ -136,6 +136,8 @@ t_list	*ft_ast_to_linkedlist(t_ast_node *node)
 	t_list	*temp_list;
 	t_list	*exec_node;
 
+	if (!node)
+		return (NULL);
 	list = ft_ast_preorder(node);
 	exec_node = ft_exec_node(list);
 	while (list)

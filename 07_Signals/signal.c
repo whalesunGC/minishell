@@ -32,6 +32,7 @@ static void	handle_s_command_init(t_redirect_single_command_params *params_s,
 	data->input1 = params_s->input1;
 	data->exit_status = params_s->exit_status;
 	data->z = 0;
+	data->msd = params_s->msd;
 	signal_cleanup(data);
 	setup_signal_handlers_for_child();
 }
@@ -59,6 +60,7 @@ static void	handle_m_command_init(t_piping_multiple_command_params *params_m,
 	data->exit_status = params_m->exit_status;
 	data->z = 0;
 	data->pid_array = params_m->pid_array;
+	data->msd = params_m->msd;
 	signal_cleanup(data);
 	setup_signal_handlers_for_child();
 }
@@ -75,10 +77,6 @@ void	ft_free_signal(t_sig_data *data)
 	if (data)
 	{
 		handle_cleanup_pipes(data);
-		if (data->exec_data_head)
-			ft_lstclear(&data->exec_data_head, ft_free_exec_data);
-		if (data->env)
-			free_dup_envp(data->env);
 		if (data->pipes)
 			free_pipes(data->pipes, data->pipe_count);
 		if (data->command_path)
@@ -87,10 +85,10 @@ void	ft_free_signal(t_sig_data *data)
 			free_heredocs_pipes(data->heredocs_pipes, data->heredocs_count);
 		if (data->input1)
 			free(data->input1);
-		if (data->exit_status)
-			free(data->exit_status);
 		if (data->pid_array)
 			free(data->pid_array);
+		if (data->msd)
+			ft_free(&data->msd);
 		free(data);
 	}
 }

@@ -24,7 +24,7 @@
  * @return: -1 if error, 0 if success
  */
 
-void	execution(t_list *node, char ***env, int *exit_status)
+void	execution(t_list *node, char ***env, t_ms_data *msd)
 {
 	t_redirect_single_command_params	params;
 
@@ -34,12 +34,13 @@ void	execution(t_list *node, char ***env, int *exit_status)
 	finding_heredocs(&params, node);
 	if (params.pipe_count > 16)
 	{
-		ft_dprintf(2, "Maximum here-dcoument count exceeded\n");
+		ft_dprintf(2, "Maximum here-document count exceeded\n");
 		return ;
 	}
 	params.exec_data_head = node;
-	params.exit_status = exit_status;
-	*exit_status = 0;
+	params.exit_status = msd->exit_status;
+	*msd->exit_status = 0;
+	params.msd = msd;
 	if (params.pipe_count == 0)
 		handling_no_heredocs(&params, env, node);
 	else
