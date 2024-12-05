@@ -51,7 +51,7 @@ void	handle_pipe_reading_heredocs_and_dup2(
  */
 
 void	handle_file_opening_redirection(
-			t_redirect_single_command_params *params)
+			t_redirect_single_command_params *params, char ***env)
 {
 	if (ft_strcmp(params->result->redirect[params->k], "<") == 0)
 	{
@@ -62,6 +62,7 @@ void	handle_file_opening_redirection(
 	}
 	else if (ft_strcmp(params->result->redirect[params->k], ">") == 0)
 	{
+		handle_ambigious_redirect(params, env);
 		if (params->output_fd > 0)
 			close(params->output_fd);
 		params->output_fd = open(params->result->rd_arg
@@ -166,7 +167,7 @@ void	handle_file_opening_process_for_redirection(
 			params->k++;
 			continue ;
 		}
-		handle_file_opening_redirection(params);
+		handle_file_opening_redirection(params, env);
 		handle_file_opening_errors_redirection(params, env);
 		handling_redirection_process(params, env);
 		params->rd_arg_counter++;

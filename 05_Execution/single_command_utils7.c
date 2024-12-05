@@ -64,6 +64,36 @@ int	handle_file_opening_output_for_built_in(
 	return (0);
 }
 
+void	handle_ambigious_redirect(
+			t_redirect_single_command_params *params, char ***env)
+{
+	if (ft_strcmp(params->result->rd_arg[params->rd_arg_counter], "") == 0)
+	{
+		ft_dprintf(2, "ambigious redirect\n");
+		clean_up_function(params, env);
+		exit(EXIT_FAILURE);
+	}
+}
+
+void	handle_closing_and_freeing(
+			t_redirect_single_command_params *params)
+{
+	if (params->output_fd > 0)
+	{
+		close(params->output_fd);
+		close(params->original_fd);
+	}
+	params->a = 0;
+	while (params->a < params->pipe_count)
+	{
+		close(params->pipes[params->a][0]);
+		close(params->pipes[params->a][1]);
+		params->a++;
+	}
+	freeing_heredoc_pipes(params);
+	free_pipes(params->pipes, params->pipe_count);
+}
+
 /**
  * @function: heredocs
  * @brief: handling the presence of heredocs

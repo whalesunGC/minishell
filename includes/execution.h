@@ -235,7 +235,7 @@ int		handling_heredocs(
 void	handle_pipe_reading_heredocs_and_dup2(
 			t_redirect_single_command_params *params, char ***env);
 void	handle_file_opening_redirection(
-			t_redirect_single_command_params *params);
+			t_redirect_single_command_params *params, char ***env);
 void	handle_file_opening_errors_redirection(
 			t_redirect_single_command_params *params, char ***env);
 void	handling_redirection_process(
@@ -293,6 +293,10 @@ int		handle_other_cases(
 int		handle_file_opening_input_for_built_in(
 			t_redirect_single_command_params *params);
 int		handle_file_opening_output_for_built_in(
+			t_redirect_single_command_params *params);
+void	handle_ambigious_redirect(
+			t_redirect_single_command_params *params, char ***env);
+void	handle_closing_and_freeing(
 			t_redirect_single_command_params *params);
 int		heredocs(t_redirect_single_command_params *params, char ***env);
 
