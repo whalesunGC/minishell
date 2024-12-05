@@ -136,11 +136,12 @@ void	clean_up_function(
  * @return: -1 if forking fails 0 if all commands is executed
  */
 
-int	handle_other_cases(t_redirect_single_command_params *params, char ***env)
+int	handle_other_cases(t_redirect_single_command_params *params, char ***env,
+	int exit_s)
 {
 	if (params->result->cmd[0] == NULL)
 	{
-		if (handle_single_commands(params, env) == -1)
+		if (handle_single_commands(params, env, exit_s) == -1)
 			return (-1);
 	}
 	else
@@ -149,7 +150,7 @@ int	handle_other_cases(t_redirect_single_command_params *params, char ***env)
 		params->ac = 0;
 		while (params->av[params->ac] != NULL)
 			params->ac++;
-		if (handle_single_commands(params, env) == -1)
+		if (handle_single_commands(params, env, exit_s) == -1)
 			return (-1);
 	}
 	return (0);

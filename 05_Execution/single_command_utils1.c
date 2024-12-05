@@ -92,8 +92,12 @@ void	finding_heredocs(t_redirect_single_command_params *params, t_list *node)
 
 int	handling_no_heredocs(
 			t_redirect_single_command_params *params, char ***env, t_list *node)
-{	
+{
+	int	exit_s;
+
+	exit_s = *params->exit_status;
 	params->traverse = node;
+	*params->exit_status = 0;
 	while (params->traverse)
 	{
 		params->result = (t_exec_node *)params->traverse->content;
@@ -103,14 +107,12 @@ int	handling_no_heredocs(
 			{
 				if (handle_redirects(params, env) == -1)
 					return (-1);
-				if (handle_other_cases(params, env) == -1)
+				if (handle_other_cases(params, env, exit_s) == -1)
 					return (-1);
 			}
 			else
-			{
-				if (handle_other_cases(params, env) == -1)
+				if (handle_other_cases(params, env, exit_s) == -1)
 					return (-1);
-			}
 		}
 		params->traverse = params->traverse->next;
 	}
@@ -167,6 +169,7 @@ int	handling_heredocs(
 			t_redirect_single_command_params *params, char ***env, t_list *node)
 {	
 	params->traverse = node;
+	*params->exit_status = 0;
 	while (params->traverse)
 	{
 		params->result = (t_exec_node *)params->traverse->content;
@@ -178,7 +181,7 @@ int	handling_heredocs(
 					return (-1);
 				if (handle_redirects(params, env) == -1)
 					return (-1);
-				if (handle_other_cases(params, env) == -1)
+				if (handle_other_cases(params, env, *params->exit_status) == -1)
 					return (-1);
 			}
 		}

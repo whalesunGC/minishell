@@ -77,7 +77,8 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 	if (*data->raw_string == '\0' || ft_is_only_whitespace(data->raw_string))
 		handle_empty_expansion(data);
 	if ((data->type == TOKEN_STRING || data->type == TOKEN_COMMAND
-			|| data->type == TOKEN_INQUOTE) && ft_has_quote(data->raw_string))
+			|| data->type == TOKEN_INQUOTE || data->type == TOKEN_RD_FD)
+		&& ft_has_quote(data->raw_string))
 		data->raw_string = ft_remove_quote(data->raw_string);
 	*token_data = (*token_data)->next;
 	return (*token_data);

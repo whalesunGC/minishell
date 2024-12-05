@@ -110,9 +110,11 @@ int	initialise_var_name_var_value(t_export_params *params)
  */
 
 int	valid_export_arguments_first_parse(t_export_params *params,
-		char ***env)
-
+		char ***env, int *e_s)
 {
+	int	total_args;
+
+	total_args = params->i;
 	params->is_valid = 1;
 	params->i = 0;
 	first_parsing(params);
@@ -120,6 +122,8 @@ int	valid_export_arguments_first_parse(t_export_params *params,
 		return (free_var_name(params), free_var_value(params), -1);
 	if (params->valid_count > 0)
 	{
+		if (params->valid_count != total_args)
+			*e_s = 1;
 		params->new_env = copy_envp_with_ac(*env, params->valid_count);
 		if (params->new_env == NULL)
 		{

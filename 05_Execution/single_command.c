@@ -26,7 +26,6 @@ static void	init_params_single(t_list *node,
 {
 	params->exec_data_head = node;
 	params->exit_status = msd->exit_status;
-	*msd->exit_status = 0;
 	params->msd = msd;
 }
 

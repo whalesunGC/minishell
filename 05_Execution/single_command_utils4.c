@@ -146,7 +146,7 @@ int	handle_built_in_closing_and_restore_original_fd(
  */
 
 int	handle_single_commands_built_in(
-			t_redirect_single_command_params *params, char ***env)
+			t_redirect_single_command_params *params, char ***env, int exit_s)
 {
 	if ((ft_strcmp(params->av[0], "echo") == 0)
 		|| (ft_strcmp(params->av[0], "cd") == 0)
@@ -160,7 +160,7 @@ int	handle_single_commands_built_in(
 			return (-1);
 		if (handle_single_commands_built_in_with_redirects(params) == -1)
 			return (-1);
-		execute_bulit_in_commands_with_redirects(params, env);
+		execute_bulit_in_commands_with_redirects(params, env, exit_s);
 		if (handle_built_in_closing_and_restore_original_fd(params) == -1)
 			return (-1);
 	}
