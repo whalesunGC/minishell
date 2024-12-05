@@ -13,6 +13,23 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: initialise_counters_in_handle_arguments
+ * @brief: initialise counters before start of loop
+ * 
+ * @param t_piping_multiple_command_params *params : structure for
+ 	multiple commands parameters
+ * 
+ * @return: void function
+ */
+
+void	initialise_counters_in_handle_arguments(
+			t_piping_multiple_command_params *params)
+{
+	params->i = 0;
+	params->heredocs_pipe_number = 0;
+}
+
+/**
  * @function: setting_up_counters_and_initialise_node
  * @brief: initialise variables
  * 
@@ -81,6 +98,7 @@ int	handle_forking_process_and_executing_child(
 		handle_child_process(params, env);
 	return (0);
 }
+
 /**
  * @function: handle_arguments
  * @brief: handling the commands after input
@@ -96,8 +114,7 @@ int	handle_forking_process_and_executing_child(
 int	handle_arguments(
 			t_piping_multiple_command_params *params, char ***env)
 {
-	params->i = 0;
-	params->heredocs_pipe_number = 0;
+	initialise_counters_in_handle_arguments(params);
 	while (params->traverse)
 	{
 		setting_up_counters_and_initialise_node(params);
@@ -112,12 +129,12 @@ int	handle_arguments(
 				handle_heredocs_pipe_number_multiple_commands(params);
 			if (params->flag == 1)
 			{
-				params->traverse = params->traverse->next;
-				params->i++;
+				handle_flag_equals_one(params);
 				continue ;
 			}
 		}
-		if (handle_forking_process_and_executing_child(params, env, params->i) == -1)
+		if (handle_forking_process_and_executing_child
+			(params, env, params->i) == -1)
 			return (-1);
 		increment_counters_and_traverse_next_node(params);
 	}

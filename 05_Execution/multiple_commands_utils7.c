@@ -143,3 +143,20 @@ void	handle_heredocs_pipe_number_multiple_commands(
 		}
 	}
 }
+
+/**
+ * @function: handle_flag_equals_one in handle_arguments function
+ * @brief: moving on to next node and increment i
+ * 
+ * @param t_piping_multiple_command_params *params : structure for
+ 	multiple commands parameters
+ * 
+ * @return: void function
+ */
+
+void	handle_flag_equals_one(
+			t_piping_multiple_command_params *params)
+{
+	params->traverse = params->traverse->next;
+	params->i++;
+}

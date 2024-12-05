@@ -111,24 +111,10 @@ int	handle_single_commands_built_in_with_redirects(
 		params->original_fd = dup(STDOUT_FILENO);
 		while (params->result->redirect[params->g] != NULL)
 		{
-			if (ft_strcmp(params->result->redirect[params->g], "<") == 0)
-			{
-				if (params->input_fd > 0)
-					close(params->input_fd);
-				params->input_fd = open(params->result->rd_arg
-					[params->rd_arg_counter], O_RDONLY);
-				if (params->input_fd < 0)
-				{
-					close(params->original_fd);
-					return (-1);
-				}
-			}
-			else if ((ft_strcmp(params->result->redirect[params->g], ">") == 0)
-				|| (ft_strcmp(params->result->redirect[params->g], ">>") == 0))
-			{
-				if (handle_dup2_built_in_with_redirects(params) == -1)
-					return (-1);
-			}
+			if (handle_file_opening_input_for_built_in(params) == -1)
+				return (-1);
+			if (handle_file_opening_output_for_built_in(params) == -1)
+				return (-1);
 			params->g++;
 		}
 	}
