@@ -13,31 +13,10 @@
 #include "includes/minishell.h"
 
 /**
- * @function: handle_parsing
- * @brief:	function that handles the parsing portion of minishell
- * 
- * @param msd: minishell data
- * @return: void
- */
-static void	handle_parsing(t_ms_data *msd)
-{
-	if (!ft_is_blank(msd->input))
-		add_history(msd->input);
-	msd->input = input_clean(msd->input, msd->exit_status);
-	msd->token_data = lexer(msd->input);
-	msd->token_data = expansion(msd->token_data, msd->env, msd->exit_status);
-	msd->ast_root = parser(msd->token_data, msd->exit_status);
-	msd->exec_data = ft_ast_to_linkedlist(msd->ast_root);
-}
-
-/**
- * @function: ft_free
+ * @function: ft_free_after_exec
  * @brief:	function to free all created structs at exit.
  * 
- * @param token_data: linked-list that contains the stream of tokens
- * @param ast_root: root of the ast that is a binary tree of
- * the bash syntax.
- * @param exec_data: head of exec_data
+ * @param msd: minishell data
  * @return: void
  */
 static void	ft_free_after_exec(t_ms_data **msd)
@@ -53,31 +32,35 @@ static void	ft_free_after_exec(t_ms_data **msd)
 }
 
 /**
- * @function: ft_free
- * @brief:	function to free all created structs at exit.
+ * @function: handle_execution
+ * @brief:	function that handles the execution portion of minishell
  * 
- * @param token_data: linked-list that contains the stream of tokens
- * @param ast_root: root of the ast that is a binary tree of
- * the bash syntax.
- * @param exec_data: head of exec_data
+ * @param msd: minishell data
  * @return: void
  */
-void	ft_free(t_ms_data **msd)
+static void	handle_execution(t_ms_data *msd)
 {
-	if ((*msd)->env)
-		free_dup_envp((*msd)->env);
-	if ((*msd)->exec_data)
-		ft_lstclear(&(*msd)->exec_data, ft_free_exec_data);
-	if ((*msd)->input)
-		free((*msd)->input);
-	if ((*msd)->token_data)
-		ft_lstclear(&(*msd)->token_data, ft_free_lex_data);
-	if ((*msd)->ast_root)
-		ft_treeclear(&(*msd)->ast_root, free);
-	if ((*msd)->exit_status)
-		free((*msd)->exit_status);
-	if ((*msd))
-		free((*msd));
+	execution(msd->exec_data, &msd->env, msd);
+	execution_with_pipes(msd->exec_data, &msd->env, msd);
+	ft_free_after_exec(&msd);
+}
+
+/**
+ * @function: handle_parsing
+ * @brief:	function that handles the parsing portion of minishell
+ * 
+ * @param msd: minishell data
+ * @return: void
+ */
+static void	handle_parsing(t_ms_data *msd)
+{
+	if (!ft_is_blank(msd->input))
+		add_history(msd->input);
+	msd->input = input_clean(msd->input, msd->exit_status);
+	msd->token_data = lexer(msd->input);
+	msd->token_data = expansion(msd->token_data, msd->env, msd->exit_status);
+	msd->ast_root = parser(msd->token_data, msd->exit_status);
+	msd->exec_data = ft_ast_to_linkedlist(msd->ast_root);
 }
 
 /**
@@ -129,6 +112,7 @@ static t_ms_data	*handle_init_main(int ac, char **av, char **envp,
 int	main(int ac, char **av, char **envp)
 {
 	t_ms_data	*msd;
+	int			e_s;
 
 	msd = NULL;
 	msd = handle_init_main(ac, av, envp, msd);
@@ -148,9 +132,8 @@ int	main(int ac, char **av, char **envp)
 			ft_free_after_exec(&msd);
 			continue ;
 		}
-		execution(msd->exec_data, &msd->env, msd);
-		execution_with_pipes(msd->exec_data, &msd->env, msd);
-		ft_free_after_exec(&msd);
+		handle_execution(msd);
 	}
-	return (rl_clear_history(), ft_free(&msd), 0);
+	e_s = *msd->exit_status;
+	return (rl_clear_history(), ft_free(&msd), e_s);
 }
