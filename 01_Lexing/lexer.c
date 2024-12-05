@@ -121,6 +121,8 @@ t_list	*lexer(char *input)
 	char	**tokens;
 	t_list	*token_data;
 
+	if (!input)
+		return (NULL);
 	tokens = tokenize(input);
 	if (!tokens)
 		return (free(input), NULL);

@@ -41,12 +41,10 @@ static void	exit_is_the_only_argument(t_redirect_single_command_params *params,
 		char **env)
 
 {
-	free_dup_envp(env);
 	rl_clear_history();
 	ft_dprintf(1, "exit\n");
-	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
-	if (params->exit_status)
-		free(params->exit_status);
+	ft_free(&params->msd);
+	(void)env;
 	exit(EXIT_SUCCESS);
 }
 
@@ -71,13 +69,11 @@ static void	exit_with_one_other_argument(
 
 	exit_status = 0;
 	exit_status = ft_atoi(params->av[1]);
-	free_dup_envp(env);
 	rl_clear_history();
 	ft_dprintf(1, "exit\n");
 	exit_status = (exit_status % 256 + 256) % 256;
-	ft_lstclear(&params->exec_data_head, ft_free_exec_data);
-	if (params->exit_status)
-		free(params->exit_status);
+	ft_free(&params->msd);
+	(void)env;
 	exit(exit_status);
 }
 

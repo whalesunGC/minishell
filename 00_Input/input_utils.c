@@ -13,6 +13,24 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_is_blank
+ * @brief:	check if string contains only '\n' ' ' '\t'
+ * 
+ * @param string: input string
+ * @return: int 1 or 0
+ */
+int	ft_is_blank(char *string)
+{
+	while (*string)
+	{
+		if (*string != '\n' && !ft_iswhitespace(*string))
+			return (0);
+		string++;
+	}
+	return (1);
+}
+
+/**
  * @function: ft_not_env
  * @brief: checks if not a valid starting env name
  * 

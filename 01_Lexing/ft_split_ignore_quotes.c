@@ -54,7 +54,7 @@ static size_t	ft_num_strings(const char *s, int c)
 	return (num_strings);
 }
 
-static void	ft_free(char **s_s)
+static void	ft_free_snq(char **s_s)
 {
 	size_t	i;
 
@@ -85,7 +85,7 @@ static char	**ft_process_s(char **s_s, const char *t_s, const char *s, char c)
 			s_s[i] = ft_substr(s, 0, (t_s - s));
 		if (!s_s[i])
 		{
-			ft_free(s_s);
+			ft_free_snq(s_s);
 			return (NULL);
 		}
 		s = t_s + 1;
