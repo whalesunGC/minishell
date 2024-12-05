@@ -59,6 +59,23 @@ void	handle_delimiter_input_multiple_commands(
 }
 
 /**
+ * @function: initialise_counter_for_heredocs
+ * @brief: to set counters to 0
+ * 
+ * @param t_piping_multiple_command_params *params : structure of
+ 	multiple command parameters
+ * 
+ * @return: void function
+ */
+
+void	initialise_counter_for_heredocs(
+			t_piping_multiple_command_params *params)
+{
+	params->x = 0;
+	params->delimiter_counter = 0;
+}
+
+/**
  * @function: handle_redirect_array_for_heredocs
  * @brief: forking process is done here to handle heredocs one by one
  * 
@@ -73,8 +90,7 @@ void	handle_delimiter_input_multiple_commands(
 void	handle_redirect_array_for_heredocs(
 			t_piping_multiple_command_params *params, char ***env)
 {
-	params->x = 0;
-	params->delimiter_counter = 0;
+	initialise_counter_for_heredocs(params);
 	while (params->result->redirect[params->x] != NULL)
 	{
 		if (ft_strcmp(params->result->redirect[params->x], "<<") == 0)
