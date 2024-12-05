@@ -39,7 +39,7 @@ void	env_command(int ac, char **av, char **env)
 			while (env[i] != NULL)
 			{
 				if (ft_strnstr(env[i], "=''", ft_strlen(env[i])) == NULL)
-					printf("%s\n", env[i]);
+					ft_printf("%s\n", env[i]);
 				i++;
 			}
 		}
