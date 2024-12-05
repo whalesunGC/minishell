@@ -1,6 +1,6 @@
 # Compiler and flags
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror -Iincludes -MMD -MP
+CFLAGS = -g -Wall -Wextra -Werror -MMD -MP -Iincludes
 RM        := rm -f
 LDFLAGS = -lreadline
 
@@ -31,12 +31,12 @@ NAME = minishell
 INPUT_SRCS = $(addprefix $(INPUT_DIR)/, $(INPUT_FILES))
 LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
 EXPANSION_SRCS = $(addprefix $(EXPANSION_DIR)/, $(EXPANSION_FILES))
-PARSER_SRS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
+PARSER_SRCS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
 REDIRECTION_SRCS = $(addprefix $(REDIRECTION_DIR)/, $(REDIRECTION_FILES))
 EXECUTION_SRCS = $(addprefix $(EXECUTION_DIR)/, $(EXECUTION_FILES))
 BUILT_INS_SRCS = $(addprefix $(BUILT_INS_DIR)/, $(BUILT_INS_FILES))
 SIGNAL_SRCS = $(addprefix $(SIGNAL_DIR)/, $(SIGNAL_FILES))
-SRCS = $(INPUT_SRCS) $(EXPANSION_SRCS) $(LEXER_SRCS) $(PARSER_SRS) $(REDIRECTION_SRCS) $(EXECUTION_SRCS) $(BUILT_INS_SRCS) $(SIGNAL_SRCS) minishell.c 
+SRCS = $(INPUT_SRCS) $(EXPANSION_SRCS) $(LEXER_SRCS) $(PARSER_SRCS) $(REDIRECTION_SRCS) $(EXECUTION_SRCS) $(BUILT_INS_SRCS) $(SIGNAL_SRCS) minishell.c 
 		
 OBJS = $(SRCS:.c=.o)
 DEPEND = $(SRCS:.c=.d)
@@ -52,13 +52,13 @@ all: $(NAME)
 $(LIBFT):
 			$(MAKE) -C $(LIBFT_DIR) all bonus clean
 
-# Rule to create push_swap
+# Rule to create minishell
 $(NAME):	$(OBJS) $(LIBFT)
 			$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 # Create mandatory object files from SRC and BONUS_S
 %.o:		%.c
-			$(CC) $(CFLAGS) -c $^ -o $@
+			$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean up object files
 clean:
