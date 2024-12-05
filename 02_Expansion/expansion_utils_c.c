@@ -89,10 +89,11 @@ int	ft_has_whitespace(char *string)
 
 /**
  * @function: ft_remove_quote
- * @brief: removes all quotes from input string, returns new string
+ * @brief: removes all quotes from input string when not enclosed by quotes
+ * returns new string
  *
  * @param string: input string
- * @return: new string with no quotes
+ * @return: new string with quotes removed when not enclosed by quotes
  */
 char	*ft_remove_quote(char *string)
 {
@@ -107,13 +108,13 @@ char	*ft_remove_quote(char *string)
 	in_s_q = 0;
 	while (string[i])
 	{
-		if (string[i] == '\'')
+		if (string[i] == '\'' && !in_d_q)
 			in_s_q = !in_s_q;
-		if (string[i] == '\"')
+		if (string[i] == '\"' && !in_s_q)
 			in_d_q = !in_d_q;
-		if ((string[i] == '\'') && in_s_q)
+		if ((string[i] == '\'') && !in_d_q)
 			string = ft_str_replace(string, i, "");
-		if ((string[i] == '\"') && in_d_q)
+		else if ((string[i] == '\"') && !in_s_q)
 			string = ft_str_replace(string, i, "");
 		else
 			i++;
