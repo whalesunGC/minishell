@@ -64,6 +64,16 @@ int	handle_file_opening_output_for_built_in(
 	return (0);
 }
 
+/**
+ * @function: handle_ambigious_redirect
+ * @brief: handles errors for ambigious redirect
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ * 
+ * @return: void function
+ */
+
 void	handle_ambigious_redirect(
 			t_redirect_single_command_params *params, char ***env)
 {
@@ -74,6 +84,16 @@ void	handle_ambigious_redirect(
 		exit(EXIT_FAILURE);
 	}
 }
+
+/**
+ * @function: handle_closing_and_freeing
+ * @brief: handles closing and freeing before exit command is run
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ * 
+ * @return: void function
+ */
 
 void	handle_closing_and_freeing(
 			t_redirect_single_command_params *params)
