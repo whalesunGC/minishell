@@ -13,6 +13,58 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_file_opening_input_for_built_in
+ * @brief: handle file opening process for built in functions in utils5
+ 	this is for input redirection
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ * 
+ * @return: -1 if failure, 0 if success
+ */
+
+int	handle_file_opening_input_for_built_in(
+			t_redirect_single_command_params *params)
+{
+	if (ft_strcmp(params->result->redirect[params->g], "<") == 0)
+	{
+		if (params->input_fd > 0)
+			close(params->input_fd);
+		params->input_fd = open(params->result->rd_arg
+			[params->rd_arg_counter], O_RDONLY);
+		if (params->input_fd < 0)
+		{
+			close(params->original_fd);
+			return (-1);
+		}
+	}
+	return (0);
+}
+
+/**
+ * @function: handle_file_opening_output_for_built_in
+ * @brief: handle file opening process for built in functions in utils5
+ 	this is for output redirection
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ * 
+ * @return: -1 if failure, 0 if success
+ */
+
+int	handle_file_opening_output_for_built_in(
+			t_redirect_single_command_params *params)
+{
+	if ((ft_strcmp(params->result->redirect[params->g], ">") == 0)
+		|| (ft_strcmp(params->result->redirect[params->g], ">>") == 0))
+	{
+		if (handle_dup2_built_in_with_redirects(params) == -1)
+			return (-1);
+	}
+	return (0);
+}
+
+/**
  * @function: heredocs
  * @brief: handling the presence of heredocs
  * 

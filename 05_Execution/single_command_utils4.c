@@ -31,7 +31,6 @@ void	handling_exit_conditions_other_cases(
 {
 	if (params->result->cmd[0] == NULL)
 	{
-		ft_dprintf(2, "No commands found, so we just exit\n");
 		freeing_heredoc_pipes(params);
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);

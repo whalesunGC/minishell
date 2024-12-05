@@ -13,6 +13,88 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: initialise_params
+ * @brief: sets up the initialising of parameters before we start the function
+ 	t_list *node : structure of linked list
+ 	where it points to void content
+ 	**exit_status : to update and initialise the value to 0;
+ * 
+ * @param t_piping_multiple_command_params *params : structure of
+ 	multiple command parameters
+ * 
+ * @return: void function
+ */
+
+static void	initialise_params(
+			t_piping_multiple_command_params *params,
+				t_list *node, t_ms_data *msd)
+{
+	ft_memset(params, 0, sizeof(t_piping_multiple_command_params));
+	params->exec_data_head = node;
+	params->exit_status = msd->exit_status;
+	*msd->exit_status = 0;
+	params->msd = msd;
+}
+
+/**
+ * @function: handling_heredocs_total
+ * @brief: performs error handling if heredocs exceeds the max
+ 	will perform heredocs if it is valid
+ 	t_list *node : structure of linked list
+ 	where it points to void content
+ 	***env: needed *** here in the event of
+ 	environment needing to be changed
+ 	** will be used for freeing purposes
+ * 
+ * @param t_piping_multiple_command_params *params : structure of
+ 	multiple command parameters
+ * 
+ * @return: -1 if failure, 0 if success
+ */
+
+static int	handling_heredocs_total(
+			t_piping_multiple_command_params *params, t_list *node, char ***env)
+{
+	if (params->heredocs_count > 16)
+	{
+		ft_dprintf(2, "Maximum here-dcoument count exceeded\n");
+		closing_main_pipes(params);
+		free_pipes(params->pipes, params->total - 1);
+		free(params->pid_array);
+		return (-1);
+	}
+	if (params->heredocs_count > 0)
+	{
+		params->heredocs_pipes = creating_heredocs_pipes
+			(params->heredocs_count);
+		if (params->heredocs_pipes == NULL || setting_up_heredocs_pipes
+			(params) == -1)
+			return (-1);
+		handle_heredocs_multiple_commands(params, node, env);
+	}
+	return (0);
+}
+
+/**
+ * @function: clean_up_function_execution_with_pipes
+ * @brief: perform clean up after functions are completed.
+ * 
+ * @param t_piping_multiple_command_params *params : structure of
+ 	multiple command parameters
+ * 
+ * @return: void function
+ */
+
+static void	clean_up_function_execution_with_pipes(
+			t_piping_multiple_command_params *params)
+{
+	handle_pipe_and_waiting_for_child(params);
+	free_pipes(params->pipes, params->total - 1);
+	free_heredocs_pipes(params->heredocs_pipes, params->heredocs_count);
+	free(params->pid_array);
+}
+
+/**
  * @function: execution_with_pipes
  * @brief: handling arguments with pipe commands
  * 
@@ -31,11 +113,7 @@ void	execution_with_pipes(t_list *node, char ***env, t_ms_data *msd)
 
 	if (check_for_pipes(node) == -1)
 		return ;
-	ft_memset(&params, 0, sizeof(t_piping_multiple_command_params));
-	params.exec_data_head = node;
-	params.exit_status = msd->exit_status;
-	*msd->exit_status = 0;
-	params.msd = msd;
+	initialise_params(&params, node, msd);
 	params.total = check_total_commands(node);
 	if (params.total > 43)
 	{
@@ -50,27 +128,10 @@ void	execution_with_pipes(t_list *node, char ***env, t_ms_data *msd)
 	if (params.pipes == NULL || setting_up_pipes(&params) == -1)
 		return ;
 	searching_for_heredocs(&params, node);
-	if (params.heredocs_count > 16)
-	{
-		ft_dprintf(2, "Maximum here-document count exceeded\n");
-		closing_main_pipes(&params);
-		free_pipes(params.pipes, params.total - 1);
-		free(params.pid_array);
+	if (handling_heredocs_total(&params, node, env) == -1)
 		return ;
-	}
-	if (params.heredocs_count > 0)
-	{
-		params.heredocs_pipes = creating_heredocs_pipes(params.heredocs_count);
-		if (params.heredocs_pipes == NULL || setting_up_heredocs_pipes
-			(&params) == -1)
-			return ;
-		handle_heredocs_multiple_commands(&params, node, env);
-	}
 	params.traverse = node;
 	if (handle_arguments(&params, env) == -1)
 		;
-	handle_pipe_and_waiting_for_child(&params);
-	free_pipes(params.pipes, params.total - 1);
-	free_heredocs_pipes(params.heredocs_pipes, params.heredocs_count);
-	free(params.pid_array);
+	clean_up_function_execution_with_pipes(&params);
 }

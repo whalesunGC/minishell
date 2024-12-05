@@ -29,7 +29,7 @@ void	setting_up_input_redirections_multiple_commands(
 {
 	if (dup2(params->input_fd, STDIN_FILENO) == -1)
 	{
-		perror("dup2 to stdin failed input");
+		perror("dup2 to stdin failed input_fd");
 		clean_up_function_multiple_commands(params, env);
 		exit(EXIT_FAILURE);
 	}
@@ -76,7 +76,7 @@ void	setting_up_heredocs_multiple_commands(
 	if (dup2(params->heredocs_pipes[params->heredocs_pipe_index][0],
 		STDIN_FILENO) == -1)
 	{
-		perror("dup2 to stdin failed heredocs pipe");
+		perror("dup2 to stdin failed heredocs_pipe");
 		clean_up_function_multiple_commands(params, env);
 		exit(EXIT_FAILURE);
 	}
@@ -99,7 +99,7 @@ void	setting_up_pipes_to_redirect_output(
 {
 	if (dup2(params->pipes[params->i][1], STDOUT_FILENO) == -1)
 	{
-		perror("dup2 to stdout failed main pipe");
+		perror("dup2 to stdout failed main_pipe");
 		clean_up_function_multiple_commands(params, env);
 		exit(EXIT_FAILURE);
 	}

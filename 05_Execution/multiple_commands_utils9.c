@@ -111,8 +111,6 @@ void	handle_pipe_and_waiting_for_child(
 {
 	int	status;
 
-	ft_dprintf(2, "Debugging closing pipes and waiting"
-		"for child process to finish\n");
 	if (params->heredocs_count > 0)
 		closing_heredocs_pipes(params);
 	closing_main_pipes(params);
@@ -128,7 +126,7 @@ void	handle_pipe_and_waiting_for_child(
 				*params->exit_status = WTERMSIG(status) + 128;
 		}
 		else
-		params->j++;
+			params->j++;
 	}
 	ft_signal(NULL, NULL, NULL, PARENT);
 }

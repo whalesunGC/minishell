@@ -13,6 +13,24 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: initialise_params_single
+ * @brief: sets up the initialising of parameters before we start the function
+ * 
+ * @param node: *params : structure of
+ 	multiple command parameters
+ * @param msd: minishell data struct	
+ * @return: void function
+ */
+static void	init_params_single(t_list *node,
+	t_redirect_single_command_params *params, t_ms_data *msd)
+{
+	params->exec_data_head = node;
+	params->exit_status = msd->exit_status;
+	*msd->exit_status = 0;
+	params->msd = msd;
+}
+
+/**
  * @function: execution
  * @brief: execution of a single command where it will
  	handle redirections and no redirections
@@ -32,15 +50,12 @@ void	execution(t_list *node, char ***env, t_ms_data *msd)
 		return ;
 	ft_memset(&params, 0, sizeof(t_redirect_single_command_params));
 	finding_heredocs(&params, node);
+	init_params_single(node, &params, msd);
 	if (params.pipe_count > 16)
 	{
 		ft_dprintf(2, "Maximum here-document count exceeded\n");
 		return ;
 	}
-	params.exec_data_head = node;
-	params.exit_status = msd->exit_status;
-	*msd->exit_status = 0;
-	params.msd = msd;
 	if (params.pipe_count == 0)
 		handling_no_heredocs(&params, env, node);
 	else

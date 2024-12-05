@@ -138,6 +138,8 @@ void	handle_heredocs_readline_multiple_commands(
 			t_piping_multiple_command_params *params, char ***env);
 
 // multiple_commands_utils4 //
+void	initialise_counter_for_heredocs(
+			t_piping_multiple_command_params *params);
 void	handle_counters_and_redirects_array(
 			t_piping_multiple_command_params *params);
 void	handle_delimiter_input_multiple_commands(
@@ -180,8 +182,12 @@ void	handle_file_opening_multiple_commands(
 			t_piping_multiple_command_params *params);
 void	handle_heredocs_pipe_number_multiple_commands(
 			t_piping_multiple_command_params *params);
+void	handle_flag_equals_one(
+			t_piping_multiple_command_params *params);
 
 // multiple_commands_utils8 //
+void	initialise_counter_for_handle_arguments(
+			t_piping_multiple_command_params *params);
 void	setting_up_counters_and_initialise_node(
 			t_piping_multiple_command_params *params);
 void	increment_counters_and_traverse_next_node(
@@ -283,6 +289,10 @@ int		handle_other_cases(
 			t_redirect_single_command_params *params, char ***env);
 
 // single_command_utils7 //
+int		handle_file_opening_input_for_built_in(
+			t_redirect_single_command_params *params);
+int		handle_file_opening_output_for_built_in(
+			t_redirect_single_command_params *params);
 int		heredocs(t_redirect_single_command_params *params, char ***env);
 
 // single_command_utils8 //
