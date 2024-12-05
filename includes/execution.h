@@ -265,19 +265,19 @@ int		handle_fork_plus_executing_child(
 int		handle_built_in_closing_and_restore_original_fd(
 			t_redirect_single_command_params *params);
 int		handle_single_commands_built_in(
-			t_redirect_single_command_params *params, char ***env);
+			t_redirect_single_command_params *params, char ***env, int exit_s);
 
 // single_command_utils5 //
 int		handle_single_commands_without_redirects(
-			t_redirect_single_command_params *params, char ***env);
+			t_redirect_single_command_params *params, char ***env, int exit_s);
 int		handle_dup2_built_in_with_redirects(
 			t_redirect_single_command_params *params);
 int		handle_single_commands_built_in_with_redirects(
 			t_redirect_single_command_params *params);
 void	execute_bulit_in_commands_with_redirects(
-			t_redirect_single_command_params *params, char ***env);
+			t_redirect_single_command_params *params, char ***env, int exit_s);
 int		handle_single_commands(
-			t_redirect_single_command_params *params, char ***env);
+			t_redirect_single_command_params *params, char ***env, int exit_s);
 
 // single_command_utils6 //
 void	execute_child_process_for_redirections(
@@ -287,7 +287,7 @@ void	freeing_heredoc_pipes(t_redirect_single_command_params *params);
 void	clean_up_function(
 			t_redirect_single_command_params *params, char ***env);
 int		handle_other_cases(
-			t_redirect_single_command_params *params, char ***env);
+			t_redirect_single_command_params *params, char ***env, int exit_s);
 
 // single_command_utils7 //
 int		handle_file_opening_input_for_built_in(

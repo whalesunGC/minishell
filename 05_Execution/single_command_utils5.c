@@ -27,7 +27,7 @@
  */
 
 int	handle_single_commands_without_redirects(
-			t_redirect_single_command_params *params, char ***env)
+			t_redirect_single_command_params *params, char ***env, int exit_s)
 {
 	if (ft_strcmp(params->av[0], "echo") == 0)
 		echo_command(params->ac, params->av);
@@ -42,7 +42,10 @@ int	handle_single_commands_without_redirects(
 	else if (ft_strcmp(params->av[0], "env") == 0)
 		env_command(params->ac, params->av, *env, params->exit_status);
 	else if (ft_strcmp(params->av[0], "exit") == 0)
+	{
+		*params->exit_status = exit_s;
 		exit_command(params, *env, params->exit_status);
+	}
 	else if (handle_fork_plus_executing_child(params, env) == -1)
 		return (-1);
 	return (0);
@@ -136,7 +139,7 @@ int	handle_single_commands_built_in_with_redirects(
  */
 
 void	execute_bulit_in_commands_with_redirects(
-			t_redirect_single_command_params *params, char ***env)
+			t_redirect_single_command_params *params, char ***env, int exit_s)
 {
 	if (ft_strcmp(params->av[0], "echo") == 0)
 		echo_command(params->ac, params->av);
@@ -151,7 +154,10 @@ void	execute_bulit_in_commands_with_redirects(
 	else if (ft_strcmp(params->av[0], "env") == 0)
 		env_command(params->ac, params->av, *env, params->exit_status);
 	else if (ft_strcmp(params->av[0], "exit") == 0)
+	{
+		*params->exit_status = exit_s;
 		exit_command(params, *env, params->exit_status);
+	}
 }
 
 /**
@@ -168,7 +174,7 @@ void	execute_bulit_in_commands_with_redirects(
  */
 
 int	handle_single_commands(
-			t_redirect_single_command_params *params, char ***env)
+			t_redirect_single_command_params *params, char ***env, int exit_s)
 {
 	if (params->result->cmd[0] == NULL)
 	{
@@ -177,12 +183,12 @@ int	handle_single_commands(
 	}
 	else if (params->result->redirect == NULL)
 	{
-		if (handle_single_commands_without_redirects(params, env) == -1)
+		if (handle_single_commands_without_redirects(params, env, exit_s) == -1)
 			return (-1);
 	}
 	else if (params->result->redirect != NULL)
 	{
-		if (handle_single_commands_built_in(params, env) == -1)
+		if (handle_single_commands_built_in(params, env, exit_s) == -1)
 			return (-1);
 	}
 	return (0);

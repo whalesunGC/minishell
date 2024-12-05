@@ -111,7 +111,9 @@ char	*ft_remove_quote(char *string)
 			in_s_q = !in_s_q;
 		if (string[i] == '\"')
 			in_d_q = !in_d_q;
-		if ((string[i] == '\'' || string[i] == '\"') && (!in_s_q || !in_d_q))
+		if ((string[i] == '\'') && in_s_q)
+			string = ft_str_replace(string, i, "");
+		if ((string[i] == '\"') && in_d_q)
 			string = ft_str_replace(string, i, "");
 		else
 			i++;
