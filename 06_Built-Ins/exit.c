@@ -41,11 +41,14 @@ static void	exit_is_the_only_argument(t_redirect_single_command_params *params,
 		char **env)
 
 {
+	int	e_s;
+
+	(void)env;
+	e_s = *params->exit_status;
 	rl_clear_history();
 	ft_dprintf(1, "exit\n");
 	ft_free(&params->msd);
-	(void)env;
-	exit(EXIT_SUCCESS);
+	exit(e_s);
 }
 
 /**
@@ -133,8 +136,9 @@ void	exit_command(t_redirect_single_command_params *params,
 		{
 			if (is_argument_numeric(params->av[1]) == 0)
 			{
-				ft_dprintf(1, "%s: %s: numberic"
+				ft_dprintf(2, "%s: %s: numberic"
 					" argument required\n", params->av[0], params->av[1]);
+				*e_s = 2;
 				exit_is_the_only_argument(params, env);
 			}
 			else if (params-> ac == 2)

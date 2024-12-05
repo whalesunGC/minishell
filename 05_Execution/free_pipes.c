@@ -13,6 +13,34 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: ft_free
+ * @brief:	function to free all created structs at exit.
+ * 
+ * @param token_data: linked-list that contains the stream of tokens
+ * @param ast_root: root of the ast that is a binary tree of
+ * the bash syntax.
+ * @param exec_data: head of exec_data
+ * @return: void
+ */
+void	ft_free(t_ms_data **msd)
+{
+	if ((*msd)->env)
+		free_dup_envp((*msd)->env);
+	if ((*msd)->exec_data)
+		ft_lstclear(&(*msd)->exec_data, ft_free_exec_data);
+	if ((*msd)->input)
+		free((*msd)->input);
+	if ((*msd)->token_data)
+		ft_lstclear(&(*msd)->token_data, ft_free_lex_data);
+	if ((*msd)->ast_root)
+		ft_treeclear(&(*msd)->ast_root, free);
+	if ((*msd)->exit_status)
+		free((*msd)->exit_status);
+	if ((*msd))
+		free((*msd));
+}
+
+/**
  * @function: free_pipes
  * @brief: freeing pipes after the usage of the functions
  * 

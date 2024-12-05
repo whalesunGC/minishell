@@ -214,6 +214,7 @@ void	handle_parent_for_handling_forking_process_multi(
 // free_pipes.c //
 void	free_pipes(int **pipes, int num_pipes);
 void	free_heredocs_pipes(int **heredocs_pipes, int heredocs_count);
+void	ft_free(t_ms_data **msd);
 
 // single_command.c //
 void	execution(t_list *node, char ***env, t_ms_data *msd);

@@ -53,13 +53,15 @@ static void	ft_free_all_pipes(t_piping_multiple_command_params *params)
 static void	exit_is_the_only_argument(
 			t_piping_multiple_command_params *params, char **env)
 {
+	int	e_s;
+
+	e_s = *params->exit_status;
 	(void)(env);
 	rl_clear_history();
-	ft_dprintf(1, "exit\n");
 	ft_free_all_pipes(params);
 	free(params->pid_array);
 	ft_free(&params->msd);
-	exit(EXIT_SUCCESS);
+	exit(e_s);
 }
 
 /**
@@ -145,8 +147,9 @@ void	exit_command_multiple(
 		{
 			if (is_argument_numeric(params->av[1]) == 0)
 			{
-				ft_dprintf(1, "%s: %s: numberic"
+				ft_dprintf(2, "%s: %s: numberic"
 					" argument required\n", params->av[0], params->av[1]);
+				*params->exit_status = 2;
 				exit_is_the_only_argument(params, env);
 			}
 			else if (params->ac == 2)

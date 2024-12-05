@@ -1,6 +1,6 @@
 *.d
 *.o
 *.a
-submission*
+.submission*
 .vscode
 minishell
