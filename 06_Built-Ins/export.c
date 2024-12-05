@@ -77,7 +77,7 @@ char	**export_command(int ac, char **av, char ***env, int *e_s)
 			if (parse_export_arguments(&params) == -1)
 				return (*e_s = 1, NULL);
 			checking_for_duplicates_in_var_name(&params);
-			if (valid_export_arguments_first_parse(&params, env) == -1)
+			if (valid_export_arguments_first_parse(&params, env, e_s) == -1)
 				return (*e_s = 1, NULL);
 			if (params.valid_count > 0)
 				processing_for_valid_counts(&params, env);
