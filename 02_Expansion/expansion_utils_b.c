@@ -13,6 +13,23 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_rd_fd
+ * @brief: sets rd_args to empty string when input is NULL
+ * or when string has whitespace and is not in quotes 
+ *
+ * @param data: token data
+ */
+static void	handle_rd_fd(t_lex_data *data)
+{
+	if (!data->raw_string || (!ft_has_quote(data->raw_string)
+			&& ft_has_whitespace(data->raw_string)))
+	{
+		free(data->raw_string);
+		data->raw_string = ft_strdup("");
+	}
+}
+
+/**
  * @function: handle_empty_expansion
  * @brief: frees and sets raw_string to NULL 
  *
@@ -47,6 +64,23 @@ static int	ft_is_only_whitespace(char *string)
 }
 
 /**
+ * @function: handle_remove_quote
+ * @brief: handle remove quotes
+ *
+ * @param data: token data
+ */
+static void	handle_remove_quote(t_lex_data *data)
+{
+	if (data->type != TOKEN_RD_FD && (*data->raw_string == '\0'
+			|| ft_is_only_whitespace(data->raw_string)))
+		handle_empty_expansion(data);
+	if ((data->type == TOKEN_STRING || data->type == TOKEN_COMMAND
+			|| data->type == TOKEN_INQUOTE || data->type == TOKEN_RD_FD)
+		&& ft_has_quote(data->raw_string))
+		data->raw_string = ft_remove_quote(data->raw_string);
+}
+
+/**
  * @function: ft_expansion_tokens
  * @brief: this handles the expansion post tokenization
  * 
@@ -66,20 +100,18 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 	{
 		data->raw_string = expansion_string(data->raw_string, 0,
 				env, exit_status);
-		token_data = handle_word_split(ft_strdup(data->raw_string), token_data,
-				exit_status);
+		if (data->type == TOKEN_RD_FD)
+			handle_rd_fd(data);
+		else
+			token_data = handle_word_split(ft_strdup(data->raw_string),
+					token_data, exit_status);
 		data = (t_lex_data *)(*token_data)->content;
 		data->type = lexer_token_type_a(data->raw_string, data->is_first_token);
 		if (data->type == 42)
 			data->type = lexer_token_type_c(data->raw_string, data->in_quote,
 					data->is_hd_delimiter, data->is_fd);
 	}
-	if (*data->raw_string == '\0' || ft_is_only_whitespace(data->raw_string))
-		handle_empty_expansion(data);
-	if ((data->type == TOKEN_STRING || data->type == TOKEN_COMMAND
-			|| data->type == TOKEN_INQUOTE || data->type == TOKEN_RD_FD)
-		&& ft_has_quote(data->raw_string))
-		data->raw_string = ft_remove_quote(data->raw_string);
+	handle_remove_quote(data);
 	*token_data = (*token_data)->next;
 	return (*token_data);
 }
