@@ -26,13 +26,13 @@
 static int	handle_quote_status(char *input, int *in_single_quote,
 	int *in_d_quote, int *i)
 {
-	if (input[*i] == '\"')
+	if (input[*i] == '\"' && !(*in_single_quote))
 	{
 		*in_d_quote = !(*in_d_quote);
 		(*i)++;
 		return (1);
 	}
-	else if (input[*i] == '\'')
+	else if (input[*i] == '\'' && !(*in_d_quote))
 	{
 		*in_single_quote = !(*in_single_quote);
 		(*i)++;
