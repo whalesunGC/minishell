@@ -79,7 +79,7 @@ void	handle_ambigious_redirect(
 {
 	if (ft_strcmp(params->result->rd_arg[params->rd_arg_counter], "") == 0)
 	{
-		ft_dprintf(2, "ambiguous redirect\n");
+		ft_dprintf(2, "Ambiguous redirect\n");
 		clean_up_function(params, env);
 		exit(EXIT_FAILURE);
 	}
