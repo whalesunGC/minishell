@@ -25,6 +25,10 @@ void	handle_child_sigint(int signum)
 {
 	signal_cleanup(NULL);
 	(void)signum;
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	ft_printf("\n");
 	exit(130);
 }
 

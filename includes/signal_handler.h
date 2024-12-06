@@ -39,5 +39,6 @@ void		setup_signal_handlers_for_child(void);
 void		signal_parent(int *exit_status);
 void		signal_cleanup(t_sig_data *data);
 void		handle_cleanup_pipes(t_sig_data *data);
+void		handle_readline_cleanup(void);
 
 #endif
