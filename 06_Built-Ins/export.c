@@ -67,9 +67,7 @@ char	**export_command(int ac, char **av, char ***env, int *e_s)
 	setting_up_ac_av(&params, ac, av);
 	if (params.ac > 0 && ft_strncmp(params.av[0], "export", 6) == 0)
 	{
-		if (params.ac == 1 && ft_strlen(params.av[0]) == 6)
-			only_export_command(&params, env);
-		else if (params.ac > 1 && ft_strlen(params.av[0]) == 6)
+		if (params.ac > 1 && ft_strlen(params.av[0]) == 6)
 		{
 			setting_up_of_av_structure(&params);
 			if (initialise_var_name_var_value(&params) == -1)
