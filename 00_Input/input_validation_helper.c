@@ -12,6 +12,15 @@
 
 #include "../includes/minishell.h"
 
+/**
+ * @function: handle_quotes
+ * @brief: sets flags for quote_char and in_quotes
+ *
+ * @param in_quotes: input string
+ * @param quote_char: 
+ * @param current_char:
+ * @return: 1 if balanced, 0 if not
+ */
 void	handle_quotes(int *in_quotes, char *quote_char, char current_char)
 {
 	*in_quotes = !*in_quotes;
@@ -21,6 +30,15 @@ void	handle_quotes(int *in_quotes, char *quote_char, char current_char)
 		*quote_char = 0;
 }
 
+/**
+ * @function: handle_pipe_flags
+ * @brief: sets flags for input handling
+ *
+ * @param input: input string
+ * @param found_non_space:
+ * @param last_char_pipe:
+ * @return: 1 if balanced, 0 if not
+ */
 int	handle_pipe_flags(const char *input, int *found_non_space,
 		int *last_char_pipe)
 {
@@ -39,6 +57,16 @@ int	handle_pipe_flags(const char *input, int *found_non_space,
 	return (1);
 }
 
+/**
+ * @function: handle_seq_flags
+ * @brief: sets flags for if particular seq is found at end of string
+ *
+ * @param input: input string
+ * @param found_non_space:
+ * @param last_char:
+ * @param seq:
+ * @return: 1 if balanced, 0 if not
+ */
 int	handle_seq_flags(const char **input, int *found_non_space,
 		int *last_char_or, const char *seq)
 {

@@ -20,15 +20,14 @@
  * @param current_token: current token position
  * @return: current token position
  */
-t_list	**handle_word_split(char *string, t_list **current_token,
-	int *exit_status)
+t_list	**handle_word_split(char *string, t_list **current_token)
 {
 	t_list	*node;
 	t_list	*node_head;
 
 	node = NULL;
 	node_head = NULL;
-	string = input_clean(string, exit_status);
+	string = input_clean_2(string);
 	node = lexer(string);
 	if (!node)
 		return (free(string), current_token);

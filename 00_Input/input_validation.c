@@ -13,6 +13,20 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: input_clean_2
+ * @brief: input cleaning before word_splitting
+ * 
+ * @param input: input string
+ * @return: modified string that is delimited for the lexer module.
+ */
+char	*input_clean_2(char *input)
+{
+	input = ft_input_swap_whitespace(input);
+	input = ft_input_remove_extra_whitespace(input);
+	return (input);
+}
+
+/**
  * @function: ft_input_validation
  * @brief: function validates the input string for syntax errors
  *

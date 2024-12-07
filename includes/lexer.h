@@ -64,6 +64,7 @@ t_token_type		lexer_token_type_b(char *input, int in_quote,
 						int is_hd_delimiter, int is_fd);
 t_token_type		lexer_token_type_c(char *input, int in_quote,
 						int is_hd_delimiter, int is_fd);
+void				handle_retokenize(t_lex_data *data);
 // lexer Utils
 void				ft_free_split(char **split);
 void				ft_free_lex_data(void *data);

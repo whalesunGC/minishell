@@ -13,6 +13,20 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_retokenize
+ * @brief: post word split tokenization
+ *
+ * @param data: input lex_data
+ */
+void	handle_retokenize(t_lex_data *data)
+{
+	data->type = lexer_token_type_a(data->raw_string, data->is_first_token);
+	if (data->type == 42)
+		data->type = lexer_token_type_c(data->raw_string, data->in_quote,
+				data->is_hd_delimiter, data->is_fd);
+}
+
+/**
  * @function: lexer_token_type_a
  * @brief: to match the input string to the correct token type
  *
