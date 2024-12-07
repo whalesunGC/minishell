@@ -87,6 +87,9 @@ void	free_new_env(t_export_params *params);
 // export utils7 //
 void	valid_export_arguments(t_export_params *params);
 
+// exit_utils.c
+int		ft_chck_ul(char *number);
+
 //handle freeing of av after usage //
 void	free_tokens(char **av);
 void	free_dup_envp(char **env);
