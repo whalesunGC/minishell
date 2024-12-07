@@ -100,11 +100,8 @@ void	handle_file_opening_multiple_commands(
 		handling_file_opening_for_redirects(params);
 		handle_file_opening_errors(params);
 		if (params->flag == 1)
-		{
-			if (params->input_fd > 0)
-				close(params->input_fd);
-			if (params->output_fd > 0)
-				close(params->output_fd);
+		{	
+			reset_and_closing_fds_when_error(params);
 			break ;
 		}
 		params->rd_arg_counter++;

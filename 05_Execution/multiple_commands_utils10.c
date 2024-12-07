@@ -16,8 +16,8 @@
  * @function: handle_parent_for_handling_forking_process_multi
  * @brief: handle parent process for the function handling forking process below
  * 
- * @param params *params: structure for
- 	Multi command parameters
+ * @param t_piping_multiple_command_params *params : structure for
+ 	multiple commands parameters
  * 
  * @return: void function
  */
@@ -34,4 +34,27 @@ void	handle_parent_for_handling_forking_process_multi(
 	else if (WIFSIGNALED(status))
 		*params->exit_status = WTERMSIG(status) + 128;
 	ft_signal(NULL, NULL, NULL, PARENT);
+}
+
+/**
+ * @function: reset_and_closing_fds_when_error
+ * @brief: closing and resetting fds when having error
+ * 
+ * @param t_piping_multiple_command_params *params : structure for
+ 	multiple commands parameters
+ * 
+ * @return: void function
+ */
+
+void	reset_and_closing_fds_when_error(
+			t_piping_multiple_command_params *params)
+{
+	if (params->input_fd < 0)
+		params->input_fd = 0;
+	if (params->input_fd > 0)
+		close(params->input_fd);
+	if (params->output_fd > 0)
+		close(params->output_fd);
+	if (params->output_fd < 0)
+		params->output_fd = 0;
 }
