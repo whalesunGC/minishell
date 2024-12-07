@@ -28,6 +28,7 @@ int		ft_is_env(int i);
 int		ft_is_blank(char *string);
 
 // input_validation.c
+char	*input_clean_2(char *input);
 char	*ft_input_validation(char *input, int *exit_status);
 int		check_pipe_placement(const char *input);
 int		check_or_placement(const char *input);
