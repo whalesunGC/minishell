@@ -13,6 +13,17 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_readline_cleanup
+ * @breif: cleans up readline for certain cases
+ */
+void	handle_readline_cleanup(void)
+{
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	ft_printf("\n");
+}
+
+/**
  * @function: handle_clean_up_pipes
  * @brief: clean up all pipes in child exit on signal
  * @param data: t_sig_data

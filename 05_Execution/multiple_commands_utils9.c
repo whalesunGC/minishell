@@ -128,5 +128,6 @@ void	handle_pipe_and_waiting_for_child(
 		else
 			params->j++;
 	}
+	handle_readline_cleanup();
 	ft_signal(NULL, NULL, NULL, PARENT);
 }

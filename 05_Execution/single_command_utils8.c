@@ -32,7 +32,16 @@ void	handle_parent_for_handling_forking_process(
 	if (WIFEXITED(status))
 		*params->exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
+	{
 		*params->exit_status = WTERMSIG(status) + 128;
+		if (WTERMSIG(status) + 128 == 130)
+			handle_readline_cleanup();
+		else if (WTERMSIG(status) + 128 == 131)
+		{
+			handle_readline_cleanup();
+			ft_printf("\n");
+		}
+	}
 	ft_signal(NULL, NULL, NULL, PARENT);
 }
 
