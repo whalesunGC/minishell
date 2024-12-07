@@ -210,6 +210,8 @@ void	handle_pipe_and_waiting_for_child(
 // multiple_commands_utils10 //
 void	handle_parent_for_handling_forking_process_multi(
 			t_piping_multiple_command_params *params);
+void	reset_and_closing_fds_when_error(
+			t_piping_multiple_command_params *params);
 
 // free_pipes.c //
 void	free_pipes(int **pipes, int num_pipes);

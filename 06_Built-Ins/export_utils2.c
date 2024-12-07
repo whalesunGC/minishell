@@ -128,24 +128,21 @@ static int	extracting_var_values(t_export_params *params)
 	if (params->result != NULL)
 	{
 		if (params->split_result[1] != NULL)
-			params->var_value[params->j] = ft_strdup(params->split_result[1]);
-		else
-			params->var_value[params->j] = ft_strdup("");
-		if (params->var_value[params->j] == NULL)
 		{
-			free_var_name(params);
-			free_split_result(params);
-			return (-1);
+			if (ft_strcmp(params->split_result[1], "") == 0)
+				params->var_value[params->j] = ft_strdup("=");
+			else
+				params->var_value[params->j]
+					= ft_strdup(params->split_result[1]);
 		}
 	}
 	else
-	{
 		params->var_value[params->j] = ft_strdup("");
-		if (params->var_value[params->j] == NULL)
-		{
-			free_var_name(params);
-			return (-1);
-		}
+	if (params->var_value[params->j] == NULL)
+	{
+		free_var_name(params);
+		free_split_result(params);
+		return (-1);
 	}
 	return (0);
 }

@@ -12,6 +12,35 @@
 
 #include "../includes/minishell.h"
 
+char	*handle_var_value_only_equal_sign(t_export_params *params)
+{
+	free(params->var_value[params->b]);
+	params->var_value[params->b] = ft_strdup("");
+	if (params->var_value[params->b] == NULL)
+	{
+		free_var_name(params);
+		free_var_value(params);
+		return (NULL);
+	}
+	params->str1 = ft_strjoin(params->var_name[params->b], "=");
+	if (params->str1 == NULL)
+		return (NULL);
+	ft_strlcpy(params->new_env[params->j], params->str1,
+		ft_strlen(params->str1) + 1);
+	free(params->str1);
+	return (params->new_env[params->j]);
+}
+
+void	handle_var_value_with_valid_data(t_export_params *params)
+{
+	params->str1 = ft_strjoin(params->var_name[params->b], "=");
+	params->str2 = ft_strjoin(params->str1, params->var_value[params->b]);
+	ft_strlcpy(params->new_env[params->j], params->str2,
+		ft_strlen(params->str2) + 1);
+	free(params->str1);
+	free(params->str2);
+}
+
 /**
  * @function: has_equal_sign
  * @brief: supports valid_export_arguments function in export_utils7
@@ -29,18 +58,22 @@
 char	**has_equal_sign(t_export_params *params)
 
 {
-	char	*str1;
-	char	*str2;
-
-	params->new_env[params->j] = (char *)malloc
-		(sizeof(char) * (ft_strlen(params->av[params->i]) + 1));
+	if (ft_strcmp(params->var_value[params->b], "=") == 0)
+		params->new_env[params->j] = (char *)malloc
+			(sizeof(char) * (ft_strlen(params->av[params->i]) + 4));
+	else
+		params->new_env[params->j] = (char *)malloc
+			(sizeof(char) * (ft_strlen(params->av[params->i]) + 1));
 	if (params->new_env[params->j] == NULL)
 		return (NULL);
-	str1 = ft_strjoin(params->var_name[params->b], "=");
-	str2 = ft_strjoin(str1, params->var_value[params->b]);
-	ft_strlcpy(params->new_env[params->j], str2, ft_strlen(str2) + 1);
-	free(str1);
-	free(str2);
+	if (ft_strcmp(params->var_value[params->b], "=") == 0)
+	{
+		params->result = handle_var_value_only_equal_sign(params);
+		if (params->result == NULL)
+			return (NULL);
+	}
+	else
+		handle_var_value_with_valid_data(params);
 	return (params->new_env);
 }
 

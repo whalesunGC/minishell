@@ -13,30 +13,6 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: only_export_command
- * @brief: illusrates what happens the only argument is export
- 		will print out the details inside the environment
- 		this function is to be used in export_command function
- * 
- * @param t_export_params *params: created a structure
- 	to store variables required for the export function
- 	***env : to update the correct environment variables
- 		if appending is done in other functions
- * 
- * @return: void function
- */
-
-void	only_export_command(t_export_params *params, char ***env)
-
-{
-	while ((*env)[params->i] != NULL)
-	{
-		ft_dprintf(1, "%s\n", (*env)[params->i]);
-		params->i++;
-	}
-}
-
-/**
  * @function: setting_up_of_av_structure
  * @brief: to create an av structure which can be used
  	as the final product to append data if needed
@@ -112,24 +88,28 @@ int	initialise_var_name_var_value(t_export_params *params)
 int	valid_export_arguments_first_parse(t_export_params *params,
 		char ***env, int *e_s)
 {
-	int	total_args;
-
-	total_args = params->i;
-	params->is_valid = 1;
-	params->i = 0;
-	first_parsing(params);
+	initialise_counters_and_parsing(params);
 	if (params->valid_count == 0)
 		return (free_var_name(params), free_var_value(params), -1);
 	if (params->valid_count > 0)
 	{
-		if (params->valid_count != total_args)
+		if (params->valid_count != params->total_args)
 			*e_s = 1;
-		params->new_env = copy_envp_with_ac(*env, params->valid_count);
-		if (params->new_env == NULL)
+		initialise_counters_in_loop(params);
+		while ((*env)[params->k] != NULL)
 		{
-			free_var_name(params);
-			free_var_value(params);
-			return (-1);
+			checking_env_data(params, env);
+			params->k++;
+		}
+		if (params->valid_count > 0)
+		{
+			params->new_env = copy_envp_with_ac(*env, params->valid_count);
+			if (params->new_env == NULL)
+			{
+				free_var_name(params);
+				free_var_value(params);
+				return (-1);
+			}
 		}
 	}
 	return (0);

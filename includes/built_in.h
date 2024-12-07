@@ -24,19 +24,27 @@ typedef struct s_export_params
 	char	*equal_sign;
 	char	*equal_sign1;
 	char	*result;
+	char	*str1;
+	char	*str2;
+	char	*result1;
 	char	current_char;
 	int		ac;
 	int		i;
 	int		j;
+	int		k;
+	int		l;
+	int		m;
 	int		b;
 	int		d;
 	int		e;
 	int		f;
+	int		total_args;
 	int		counter;
 	int		found;
 	int		valid_count;
 	int		is_valid;
 	int		length;
+	int		flag;
 }	t_export_params;
 
 // handle built-ins plus the supporting logic for export functions. //
@@ -53,7 +61,6 @@ char	**unset_command(int ac, char **av, char **env);
 char	**export_command(int ac, char **av, char ***env, int *e_s);
 
 // export_utils1 //
-void	only_export_command(t_export_params *params, char ***env);
 void	setting_up_of_av_structure(t_export_params *params);
 int		initialise_var_name_var_value(t_export_params *params);
 int		valid_export_arguments_first_parse(t_export_params *params,
@@ -86,6 +93,13 @@ void	free_new_env(t_export_params *params);
 
 // export utils7 //
 void	valid_export_arguments(t_export_params *params);
+
+// export utils8 //
+void	checking_env_data(t_export_params *params, char ***env);
+void	handling_data_if_env_exists_and_var_value_is_empty(
+			t_export_params *params);
+void	initialise_counters_and_parsing(t_export_params *params);
+void	initialise_counters_in_loop(t_export_params *params);
 
 //handle freeing of av after usage //
 void	free_tokens(char **av);
