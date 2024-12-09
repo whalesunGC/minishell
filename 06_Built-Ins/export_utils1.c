@@ -13,6 +13,36 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: only_export_command
+ * @brief: illusrates what happens the only argument is export
+ 		will print out the details inside the environment
+ 		this function is to be used in export_command function
+ * 
+ * @param t_export_params *params: created a structure
+ 	to store variables required for the export function
+ 	***env : to update the correct environment variables
+ 		if appending is done in other functions
+ * 
+ * @return: void function
+ */
+
+void	only_export_command(t_export_params *params, char ***env)
+
+{
+	while ((*env)[params->i] != NULL)
+	{
+		params->equal_sign = ft_strchr((*env)[params->i], '=');
+		if (ft_strcmp(params->equal_sign + 1, "") == 0)
+		{
+			ft_dprintf(1, "%s\'\'\n", (*env)[params->i]);
+		}
+		else
+			ft_dprintf(1, "%s\n", (*env)[params->i]);
+		params->i++;
+	}
+}
+
+/**
  * @function: setting_up_of_av_structure
  * @brief: to create an av structure which can be used
  	as the final product to append data if needed
