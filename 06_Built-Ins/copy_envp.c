@@ -29,7 +29,10 @@ char	**handle_env_int(char **env, int *e_s)
 	char	*shlvl_arg;
 
 	shlvl_old = ft_getenv("SHLVL", env);
-	shlvl_new = ft_itoa(ft_atoi(shlvl_old) + 1);
+	if (!shlvl_old)
+		shlvl_new = ft_itoa(1);
+	else
+		shlvl_new = ft_itoa(ft_atoi(shlvl_old) + 1);
 	shlvl_arg = ft_str_insert(ft_strdup("SHLVL="), 5, shlvl_new);
 	av[0] = ft_strdup("export");
 	av[1] = shlvl_arg;
