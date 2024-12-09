@@ -101,12 +101,16 @@ void	handling_data_if_env_exists_and_var_value_is_empty(
 void	initialise_counters_and_parsing(t_export_params *params);
 void	initialise_counters_in_loop(t_export_params *params);
 
+// exit_utils.c
+int		ft_chck_ul(char *number);
+
 //handle freeing of av after usage //
 void	free_tokens(char **av);
 void	free_dup_envp(char **env);
 
 // copy envp so that you can manipulate the data //
 char	**copy_envp(char **envp);
+char	**handle_env_int(char **envp, int *e_s);
 
 // copying from env in the event i need to append new data //
 char	**copy_envp_with_ac(char **env, int space);

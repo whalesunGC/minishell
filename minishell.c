@@ -82,21 +82,20 @@ static t_ms_data	*handle_init_main(int ac, char **av, char **envp,
 	ft_memset(msd, 0, sizeof(t_ms_data));
 	(void)ac;
 	(void)av;
-	if (envp[0] == NULL)
-		ft_dprintf(1, "envp not initialised\n");
-	msd->env = copy_envp(envp);
-	if (msd->env == NULL)
-	{
-		ft_dprintf(2, "Duplicate of envp error!\n");
-		return (ft_free(&msd), NULL);
-	}
-	msd->token_data = NULL;
-	msd->ast_root = NULL;
-	msd->exec_data = NULL;
 	msd->exit_status = (int *)malloc(sizeof(int));
 	if (!msd->exit_status)
 		return (ft_free(&msd), NULL);
 	*msd->exit_status = 0;
+	if (envp[0] == NULL)
+		ft_dprintf(1, "envp not initialised\n");
+	msd->env = copy_envp(envp);
+	if (msd->env == NULL)
+		return (ft_dprintf(2, "Duplicate of envp error!\n"),
+			ft_free(&msd), NULL);
+	msd->env = handle_env_int(msd->env, msd->exit_status);
+	msd->token_data = NULL;
+	msd->ast_root = NULL;
+	msd->exec_data = NULL;
 	ft_signal(NULL, NULL, NULL, PARENT);
 	signal_parent(msd->exit_status);
 	return (msd);

@@ -100,16 +100,18 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 	{
 		data->raw_string = expansion_string(data->raw_string, 0,
 				env, exit_status);
+		if (data->type == TOKEN_VARIABLE && data->is_first_token)
+			data->type = TOKEN_COMMAND;
+		if (data->type == TOKEN_VARIABLE)
+			data->type = TOKEN_STRING;
 		if (data->type == TOKEN_RD_FD)
 			handle_rd_fd(data);
 		else
 			token_data = handle_word_split(ft_strdup(data->raw_string),
-					token_data, exit_status);
+					token_data);
 		data = (t_lex_data *)(*token_data)->content;
-		data->type = lexer_token_type_a(data->raw_string, data->is_first_token);
-		if (data->type == 42)
-			data->type = lexer_token_type_c(data->raw_string, data->in_quote,
-					data->is_hd_delimiter, data->is_fd);
+		if (!(data->type == TOKEN_STRING) && !(data->type == TOKEN_COMMAND))
+			handle_retokenize(data);
 	}
 	handle_remove_quote(data);
 	*token_data = (*token_data)->next;

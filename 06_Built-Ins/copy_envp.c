@@ -13,6 +13,32 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_env_int
+ * @brief: makes copy of env and increases the SHLVL
+ * 
+ * @param env:array of pointers belonging pertaining to each string.
+ * i: to loop through the string to free the correct string.
+ * @param e_s: pointer to exit_status
+ * @return env:
+ */
+char	**handle_env_int(char **env, int *e_s)
+{
+	char	*shlvl_old;
+	char	*shlvl_new;
+	char	*av[3];
+	char	*shlvl_arg;
+
+	shlvl_old = ft_getenv("SHLVL", env);
+	shlvl_new = ft_itoa(ft_atoi(shlvl_old) + 1);
+	shlvl_arg = ft_str_insert(ft_strdup("SHLVL="), 5, shlvl_new);
+	av[0] = ft_strdup("export");
+	av[1] = shlvl_arg;
+	av[2] = NULL;
+	export_command(2, av, &env, e_s);
+	return (free(shlvl_old), free(shlvl_new), free(shlvl_arg), env);
+}
+
+/**
  * @function: handle_error_for_env_string
  * @brief: freeing strings if malloc fails during building
  		of each line while copying from envp

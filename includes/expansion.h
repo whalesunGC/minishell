@@ -31,8 +31,7 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 int		ft_has_whitespace(char *string);
 char	*ft_remove_quote(char *string);
 int		ft_has_quote(char *string);
-t_list	**handle_word_split(char *string, t_list **current_token,
-			int *exit_status);
+t_list	**handle_word_split(char *string, t_list **current_token);
 t_list	*ft_lstinsert(t_list *node, t_list *current);
 
 //expansion_utils_d.c
