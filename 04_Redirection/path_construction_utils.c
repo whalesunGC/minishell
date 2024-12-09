@@ -67,10 +67,7 @@ int	check_valid_path_variable(t_command_params *params, char **env)
 		i++;
 	}
 	if (params->path == NULL)
-	{
-		ft_printf("PATH environment variable not set.\n");
 		return (-1);
-	}
 	return (0);
 }
 
