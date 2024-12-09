@@ -53,20 +53,7 @@ void	executing_execve(
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
 	}
-	params->dot_slash = ft_strnstr(params->result->cmd[0], "./", ft_strlen(params->result->cmd[0]));
-	ft_dprintf(2, "[%s]\n", params->dot_slash);
-	if (params->dot_slash == NULL)
-	{
-		params->slash = ft_strchr(params->result->cmd[0], '/');
-		ft_dprintf(2, "[%s]\n", params->slash);
-		if (params->slash == NULL)
-			params->command_path = find_command(&params->result->cmd[0], 0, *env);
-		else
-			params->command_path = params->result->cmd[0];	
-	}
-	else
-		params->command_path = params->result->cmd[0];
-	ft_dprintf(2, "[%s]\n", params->command_path);
+	handle_dot_slash_and_slash_single_commands(params, env);
 	if (params->command_path == NULL || *params->result->cmd[0] == '\0')
 	{
 		ft_dprintf(2, "%s : command not found\n", params->result->cmd[0]);
