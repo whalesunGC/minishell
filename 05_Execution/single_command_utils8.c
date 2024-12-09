@@ -35,11 +35,14 @@ void	handle_parent_for_handling_forking_process(
 	{
 		*params->exit_status = WTERMSIG(status) + 128;
 		if (WTERMSIG(status) + 128 == 130)
-			handle_readline_cleanup();
-		else if (WTERMSIG(status) + 128 == 131)
 		{
 			handle_readline_cleanup();
 			ft_printf("\n");
+		}
+		else if (WTERMSIG(status) + 128 == 131)
+		{
+			handle_readline_cleanup();
+			ft_printf("Quit (core dumped)\n");
 		}
 	}
 	ft_signal(NULL, NULL, NULL, PARENT);

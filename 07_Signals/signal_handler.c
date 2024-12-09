@@ -44,9 +44,9 @@ void	handle_parent_sigint(int signum)
 {
 	(void)signum;
 	signal_parent(NULL);
+	ft_printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	ft_printf("\n");
 	rl_redisplay();
 }
 

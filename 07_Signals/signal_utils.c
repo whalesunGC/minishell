@@ -20,7 +20,6 @@ void	handle_readline_cleanup(void)
 {
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	ft_printf("\n");
 }
 
 /**
