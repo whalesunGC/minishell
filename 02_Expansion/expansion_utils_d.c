@@ -28,8 +28,8 @@ char	*ft_remove_inquote(char *string)
 		return (NULL);
 	if (*string == '\'' || *string == '\"')
 		string = ft_str_replace(string, 0, "");
-	if (string[len - 1] == '\'' || string[len - 1] == '\"')
-		string = ft_str_replace(string, (len - 1), "");
+	if (string[len - 2] == '\'' || string[len - 2] == '\"')
+		string = ft_str_replace(string, (len - 2), "");
 	return (string);
 }
 
