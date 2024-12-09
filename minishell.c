@@ -119,7 +119,7 @@ int	main(int ac, char **av, char **envp)
 		exit(EXIT_FAILURE);
 	while (1)
 	{
-		msd->input = readline("🤏🐚>> ");
+		msd->input = readline("minishell>> ");
 		if (msd->input == NULL)
 		{
 			ft_dprintf(1, "Exiting minishell\n");
