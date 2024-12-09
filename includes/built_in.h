@@ -110,6 +110,7 @@ void	free_dup_envp(char **env);
 
 // copy envp so that you can manipulate the data //
 char	**copy_envp(char **envp);
+char	**handle_env_int(char **envp, int *e_s);
 
 // copying from env in the event i need to append new data //
 char	**copy_envp_with_ac(char **env, int space);
