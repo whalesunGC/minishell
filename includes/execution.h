@@ -51,6 +51,8 @@ typedef struct s_redirect_single_command_params
 	t_exec_node	*result;
 	char		*command_path;
 	char		*input1;
+	char		*dot_slash;
+	char		*slash;
 	pid_t		pid;
 	int			ac;
 	int			input_fd;
@@ -64,6 +66,7 @@ typedef struct s_redirect_single_command_params
 	int			a;
 	int			b;
 	int			g;
+	int			h;
 	int			original_fd;
 	int			delimiter_counter;
 	int			rd_arg_counter;
@@ -87,6 +90,8 @@ typedef struct s_piping_multiple_command_params
 	int			*exit_status;
 	char		*command_path;
 	char		*input1;
+	char		*dot_slash;
+	char		*slash;
 	pid_t		pid;
 	pid_t		*pid_array;
 	int			ac;
