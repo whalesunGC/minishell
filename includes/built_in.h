@@ -61,6 +61,7 @@ char	**unset_command(int ac, char **av, char **env);
 char	**export_command(int ac, char **av, char ***env, int *e_s);
 
 // export_utils1 //
+void	only_export_command(t_export_params *params, char ***env);
 void	setting_up_of_av_structure(t_export_params *params);
 int		initialise_var_name_var_value(t_export_params *params);
 int		valid_export_arguments_first_parse(t_export_params *params,

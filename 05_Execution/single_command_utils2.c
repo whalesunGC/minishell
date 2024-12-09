@@ -70,6 +70,7 @@ void	handle_file_opening_redirection(
 	}
 	else if (ft_strcmp(params->result->redirect[params->k], ">>") == 0)
 	{
+		handle_ambigious_redirect(params, env);
 		if (params->output_fd > 0)
 			close(params->output_fd);
 		params->output_fd = open(params->result->rd_arg
