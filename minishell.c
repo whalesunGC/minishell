@@ -57,7 +57,7 @@ static void	handle_parsing(t_ms_data *msd)
 	if (!ft_is_blank(msd->input))
 		add_history(msd->input);
 	msd->input = input_clean(msd->input, msd->exit_status);
-	msd->token_data = lexer(msd->input);
+	msd->token_data = lexer(msd->input, msd->env);
 	msd->token_data = expansion(msd->token_data, msd->env, msd->exit_status);
 	msd->ast_root = parser(msd->token_data, msd->exit_status);
 	msd->exec_data = ft_ast_to_linkedlist(msd->ast_root);

@@ -40,6 +40,7 @@ typedef struct s_lex_data
 	int				is_first_token;
 	int				is_hd_delimiter;
 	int				is_fd;
+	int				is_variable;
 }					t_lex_data;
 
 typedef struct s_lex_init_state
@@ -52,10 +53,10 @@ typedef struct s_lex_init_state
 }					t_lex_init_state;
 
 // lexer.c
-t_list				*lexer(char *input);
+t_list				*lexer(char *input, char **env);
 t_lex_data			*lexer_token_data(char *input, int is_first_token,
 						int is_hd_delimiter, int is_fd);
-t_list				*lexer_init_data(char **tokens);
+t_list				*lexer_init_data(char **tokens, char **env);
 
 // tokenize.c
 char				**tokenize(char *input);
@@ -70,6 +71,7 @@ void				ft_free_split(char **split);
 void				ft_free_lex_data(void *data);
 void				ft_print_tokens(t_list *token_data);
 t_lex_init_state	*ft_lexer_init_state(t_lex_init_state *state);
+int					has_valid_variable(char *input, char **env);
 
 // ft_split_ignore_quotes.c
 char				**ft_split_ignore_quotes(const char *s, char c);

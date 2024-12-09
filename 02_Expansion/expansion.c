@@ -23,7 +23,7 @@
  * @param i: current count
  * @return: 1 if flags change or 0
  */
-static int	handle_quote_status(char *input, int *in_single_quote,
+int	handle_quote_status(char *input, int *in_single_quote,
 	int *in_d_quote, int *i)
 {
 	if (input[*i] == '\"' && !(*in_single_quote))

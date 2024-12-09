@@ -13,6 +13,42 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: has_valid_variable
+ * @brief: function checks if string contains valid expansion variable.
+ * 
+ * @param input: input string
+ * @return: 1 if contains , 0 is not
+ */
+int	has_valid_variable(char *input, char **env)
+{
+	int		in_single_quote;
+	int		in_d_quote;
+	int		i;
+	char	*env_var;
+
+	in_single_quote = 0;
+	in_d_quote = 0;
+	i = 0;
+	env_var = NULL;
+	if (!input)
+		return (0);
+	while (input[i])
+	{
+		env_var = ft_var_exp(&input, i, env);
+		if (handle_quote_status(input, &in_single_quote, &in_d_quote, &i) == 1)
+			;
+		else if ((input[i] == '$' && input[i + 1] == '?'))
+			return (1);
+		else if ((input[i] == '$' && ft_is_env(input[i + 1]))
+			&& (!in_single_quote || in_d_quote) && env_var)
+			return (free(env_var), 1);
+		else
+			i++;
+	}
+	return (0);
+}
+
+/**
  * @function: ft_lexer_init_state
  * @brief: function that inits the state of the lexer before assigning token
  * types

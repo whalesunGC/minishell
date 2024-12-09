@@ -77,8 +77,10 @@ static void	handle_remove_quote(t_lex_data *data)
 	if (((data->type == TOKEN_STRING || data->type == TOKEN_COMMAND
 				|| data->type == TOKEN_INQUOTE || data->type == TOKEN_RD_FD)
 			&& ft_has_quote(data->raw_string))
-		&& check_quotes_balance(data->raw_string))
+		&& !data->is_variable)
 		data->raw_string = ft_remove_quote(data->raw_string);
+	if (data->type == TOKEN_INQUOTE && data->is_variable)
+		data->raw_string = ft_remove_inquote(data->raw_string);
 }
 
 /**
@@ -109,7 +111,7 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 			handle_rd_fd(data);
 		else
 			token_data = handle_word_split(ft_strdup(data->raw_string),
-					token_data);
+					token_data, env);
 		data = (t_lex_data *)(*token_data)->content;
 		if (!(data->type == TOKEN_STRING) && !(data->type == TOKEN_COMMAND))
 			handle_retokenize(data);
