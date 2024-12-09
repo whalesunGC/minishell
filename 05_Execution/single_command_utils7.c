@@ -57,7 +57,7 @@ int	handle_file_opening_output_for_built_in(
 {
 	if ((ft_strcmp(params->result->redirect[params->g], ">") == 0)
 		|| (ft_strcmp(params->result->redirect[params->g], ">>") == 0))
-	{
+	{	
 		if (handle_dup2_built_in_with_redirects(params) == -1)
 			return (-1);
 	}
