@@ -16,6 +16,8 @@
 t_list	*expansion(t_list *token_data, char **env, int *exist_status);
 char	*expansion_string(char *input, int ignore_quote, char **env,
 			int *exist_status);
+int		handle_quote_status(char *input, int *in_single_quote,
+			int *in_d_quote, int *i);
 
 //expansion_utils_a.c
 char	*ft_str_replace(char *input, int index, char *rep_substring);
@@ -31,12 +33,11 @@ t_list	*ft_expansion_tokens(t_list **token_data, char **env,
 int		ft_has_whitespace(char *string);
 char	*ft_remove_quote(char *string);
 int		ft_has_quote(char *string);
-t_list	**handle_word_split(char *string, t_list **current_token);
+t_list	**handle_word_split(char *string, t_list **current_token, char **env);
 t_list	*ft_lstinsert(t_list *node, t_list *current);
 
 //expansion_utils_d.c
 char	*ft_getenv(char *string, char **env);
 char	*ft_var_exp(char **input, int start_index, char **env);
 int		ft_env_len(const char *input);
-char	*ft_remove_inquote(char *string);
 #endif

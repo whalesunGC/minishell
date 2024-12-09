@@ -13,27 +13,6 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: ft_remove_inquote
- * @brief: remove head and tail quotes if TOKEN_INQUOTE and quotes 
- * are unbalanced.
- *
- * @param string: The input string starting with the variable name
- */
-char	*ft_remove_inquote(char *string)
-{
-	int	len;
-
-	len = ft_strlen(string);
-	if (!string)
-		return (NULL);
-	if (*string == '\'' || *string == '\"')
-		string = ft_str_replace(string, 0, "");
-	if (string[len - 1] == '\'' || string[len - 1] == '\"')
-		string = ft_str_replace(string, (len - 1), "");
-	return (string);
-}
-
-/**
  * @function: ft_env_len
  * @brief: Calculates the length of an environment variable name
  *

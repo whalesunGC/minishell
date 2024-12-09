@@ -44,8 +44,6 @@ t_lex_data	*lexer_token_data(char *input, int is_first_token,
 	if (data->type == 42)
 		data->type = lexer_token_type_b(input, in_quote, is_hd_delimiter,
 				is_fd);
-	if (data->type == TOKEN_VARIABLE)
-		data->is_variable = 1;
 	return (data);
 }
 
@@ -62,7 +60,7 @@ static void	update_state_flags(t_lex_init_state *state, t_lex_data *data)
 }
 
 static t_list	*create_token_node(t_lex_init_state *state, char **tokens,
-		t_list *first_node)
+		t_list *first_node, char **env)
 {
 	t_lex_data	*data;
 	t_list		*new_node;
@@ -71,6 +69,7 @@ static t_list	*create_token_node(t_lex_init_state *state, char **tokens,
 			state->is_hd_delimiter, state->is_fd);
 	if (!data)
 		return (NULL);
+	data->is_variable = has_valid_variable(data->raw_string, env);
 	if (state->i == 0)
 		first_node = ft_lstnew(data);
 	else
@@ -92,7 +91,7 @@ static t_list	*create_token_node(t_lex_init_state *state, char **tokens,
  *
  * @return: returns a pointer to the first node of the linked-list
  */
-t_list	*lexer_init_data(char **tokens)
+t_list	*lexer_init_data(char **tokens, char **env)
 {
 	t_lex_init_state	*state;
 	t_list				*first_node;
@@ -102,7 +101,7 @@ t_list	*lexer_init_data(char **tokens)
 	first_node = NULL;
 	while (tokens[state->i])
 	{
-		first_node = create_token_node(state, tokens, first_node);
+		first_node = create_token_node(state, tokens, first_node, env);
 		if (!first_node)
 			return (free(state), NULL);
 	}
@@ -119,7 +118,7 @@ t_list	*lexer_init_data(char **tokens)
  * @return: returns a linked-list "data" which is a stream of tokens
  * if created or NULLL if not.
  */
-t_list	*lexer(char *input)
+t_list	*lexer(char *input, char **env)
 {
 	char	**tokens;
 	t_list	*token_data;
@@ -131,7 +130,7 @@ t_list	*lexer(char *input)
 		return (free(input), NULL);
 	else
 	{
-		token_data = lexer_init_data(tokens);
+		token_data = lexer_init_data(tokens, env);
 		if (!token_data)
 			return (ft_free_split(tokens), free(tokens), NULL);
 	}
