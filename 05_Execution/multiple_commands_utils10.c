@@ -58,3 +58,31 @@ void	reset_and_closing_fds_when_error(
 	if (params->output_fd < 0)
 		params->output_fd = 0;
 }
+
+/**
+ * @function: handle_dot_slash_and_slash
+ * @brief: finding your command array if you have executables
+ * 
+ * @param t_piping_multiple_command_params *params : structure for
+ 	multiple commands parameters
+ * 
+ * @return: void function
+ */
+
+void	handle_dot_slash_and_slash(
+			t_piping_multiple_command_params *params, char ***env)
+{
+	params->dot_slash = ft_strnstr(params->result->cmd[0],
+			"./", ft_strlen(params->result->cmd[0]));
+	if (params->dot_slash == NULL)
+	{
+		params->slash = ft_strchr(params->result->cmd[0], '/');
+		if (params->slash == NULL)
+			params->command_path = find_command(&params->result->cmd[0],
+					0, *env);
+		else
+			params->command_path = params->result->cmd[0];
+	}
+	else
+		params->command_path = params->result->cmd[0];
+}

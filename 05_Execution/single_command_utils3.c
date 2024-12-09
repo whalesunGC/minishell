@@ -53,11 +53,7 @@ void	executing_execve(
 		clean_up_function(params, env);
 		exit(EXIT_SUCCESS);
 	}
-	if (access(params->result->cmd[0], F_OK) == 0)
-		params->command_path = params->result->cmd[0];
-	else
-		params->command_path = find_command
-			(&params->result->cmd[0], 0, *env);
+	handle_dot_slash_and_slash_single_commands(params, env);
 	if (params->command_path == NULL || *params->result->cmd[0] == '\0')
 	{
 		ft_dprintf(2, "%s : command not found\n", params->result->cmd[0]);
