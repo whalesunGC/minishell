@@ -39,10 +39,13 @@ t_lex_data	*lexer_token_data(char *input, int is_first_token,
 	data->in_quote = in_quote;
 	data->is_hd_delimiter = is_hd_delimiter;
 	data->is_fd = is_fd;
+	data->is_variable = 0;
 	data->type = lexer_token_type_a(input, is_first_token);
 	if (data->type == 42)
 		data->type = lexer_token_type_b(input, in_quote, is_hd_delimiter,
 				is_fd);
+	if (data->type == TOKEN_VARIABLE)
+		data->is_variable = 1;
 	return (data);
 }
 

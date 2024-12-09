@@ -38,4 +38,5 @@ t_list	*ft_lstinsert(t_list *node, t_list *current);
 char	*ft_getenv(char *string, char **env);
 char	*ft_var_exp(char **input, int start_index, char **env);
 int		ft_env_len(const char *input);
+char	*ft_remove_inquote(char *string);
 #endif

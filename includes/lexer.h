@@ -40,6 +40,7 @@ typedef struct s_lex_data
 	int				is_first_token;
 	int				is_hd_delimiter;
 	int				is_fd;
+	int				is_variable;
 }					t_lex_data;
 
 typedef struct s_lex_init_state
