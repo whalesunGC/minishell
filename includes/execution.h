@@ -51,6 +51,8 @@ typedef struct s_redirect_single_command_params
 	t_exec_node	*result;
 	char		*command_path;
 	char		*input1;
+	char		*dot_slash;
+	char		*slash;
 	pid_t		pid;
 	int			ac;
 	int			input_fd;
@@ -64,6 +66,7 @@ typedef struct s_redirect_single_command_params
 	int			a;
 	int			b;
 	int			g;
+	int			h;
 	int			original_fd;
 	int			delimiter_counter;
 	int			rd_arg_counter;
@@ -87,6 +90,8 @@ typedef struct s_piping_multiple_command_params
 	int			*exit_status;
 	char		*command_path;
 	char		*input1;
+	char		*dot_slash;
+	char		*slash;
 	pid_t		pid;
 	pid_t		*pid_array;
 	int			ac;
@@ -212,6 +217,8 @@ void	handle_parent_for_handling_forking_process_multi(
 			t_piping_multiple_command_params *params);
 void	reset_and_closing_fds_when_error(
 			t_piping_multiple_command_params *params);
+void	handle_dot_slash_and_slash(
+			t_piping_multiple_command_params *params, char ***env);
 
 // free_pipes.c //
 void	free_pipes(int **pipes, int num_pipes);
@@ -337,6 +344,10 @@ int		handling_dup2_and_closing_heredoc_pipes_before_execve(
 int		handle_execve_for_heredocs(
 			t_redirect_single_command_params *params, char ***env);
 int		handle_child_execution(
+			t_redirect_single_command_params *params, char ***env);
+
+// single_command_utils11 //
+void	handle_dot_slash_and_slash_single_commands(
 			t_redirect_single_command_params *params, char ***env);
 
 #endif
