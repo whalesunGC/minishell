@@ -11,6 +11,26 @@
 /* ************************************************************************** */
 #include "../includes/minishell.h"
 
+/**
+ * @function: ft_has_quote
+ * @brief: checks if quotes exist in string
+ *
+ * @param string: input string
+ * @return: 1 or 0
+ */
+int	ft_has_quote(char *string)
+{
+	if (!string)
+		return (0);
+	while (*string)
+	{
+		if (*string == '\'' || *string == '\"')
+			return (1);
+		string++;
+	}
+	return (0);
+}
+
 char	*ft_strchr_ignore_quotes(const char *s, int c)
 {
 	unsigned char	t;

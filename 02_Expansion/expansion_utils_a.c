@@ -13,6 +13,22 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_has_var
+ * @brief: takes care of expansion within ft_expansion_tokens
+ *
+ * @param data: token data
+ */
+void	handle_has_var(t_lex_data *data, char **env, int *exit_status)
+{
+	if (data->has_val_var)
+		data->raw_string = expansion_val_var(data->raw_string,
+				env, exit_status);
+	else
+		data->raw_string = expansion_string(data->raw_string, 0,
+				env, exit_status);
+}
+
+/**
  * @function: expansion_replace_string
  * @brief: string replacement function for the expansion step.
  * 
