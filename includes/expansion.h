@@ -14,6 +14,18 @@
 
 # include "lexer.h"
 
+typedef struct s_ex_data
+{
+	int		**index;
+	char	**env;
+	int		*exit_status;
+	int		j;
+	int		rem_count;
+	int		in_d_q;
+	int		in_s_q;
+}				t_ex_data;
+
+
 //expansion.c
 t_list	*expansion(t_list *token_data, char **env, int *exist_status);
 char	*expansion_string(char *input, int ignore_quote, char **env,
@@ -29,7 +41,6 @@ char	*ft_str_replace(char *input, int index, char *rep_substring);
 char	*ft_str_insert(char *input, int index, char *insert_string);
 char	*ft_env_search(char *var, char **env);
 void	expansion_replace_string(char *env_var, int index, char **exp_input);
-void	handle_has_var(t_lex_data *data, char **env, int *exit_status);
 
 //expansion_utils_b.c
 t_list	*ft_expansion_tokens(t_list **token_data, char **env,
@@ -47,6 +58,10 @@ char	*ft_getenv(char *string, char **env);
 char	*ft_var_exp(char **input, int start_index, char **env);
 int		ft_env_len(const char *input);
 char	*ft_remove_inquote(char *string);
-char	*expansion_val_var(char *input, char **env,
-			int *exit_status);
+
+//expansion_utils_e.c
+void	handle_has_var(t_lex_data *data, char **env, int *exit_status);
+char	*expansion_val_var(char *input, t_ex_data *ex_data);
+void	handle_env_variable_val_var(char **input, int *i, t_ex_data *ex_data);
+
 #endif
