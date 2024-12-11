@@ -13,6 +13,27 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_ambigious_redirect_m
+ * @brief: handles errors for ambigious redirect
+ * 
+ * @param t_redirect_single_command_params *params: structure for
+ 	single_command parameters
+ * 
+ * @return: void function
+ */
+
+static void	handle_ambigious_redirect_m(
+			t_piping_multiple_command_params *params)
+{
+	if (ft_strcmp(params->result->rd_arg[params->rd_arg_counter], "") == 0)
+	{
+		ft_dprintf(2, "Ambiguous redirect\n");
+		*params->exit_status = 1;
+		params->flag = 1;
+	}
+}
+
+/**
  * @function: handle_file_opening_errors
  * @brief: print error message if file opening fails
  * 
@@ -24,7 +45,8 @@
 
 void	handle_file_opening_errors(t_piping_multiple_command_params *params)
 {
-	if (params->input_fd < 0 || params->output_fd < 0)
+	if (!(ft_strcmp(params->result->rd_arg[params->rd_arg_counter], "") == 0)
+		&& (params->input_fd < 0 || params->output_fd < 0))
 	{
 		ft_dprintf(2, "%s: ", params->result->rd_arg[params->rd_arg_counter]);
 		perror("Error opening file");
@@ -98,6 +120,7 @@ void	handle_file_opening_multiple_commands(
 			continue ;
 		}
 		handling_file_opening_for_redirects(params);
+		handle_ambigious_redirect_m(params);
 		handle_file_opening_errors(params);
 		if (params->flag == 1)
 		{	
@@ -139,21 +162,4 @@ void	handle_heredocs_pipe_number_multiple_commands(
 				params->heredocs_pipe_index = params->heredocs_pipe_number - 1;
 		}
 	}
-}
-
-/**
- * @function: handle_flag_equals_one in handle_arguments function
- * @brief: moving on to next node and increment i
- * 
- * @param t_piping_multiple_command_params *params : structure for
- 	multiple commands parameters
- * 
- * @return: void function
- */
-
-void	handle_flag_equals_one(
-			t_piping_multiple_command_params *params)
-{
-	params->traverse = params->traverse->next;
-	params->i++;
 }

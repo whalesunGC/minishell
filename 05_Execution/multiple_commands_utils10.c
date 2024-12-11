@@ -13,6 +13,23 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_flag_equals_one in handle_arguments function
+ * @brief: moving on to next node and increment i
+ * 
+ * @param t_piping_multiple_command_params *params : structure for
+ 	multiple commands parameters
+ * 
+ * @return: void function
+ */
+
+void	handle_flag_equals_one(
+			t_piping_multiple_command_params *params)
+{
+	params->traverse = params->traverse->next;
+	params->i++;
+}
+
+/**
  * @function: handle_parent_for_handling_forking_process_multi
  * @brief: handle parent process for the function handling forking process below
  * 
