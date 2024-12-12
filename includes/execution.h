@@ -187,8 +187,6 @@ void	handle_file_opening_multiple_commands(
 			t_piping_multiple_command_params *params);
 void	handle_heredocs_pipe_number_multiple_commands(
 			t_piping_multiple_command_params *params);
-void	handle_flag_equals_one(
-			t_piping_multiple_command_params *params);
 
 // multiple_commands_utils8 //
 void	initialise_counter_for_handle_arguments(
@@ -219,6 +217,8 @@ void	reset_and_closing_fds_when_error(
 			t_piping_multiple_command_params *params);
 void	handle_dot_slash_and_slash(
 			t_piping_multiple_command_params *params, char ***env);
+void	handle_flag_equals_one(
+			t_piping_multiple_command_params *params);
 
 // free_pipes.c //
 void	free_pipes(int **pipes, int num_pipes);

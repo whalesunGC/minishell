@@ -13,10 +13,44 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: has_variable
+ * @brief: function checks if string contains expansion variables.
+ * 
+ * @param input: input string
+ * @return: 1 if contains , 0 is not
+ */
+int	has_variable(char *input)
+{
+	int		in_single_quote;
+	int		in_d_quote;
+	int		i;
+
+	in_single_quote = 0;
+	in_d_quote = 0;
+	i = 0;
+	if (!input)
+		return (0);
+	while (input[i])
+	{
+		if (handle_quote_status(input, &in_single_quote, &in_d_quote, &i) == 1)
+			;
+		else if ((input[i] == '$' && input[i + 1] == '?'))
+			return (1);
+		else if ((input[i] == '$' && ft_is_env(input[i + 1]))
+			&& (!in_single_quote || in_d_quote))
+			return (1);
+		else
+			i++;
+	}
+	return (0);
+}
+
+/**
  * @function: has_valid_variable
  * @brief: function checks if string contains valid expansion variable.
  * 
  * @param input: input string
+ * @param env: current envp
  * @return: 1 if contains , 0 is not
  */
 int	has_valid_variable(char *input, char **env)
@@ -24,24 +58,23 @@ int	has_valid_variable(char *input, char **env)
 	int		in_single_quote;
 	int		in_d_quote;
 	int		i;
-	char	*env_var;
+	int		in_env_var;
 
 	in_single_quote = 0;
 	in_d_quote = 0;
 	i = 0;
-	env_var = NULL;
 	if (!input)
 		return (0);
 	while (input[i])
 	{
-		env_var = ft_var_exp(&input, i, env);
+		in_env_var = has_env_variable(input, env, i);
 		if (handle_quote_status(input, &in_single_quote, &in_d_quote, &i) == 1)
 			;
 		else if ((input[i] == '$' && input[i + 1] == '?'))
 			return (1);
 		else if ((input[i] == '$' && ft_is_env(input[i + 1]))
-			&& (!in_single_quote || in_d_quote) && env_var)
-			return (free(env_var), 1);
+			&& (!in_single_quote || in_d_quote) && in_env_var)
+			return (1);
 		else
 			i++;
 	}
@@ -66,24 +99,6 @@ t_lex_init_state	*ft_lexer_init_state(t_lex_init_state *state)
 	state->is_hd_delimiter = 0;
 	state->is_fd = 0;
 	return (state);
-}
-
-/**
- * @function: ft_print_tokens
- * @brief: function that takes the list and prints it.
- * 
- * @param token_data: pointer to the head of the list
- * @return: no return value, void function.
- */
-void	ft_print_tokens(t_list *token_data)
-{
-	while (token_data)
-	{
-		ft_printf("Token is %s, Token Type is %d\n",
-			((t_lex_data *)(token_data->content))->raw_string,
-			((t_lex_data *)(token_data->content))->type);
-		token_data = token_data->next;
-	}
 }
 
 /**

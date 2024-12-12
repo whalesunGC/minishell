@@ -13,6 +13,33 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: handle_quote_status_val_var
+ * @brief: assigns flags to quotes
+ *
+ * @param input: address to the pointer of the
+ * string(string by reference)
+ * @param in_single_quote: point to the index value of where '$' is found
+ * @param in_double_quote: env variables copied from main
+ * @param i: current count
+ * @return: 1 if flags change or 0
+ */
+int	handle_quote_status_val_var(char *input, int *in_single_quote,
+	int *in_d_quote, int *i)
+{
+	if (input[*i] == '\"' && !(*in_single_quote))
+	{
+		*in_d_quote = !(*in_d_quote);
+		return (1);
+	}
+	else if (input[*i] == '\'' && !(*in_d_quote))
+	{
+		*in_single_quote = !(*in_single_quote);
+		return (1);
+	}
+	return (0);
+}
+
+/**
  * @function: handle_quote_status
  * @brief: assigns flags to quotes
  *
@@ -52,7 +79,7 @@ int	handle_quote_status(char *input, int *in_single_quote,
  * @param env: env variables copied from main
  *
  */
-static void	handle_env_variable(char **input, int *i, char **env)
+void	handle_env_variable(char **input, int *i, char **env)
 {
 	char	*env_var;
 

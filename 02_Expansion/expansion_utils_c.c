@@ -13,6 +13,26 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: has_valid_variable
+ * @brief: function checks if string contains expansion variable.
+ * 
+ * @param input: input string
+ * @param env: current envp
+ * @param i: index in string
+ * @return: 1 if contains , 0 is not
+ */
+int	has_env_variable(char *input, char **env, int i)
+{
+	char	*env_var;
+
+	env_var = ft_var_exp(&input, i, env);
+	if (!env_var)
+		return (0);
+	else
+		return (free(env_var), 1);
+}
+
+/**
  * @function: handle_word_split
  * @brief: handles additional word splitting after the expansion step
  *
@@ -119,24 +139,4 @@ char	*ft_remove_quote(char *string)
 			i++;
 	}
 	return (string);
-}
-
-/**
- * @function: ft_has_quote
- * @brief: checks if quotes exist in string
- *
- * @param string: input string
- * @return: 1 or 0
- */
-int	ft_has_quote(char *string)
-{
-	if (!string)
-		return (0);
-	while (*string)
-	{
-		if (*string == '\'' || *string == '\"')
-			return (1);
-		string++;
-	}
-	return (0);
 }

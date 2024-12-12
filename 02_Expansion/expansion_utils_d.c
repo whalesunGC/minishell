@@ -13,6 +13,47 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: expansion_val_var
+ * @brief: takes input string that contains valid variables
+ * and does variable expansion and quote removal
+ *
+ * @param input: any string, note that this
+ * 	is malloced and needs to be freed after use.
+ * @param env: env variables copied from main
+ *
+ * @return: returns expanded string.
+ */
+char	*expansion_val_var(char *input, char **env,
+	int *exit_status)
+{
+	int		in_single_quote;
+	int		in_d_quote;
+	int		i;
+	char	*status;
+
+	in_single_quote = 0;
+	in_d_quote = 0;
+	i = 0;
+	status = ft_itoa(*exit_status);
+	while (input[i])
+	{
+		handle_quote_status_val_var(input, &in_single_quote, &in_d_quote, &i);
+		if ((input[i] == '\'') && !in_d_quote)
+			input = ft_str_replace(input, i, "");
+		else if ((input[i] == '\"') && !in_single_quote)
+			input = ft_str_replace(input, i, "");
+		else if ((input[i] == '$' && input[i + 1] == '?'))
+			input = ft_str_replace(input, i, status);
+		else if ((input[i] == '$' && ft_is_env(input[i + 1]))
+			&& (!in_single_quote || in_d_quote))
+			handle_env_variable(&input, &i, env);
+		else
+			i++;
+	}
+	return (free(status), input);
+}
+
+/**
  * @function: ft_remove_inquote
  * @brief: remove head and tail quotes if TOKEN_INQUOTE and quotes 
  * are unbalanced.

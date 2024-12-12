@@ -55,6 +55,7 @@ void	handle_file_opening_redirection(
 {
 	if (ft_strcmp(params->result->redirect[params->k], "<") == 0)
 	{
+		handle_ambigious_redirect(params, env);
 		if (params->input_fd > 0)
 			close(params->input_fd);
 		params->input_fd = open(params->result

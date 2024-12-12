@@ -39,7 +39,8 @@ t_lex_data	*lexer_token_data(char *input, int is_first_token,
 	data->in_quote = in_quote;
 	data->is_hd_delimiter = is_hd_delimiter;
 	data->is_fd = is_fd;
-	data->is_variable = 0;
+	data->has_val_var = 0;
+	data->has_var = has_variable(input);
 	data->type = lexer_token_type_a(input, is_first_token);
 	if (data->type == 42)
 		data->type = lexer_token_type_b(input, in_quote, is_hd_delimiter,
@@ -69,7 +70,8 @@ static t_list	*create_token_node(t_lex_init_state *state, char **tokens,
 			state->is_hd_delimiter, state->is_fd);
 	if (!data)
 		return (NULL);
-	data->is_variable = has_valid_variable(data->raw_string, env);
+	if (data->has_var)
+		data->has_val_var = has_valid_variable(data->raw_string, env);
 	if (state->i == 0)
 		first_node = ft_lstnew(data);
 	else
