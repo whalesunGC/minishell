@@ -103,7 +103,7 @@ void	initialise_counters_and_parsing(t_export_params *params);
 void	initialise_counters_in_loop(t_export_params *params);
 
 // exit_utils.c
-int		ft_chck_ul(char *number);
+int		ft_chk_ul(char *number);
 
 //handle freeing of av after usage //
 void	free_tokens(char **av);

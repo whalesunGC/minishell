@@ -42,7 +42,7 @@ char	*expansion_val_var(char *input, char **env,
 			input = ft_str_replace(input, i, "");
 		else if ((input[i] == '\"') && !in_single_quote)
 			input = ft_str_replace(input, i, "");
-		else if ((input[i] == '$' && input[i + 1] == '?'))
+		else if ((input[i] == '$' && input[i + 1] == '?') && !in_single_quote)
 			input = ft_str_replace(input, i, status);
 		else if ((input[i] == '$' && ft_is_env(input[i + 1]))
 			&& (!in_single_quote || in_d_quote))

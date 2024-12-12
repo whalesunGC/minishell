@@ -133,7 +133,7 @@ void	exit_command(t_redirect_single_command_params *params,
 			ft_dprintf(2, "%s: command not found\n", params->av[0]);
 		else if (params->ac >= 2 && ft_strlen(params->av[0]) == 4)
 		{
-			if (ft_chck_ul(params->av[1]) && is_argument_numeric(params->av[1]))
+			if (!is_argument_numeric(params->av[1]) || ft_chk_ul(params->av[1]))
 			{
 				ft_dprintf(2, "%s: %s: numeric"
 					" argument required\n", params->av[0], params->av[1]);

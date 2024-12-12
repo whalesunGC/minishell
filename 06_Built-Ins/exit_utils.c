@@ -42,7 +42,7 @@ static int	handle_symbol(char **number, int *is_minus)
  *
  * @return: void function
  */
-int	ft_chck_ul(char *number)
+int	ft_chk_ul(char *number)
 {
 	char	*temp;
 	int		len;
@@ -66,6 +66,6 @@ int	ft_chck_ul(char *number)
 			return (free(temp), 1);
 	}
 	else if (len <= 19)
-		return (1);
+		return (0);
 	return (0);
 }
