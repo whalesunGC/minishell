@@ -349,5 +349,7 @@ int		handle_child_execution(
 // single_command_utils11 //
 void	handle_dot_slash_and_slash_single_commands(
 			t_redirect_single_command_params *params, char ***env);
+void	handle_error_for_execve_single_commands(
+			t_redirect_single_command_params *params, char ***env);
 
 #endif

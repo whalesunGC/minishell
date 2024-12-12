@@ -89,11 +89,22 @@ void	handle_invalid_command(
 void	handle_execve_failure(
 			t_piping_multiple_command_params *params, char ***env)
 {
-	perror("execve process failed");
-	if (params->command_path != params->result->cmd[0])
-		free(params->command_path);
-	clean_up_function_multiple_commands(params, env);
-	exit(126);
+	if (errno == ENOENT)
+	{
+		perror("execve failed");
+		if (params->command_path != params->result->cmd[0])
+			free(params->command_path);
+		clean_up_function_multiple_commands(params, env);
+		exit(127);
+	}
+	else if (errno == EACCES)
+	{
+		perror("execve process failed");
+		if (params->command_path != params->result->cmd[0])
+			free(params->command_path);
+		clean_up_function_multiple_commands(params, env);
+		exit(126);
+	}
 }
 
 /**

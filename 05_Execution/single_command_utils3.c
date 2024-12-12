@@ -60,13 +60,7 @@ void	executing_execve(
 		handle_command_path_and_execve_failure(params, env);
 	}
 	if (execve(params->command_path, params->result->cmd, *env) == -1)
-	{
-		perror("execve failed");
-		if (params->command_path != params->result->cmd[0])
-			free(params->command_path);
-		clean_up_function(params, env);
-		exit(126);
-	}
+		handle_error_for_execve_single_commands(params, env);
 }
 
 /**

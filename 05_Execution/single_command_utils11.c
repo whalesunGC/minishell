@@ -39,3 +39,24 @@ void	handle_dot_slash_and_slash_single_commands(
 	else
 		params->command_path = params->result->cmd[0];
 }
+
+void	handle_error_for_execve_single_commands(
+			t_redirect_single_command_params *params, char ***env)
+{
+	if (errno == ENOENT)
+	{
+		perror("execve failed");
+		if (params->command_path != params->result->cmd[0])
+			free(params->command_path);
+		clean_up_function(params, env);
+		exit(127);
+	}
+	else if (errno == EACCES)
+	{
+		perror("execve failed");
+		if (params->command_path != params->result->cmd[0])
+			free(params->command_path);
+		clean_up_function(params, env);
+		exit(126);
+	}
+}

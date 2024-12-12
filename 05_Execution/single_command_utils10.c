@@ -136,24 +136,14 @@ int	handle_execve_for_heredocs(
 		(params, env) == -1)
 		return (-1);
 	freeing_heredoc_pipes(params);
-	if (access(params->result->cmd[0], F_OK) == 0)
-		params->command_path = params->result->cmd[0];
-	else
-		params->command_path = find_command(&params->result->cmd[0], 0, *env);
-	if (params->command_path == NULL)
+	handle_dot_slash_and_slash_single_commands(params, env);
+	if (params->command_path == NULL || *params->result->cmd[0] == '\0')
 	{
-		ft_dprintf(2, "command not found\n");
-		freeing_heredoc_pipes(params);
-		clean_up_function(params, env);
-		exit(127);
+		ft_dprintf(2, "%s : command not found\n", params->result->cmd[0]);
+		handle_command_path_and_execve_failure(params, env);
 	}
-	else if (execve(params->command_path, params->result->cmd, *env) == -1)
-	{
-		perror("execve failed");
-		freeing_heredoc_pipes(params);
-		clean_up_function(params, env);
-		exit(126);
-	}
+	if (execve(params->command_path, params->result->cmd, *env) == -1)
+		handle_error_for_execve_single_commands(params, env);
 	return (0);
 }
 
