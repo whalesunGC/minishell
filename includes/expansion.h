@@ -47,6 +47,10 @@ char	*ft_getenv(char *string, char **env);
 char	*ft_var_exp(char **input, int start_index, char **env);
 int		ft_env_len(const char *input);
 char	*ft_remove_inquote(char *string);
+
+//expansion_utils_e.c
 char	*expansion_val_var(char *input, char **env,
 			int *exit_status);
+char	*ft_reset_quotes(char *env_var);	
+
 #endif
