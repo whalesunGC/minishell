@@ -12,6 +12,8 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define VAR_S_Q -24 
+# define VAR_D_Q -42
 # include "../Libft/libft.h"
 # include "../Libft/ft_printf.h"
 # include "../Libft/ft_dprintf.h"

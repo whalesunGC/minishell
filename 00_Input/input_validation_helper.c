@@ -104,7 +104,7 @@ int	check_quotes_balance(const char *input)
 	{
 		if (*input == '\'' && !double_quote)
 			single_quote = !single_quote;
-		else if (*input == '"' && !single_quote)
+		else if (*input == '\"' && !single_quote)
 			double_quote = !double_quote;
 		input++;
 	}
@@ -121,13 +121,21 @@ int	check_quotes_balance(const char *input)
 int	check_parentheses_balance(const char *input)
 {
 	int	count;
+	int	single_quote;
+	int	double_quote;
 
+	single_quote = 0;
+	double_quote = 0;
 	count = 0;
 	while (*input)
 	{
-		if (*input == '(')
+		if (*input == '\'' && !double_quote)
+			single_quote = !single_quote;
+		else if (*input == '\"' && !single_quote)
+			double_quote = !double_quote;
+		if (*input == '(' && !double_quote && !single_quote)
 			count++;
-		else if (*input == ')')
+		else if (*input == ')' && !double_quote && !single_quote)
 		{
 			if (count == 0)
 				return (0);
