@@ -104,6 +104,8 @@ void	initialise_counters_in_loop(t_export_params *params);
 
 // exit_utils.c
 int		ft_chk_ul(char *number);
+void	exit_too_many_args(int *e_s);
+int		is_argument_numeric(const char *arg);
 
 //handle freeing of av after usage //
 void	free_tokens(char **av);
