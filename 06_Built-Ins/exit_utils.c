@@ -13,6 +13,51 @@
 #include "../includes/minishell.h"
 
 /**
+ * @function: is_argument_numeric
+ * @brief: checks if the argument being passed
+ 		into the program is numeric
+ * 
+ * @param *arg: literally means av[1],
+ 		the argument after the word exit.
+ * 
+ * @return: void function
+ */
+
+int	is_argument_numeric(const char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (arg[i] == '-' || arg[i] == '+')
+		i = 1;
+	if (arg[i] == '\0')
+		return (0);
+	while (arg[i] != '\0')
+	{
+		if (ft_isdigit(arg[i]) == 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+/**
+ * @function: exit_too_many_args
+ * @brief: return prompt
+ * 
+ * @param param: to free up the arguments which
+ *		are already split into tokens
+ *@param env: to free up the duplicated env
+ * 
+ * @return: void function
+ */
+void	exit_too_many_args(int *e_s)
+{
+	ft_dprintf(1, "exit\n");
+	*e_s = 1;
+}
+
+/**
  * @function: handle_symbol
  * @brief: updates the symbol status
  *
@@ -40,7 +85,7 @@ static int	handle_symbol(char **number, int *is_minus)
  *		are already split into tokens
  *@param env: to free up the duplicated env
  *
- * @return: void function
+ * @return: return 1 if outside long_min to long_max
  */
 int	ft_chk_ul(char *number)
 {
@@ -65,7 +110,8 @@ int	ft_chk_ul(char *number)
 		else if (ft_atoi(&number[len - 1]) > 7 && !is_minus)
 			return (free(temp), 1);
 	}
-	else if (len <= 19)
+	if (len <= 19)
 		return (0);
-	return (0);
+	else
+		return (1);
 }

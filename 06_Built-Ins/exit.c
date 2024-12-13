@@ -13,22 +13,6 @@
 #include "../includes/minishell.h"
 
 /**
- * @function: exit_too_many_args
- * @brief: return prompt
- * 
- * @param param: to free up the arguments which
- *		are already split into tokens
- *@param env: to free up the duplicated env
- * 
- * @return: void function
- */
-static void	exit_too_many_args(int *e_s)
-{
-	ft_dprintf(1, "exit\n");
-	*e_s = 1;
-}
-
-/**
  * @function: exit_is_the_only_argument
  * @brief: exits the program if the only argument is exit
  * 
@@ -38,7 +22,6 @@ static void	exit_too_many_args(int *e_s)
 
 static void	exit_is_the_only_argument(t_redirect_single_command_params *params,
 		char **env)
-
 {
 	int	e_s;
 
@@ -80,33 +63,21 @@ static void	exit_with_one_other_argument(
 }
 
 /**
- * @function: is_argument_numeric
- * @brief: checks if the argument being passed
- 		into the program is numeric
- * 
- * @param *arg: literally means av[1],
- 		the argument after the word exit.
- * 
+ * @function: handle_error_numeric
+ * @brief: updates the symbol status
+ *
+ * @param params: struct containing param data for execution
+ * @param env: env
+ * @param e_s: exit_status
  * @return: void function
  */
-
-static int	is_argument_numeric(const char *arg)
-
+static void	handle_error_numeric(t_redirect_single_command_params *params,
+		char **env, int *e_s)
 {
-	int	i;
-
-	i = 0;
-	if (arg[i] == '-' || arg[i] == '+')
-		i = 1;
-	if (arg[i] == '\0')
-		return (0);
-	while (arg[i] != '\0')
-	{
-		if (ft_isdigit(arg[i]) == 0)
-			return (0);
-		i++;
-	}
-	return (1);
+	ft_dprintf(2, "%s: %s: numeric"
+		" argument required\n", params->av[0], params->av[1]);
+	*e_s = 2;
+	exit_is_the_only_argument(params, env);
 }
 
 /**
@@ -133,13 +104,11 @@ void	exit_command(t_redirect_single_command_params *params,
 			ft_dprintf(2, "%s: command not found\n", params->av[0]);
 		else if (params->ac >= 2 && ft_strlen(params->av[0]) == 4)
 		{
-			if (!is_argument_numeric(params->av[1]) || ft_chk_ul(params->av[1]))
-			{
-				ft_dprintf(2, "%s: %s: numeric"
-					" argument required\n", params->av[0], params->av[1]);
-				*e_s = 2;
-				exit_is_the_only_argument(params, env);
-			}
+			if (!is_argument_numeric(params->av[1]))
+				handle_error_numeric(params, env, e_s);
+			else if (is_argument_numeric(params->av[1])
+				&& ft_chk_ul(params->av[1]))
+				handle_error_numeric(params, env, e_s);
 			else if (params-> ac == 2)
 				exit_with_one_other_argument(params, env);
 			else

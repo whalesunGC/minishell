@@ -93,32 +93,21 @@ static void	exit_with_one_other_argument(
 }
 
 /**
- * @function: is_argument_numeric
- * @brief: checks if the argument being passed
- 		into the program is numeric
- * 
- * @param *arg: literally means av[1],
- 		the argument after the word exit.
- * 
+ * @function: handle_error_numeric
+ * @brief: updates the symbol status
+ *
+ * @param params: struct containing param data for execution
+ * @param env: env
+ * @param e_s: exit_status
  * @return: void function
  */
-
-static int	is_argument_numeric(const char *arg)
+void	handle_error_numeric(t_piping_multiple_command_params *params,
+		char **env, int *e_s)
 {
-	int	i;
-
-	i = 0;
-	if (arg[i] == '-' || arg[i] == '+')
-		i = 1;
-	if (arg[i] == '\0')
-		return (0);
-	while (arg[i] != '\0')
-	{
-		if (ft_isdigit(arg[i]) == 0)
-			return (0);
-		i++;
-	}
-	return (1);
+	ft_dprintf(2, "%s: %s: numeric"
+		" argument required\n", params->av[0], params->av[1]);
+	*e_s = 2;
+	exit_is_the_only_argument(params, env);
 }
 
 /**
@@ -145,13 +134,11 @@ void	exit_command_multiple(
 			ft_dprintf(1, "%s: command not found\n", params->av[0]);
 		else if (params->ac >= 2 && ft_strlen(params->av[0]) == 4)
 		{
-			if (!is_argument_numeric(params->av[1]) || ft_chk_ul(params->av[1]))
-			{
-				ft_dprintf(2, "%s: %s: numeric"
-					" argument required\n", params->av[0], params->av[1]);
-				*params->exit_status = 2;
-				exit_is_the_only_argument(params, env);
-			}
+			if (!is_argument_numeric(params->av[1]))
+				handle_error_numeric(params, env, e_s);
+			else if (is_argument_numeric(params->av[1])
+				&& ft_chk_ul(params->av[1]))
+				handle_error_numeric(params, env, e_s);
 			else if (params->ac == 2)
 				exit_with_one_other_argument(params, env);
 			else
